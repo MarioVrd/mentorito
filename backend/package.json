@@ -1,0 +1,29 @@
+{
+  "name": "mentorito",
+  "version": "1.0.0",
+  "description": "Online learning platform created with Node.js, PostgreSQL & React.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarioVrd/mentorito.git"
+  },
+  "keywords": [
+    "elearning",
+    "online-learning"
+  ],
+  "author": "Mario Vrdoljak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarioVrd/mentorito/issues"
+  },
+  "homepage": "https://github.com/MarioVrd/mentorito#readme",
+  "devDependencies": {
+    "prisma": "^2.19.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.19.0"
+  }
+}

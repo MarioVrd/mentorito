@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String             @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String             @unique
+  password          String
+  role              Role               @default(STUDENT)
+  uploads           Upload[]
+  coursesEnrolled   Enrollment[]
+  finishedExercises FinishedExercise[]
+  courseNews        CourseNews[]
+  globalNews        GlobalNews[]
+}
+
+model GlobalNews {
+  id      String @id @default(uuid())
+  title   String
+  content String
+  adminId String
+  admin   User   @relation(fields: [adminId], references: [id])
+}
+
+model Upload {
+  id                String             @id @default(uuid())
+  title             String
+  type              String
+  uploadedAt        DateTime           @default(now())
+  userId            String
+  user              User               @relation(fields: [userId], references: [id])
+  uploadedExercises FinishedExercise[]
+}
+
+model Course {
+  id               String       @id @default(uuid())
+  title            String
+  description      String?
+  locked           Boolean      @default(false)
+  studentsEnrolled Enrollment[]
+  exercises        Exercise[]
+  news             CourseNews[]
+}
+
+model CourseNews {
+  id        String  @id @default(uuid())
+  title     String
+  content   String?
+  teacherId String
+  teacher   User    @relation(fields: [teacherId], references: [id])
+  courseId  String
+  course    Course  @relation(fields: [courseId], references: [id])
+}
+
+model Enrollment {
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id])
+  enrolledAt DateTime @default(now())
+
+  @@id([userId, courseId])
+}
+
+model Exercise {
+  id                String             @id @default(uuid())
+  title             String
+  description       String?
+  createdAt         DateTime           @default(now())
+  deadline          DateTime?
+  courseId          String
+  course            Course             @relation(fields: [courseId], references: [id])
+  finishedExercises FinishedExercise[]
+}
+
+model FinishedExercise {
+  studentId      String
+  student        User     @relation(fields: [studentId], references: [id])
+  exerciseId     String
+  exercise       Exercise @relation(fields: [exerciseId], references: [id])
+  studentComment String?
+  teacherComment String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  grade          String
+  uploadId       String?
+  upload         Upload?  @relation(fields: [uploadId], references: [id])
+
+  @@id([studentId, exerciseId])
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
