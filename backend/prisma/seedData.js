@@ -1,4 +1,4 @@
-import { encrypt } from '../utils/encrypt.js'
+import { encrypt } from '../utils/authUtils.js'
 
 const password = await encrypt(process.env.DEFAULT_USER_PASSWORD || '123456')
 

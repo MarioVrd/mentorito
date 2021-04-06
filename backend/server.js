@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import morgan from 'morgan'
 
+import userRoutes from './routes/userRoutes.js'
 import courseRoutes from './routes/courseRoutes.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json())
 
 // Routes
+app.use('/api/users', userRoutes)
 app.use('/api/courses', courseRoutes)
 
 // 404 Not found fallback

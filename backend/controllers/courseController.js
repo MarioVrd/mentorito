@@ -17,7 +17,8 @@ export const getCourses = asyncHandler(async (req, res) => {
 // @access  Private
 export const getCourseById = asyncHandler(async (req, res) => {
 	const course = await prisma.course.findFirst({
-		where: { id: req.params.id }
+		where: { id: req.params.id },
+		rejectOnNotFound: true
 	})
 
 	res.json(course)
