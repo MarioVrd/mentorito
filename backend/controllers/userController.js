@@ -5,6 +5,9 @@ import isIn from 'validator/lib/isIn.js'
 import { encrypt, comparePassword, generateToken } from '../utils/authUtils.js'
 import { availableRoles } from '../constants/roles.js'
 
+// @desc    Create a new user
+// @route   POST /api/users/register
+// @access  Admin
 export const register = asyncHandler(async (req, res) => {
 	const { firstName, lastName, email, password, role } = req.body
 
@@ -35,6 +38,9 @@ export const register = asyncHandler(async (req, res) => {
 	res.status(201).json(newUser)
 })
 
+// @desc    User login
+// @route   POST /api/users/login
+// @access  Public
 export const login = asyncHandler(async (req, res) => {
 	const { email, password } = req.body
 
