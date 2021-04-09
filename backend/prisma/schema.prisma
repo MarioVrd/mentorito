@@ -99,6 +99,7 @@ model FinishedExercise {
   @@id([studentId, exerciseId])
 }
 
+// IMPORTANT: If you are changing this enum, edit /constants/roles.js file accordingly
 enum Role {
   STUDENT
   TEACHER

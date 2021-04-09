@@ -1,5 +1,6 @@
 import prisma from '../prisma/client.js'
 import asyncHandler from 'express-async-handler'
+import validator from 'validator'
 
 // @desc    Fetch all courses
 // @route   GET /api/courses
@@ -16,12 +17,66 @@ export const getCourses = asyncHandler(async (req, res) => {
 // @route   GET /api/courses/:id
 // @access  Private
 export const getCourseById = asyncHandler(async (req, res) => {
-    const course = await prisma.course.findFirst({
+    const course = await prisma.course.findUnique({
         where: { id: req.params.id },
+        include: {
+            studentsEnrolled: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                            role: true
+                        }
+                    }
+                }
+            },
+            exercises: true,
+            news: true
+        },
         rejectOnNotFound: true
     })
 
+    course.studentsEnrolled.forEach(student => {
+        student.userId
+    })
+
     res.json(course)
+})
+
+// @desc    Create a course
+// @route   POST /api/courses
+// @access  Admin
+export const createCourse = asyncHandler(async (req, res) => {
+    let { title, description, locked } = req.body
+
+    if (typeof locked === 'string') validator.toBoolean(locked)
+
+    const course = await prisma.course.create({ data: { title, description, locked } })
+
+    res.json(course)
+})
+
+// @desc    Delete the course
+// @route   DELETE /api/courses/:id
+// @access  Admin
+export const deleteCourse = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    try {
+        const deletedCourse = await prisma.course.delete({ where: { id } })
+
+        res.json({ message: `Successfully deleted ${deletedCourse.title} course` })
+    } catch (error) {
+        let message = error.message
+
+        if (error.code === 'P2014')
+            message = 'There are still enrolled students, unenroll everyone and then delete'
+
+        res.status(400).json({ message })
+    }
 })
 
 // @desc    Enroll to course with id

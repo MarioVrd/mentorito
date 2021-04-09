@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import prisma from '../prisma/client.js'
+import { ROLE_ADMIN } from '../constants/roles.js'
 
 export const protect = asyncHandler(async (req, res, next) => {
     let token
@@ -29,3 +30,12 @@ export const protect = asyncHandler(async (req, res, next) => {
         throw new Error('Not authorized, no token')
     }
 })
+
+export const admin = (req, res, next) => {
+    if (req.user && req.user.role === ROLE_ADMIN) {
+        return next()
+    }
+
+    res.status(401)
+    throw new Error('Not authorized as an admin')
+}
