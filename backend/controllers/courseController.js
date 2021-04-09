@@ -59,6 +59,23 @@ export const createCourse = asyncHandler(async (req, res) => {
     res.json(course)
 })
 
+// @desc    Update the course
+// @route   PUT /api/courses/:id
+// @access  Admin
+export const updateCourse = asyncHandler(async (req, res) => {
+    const { id } = req.params
+    let { title, description, locked } = req.body
+
+    if (typeof locked === 'string') validator.toBoolean(locked)
+
+    const updatedCourse = await prisma.course.update({
+        where: { id },
+        data: { title, description, locked }
+    })
+
+    res.json(updatedCourse)
+})
+
 // @desc    Delete the course
 // @route   DELETE /api/courses/:id
 // @access  Admin
