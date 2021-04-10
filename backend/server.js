@@ -4,6 +4,7 @@ import morgan from 'morgan'
 
 import userRoutes from './routes/userRoutes.js'
 import courseRoutes from './routes/courseRoutes.js'
+import newsRoutes from './routes/newsRoutes.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 
 dotenv.config()
@@ -11,7 +12,7 @@ dotenv.config()
 const app = express()
 
 if (process.env.NODE_ENV === 'development') {
-	app.use(morgan('dev'))
+    app.use(morgan('dev'))
 }
 
 app.use(express.json())
@@ -19,6 +20,7 @@ app.use(express.json())
 // Routes
 app.use('/api/users', userRoutes)
 app.use('/api/courses', courseRoutes)
+app.use('/api/news', newsRoutes)
 
 // 404 Not found fallback
 app.use(notFound)
