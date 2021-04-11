@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import asyncHandler from 'express-async-handler'
 import prisma from '../prisma/client.js'
-import { ROLE_ADMIN } from '../constants/roles.js'
+import { ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles.js'
 
 export const protect = asyncHandler(async (req, res, next) => {
     let token
@@ -32,10 +32,22 @@ export const protect = asyncHandler(async (req, res, next) => {
 })
 
 export const admin = (req, res, next) => {
-    if (req.user && req.user.role === ROLE_ADMIN) {
-        return next()
-    }
+    if (req.user && req.user.role === ROLE_ADMIN) return next()
 
     res.status(401)
     throw new Error('Not authorized as an admin')
+}
+
+export const teacher = (req, res, next) => {
+    if (req.user && req.user.role === ROLE_TEACHER) return next()
+
+    res.status(401)
+    throw new Error('Not authorized as teacher')
+}
+
+export const student = (req, res, next) => {
+    if (req.user && req.user.role === ROLE_STUDENT) return next()
+
+    res.status(401)
+    throw new Error('Not authorized as student')
 }

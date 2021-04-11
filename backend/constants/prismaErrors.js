@@ -1,1 +1,2 @@
 export const PRISMA_NOT_FOUND = 'P2025'
+export const PRISMA_FOREIGN_KEY_FAILED = 'P2003'

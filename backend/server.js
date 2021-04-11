@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import userRoutes from './routes/userRoutes.js'
 import courseRoutes from './routes/courseRoutes.js'
 import newsRoutes from './routes/newsRoutes.js'
+import exerciseRoutes from './routes/exerciseRoutes.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 
 dotenv.config()
@@ -21,6 +22,7 @@ app.use(express.json())
 app.use('/api/users', userRoutes)
 app.use('/api/courses', courseRoutes)
 app.use('/api/news', newsRoutes)
+app.use('/api/exercises', exerciseRoutes)
 
 // 404 Not found fallback
 app.use(notFound)
