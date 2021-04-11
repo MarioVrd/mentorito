@@ -1,0 +1,22 @@
+{
+  "name": "mentorito",
+  "version": "1.0.0",
+  "description": "Online learning platform",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm start --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariovrd/mentorito.git"
+  },
+  "author": "Mario Vrdoljak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mariovrd/mentorito/issues"
+  },
+  "homepage": "https://github.com/mariovrd/mentorito#readme",
+  "devDependencies": {
+    "concurrently": "^6.0.1"
+  }
+}
