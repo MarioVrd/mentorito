@@ -1,7 +1,8 @@
 import styled from 'styled-components/macro'
 import home from '../assets/icons/home'
-import mycourses from '../assets/icons/mycourses'
+import book from '../assets/icons/book'
 import settings from '../assets/icons/settings'
+import { Link } from 'react-router-dom'
 
 const SideMenu = () => {
     return (
@@ -11,13 +12,13 @@ const SideMenu = () => {
             </Nav.Logo>
             <Nav.List className="menu">
                 <Nav.Item active>
-                    <Nav.Link href="/">{home} Početna</Nav.Link>
+                    <Nav.Link to="/">{home} Početna</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="/courses/">{mycourses} Moji kolegiji</Nav.Link>
+                    <Nav.Link to="/courses">{book} Kolegiji</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link href="/settings">{settings} Postavke</Nav.Link>
+                    <Nav.Link to="/settings">{settings} Postavke</Nav.Link>
                 </Nav.Item>
             </Nav.List>
             <User>User &gt;</User>
@@ -35,7 +36,7 @@ const Nav = styled.nav`
 
 Nav.Logo = styled.h1`
     line-height: 1;
-    margin: 1rem 0 1.5rem;
+    margin: 0.75rem 0 1.25rem;
 `
 
 Nav.List = styled.ul`
@@ -48,6 +49,7 @@ Nav.Item = styled.li`
     color: ${props => (props.active ? 'var(--clr-white)' : 'var(--clr-grey-300)')};
     border-top-right-radius: 0.65rem;
     border-bottom-right-radius: 0.65rem;
+    transition: background-color 200ms;
 
     svg {
         height: 1.1em;
@@ -57,9 +59,15 @@ Nav.Item = styled.li`
             fill: ${props => (props.active ? '#fff' : 'var(--clr-grey-200)')};
         }
     }
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+        background-color: ${props => (props.active ? 'var(--clr-dark)' : 'var(--clr-grey-100)')};
+    }
 `
 
-Nav.Link = styled.a`
+Nav.Link = styled(Link)`
     display: flex;
     align-items: center;
     padding: 1rem;
