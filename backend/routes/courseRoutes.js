@@ -5,18 +5,20 @@ import {
     enrollToCourse,
     createCourse,
     updateCourse,
-    deleteCourse
+    deleteCourse,
+    getEnrolledCourses
 } from '../controllers/courseController.js'
 import { admin, protect } from '../middleware/authMiddleware.js'
 
 const router = Router()
 
-router.route('/').get(getCourses).post(protect, admin, createCourse)
+router.get('/enrolled', protect, getEnrolledCourses)
+router.post('/enroll/:id', protect, enrollToCourse)
 router
     .route('/:id')
     .get(getCourseById)
     .put(protect, admin, updateCourse)
     .delete(protect, admin, deleteCourse)
-router.post('/enroll/:id', protect, enrollToCourse)
+router.route('/').get(getCourses).post(protect, admin, createCourse)
 
 export default router

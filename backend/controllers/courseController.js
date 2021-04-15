@@ -96,6 +96,18 @@ export const deleteCourse = asyncHandler(async (req, res) => {
     }
 })
 
+// @desc    Fetch all enrolled courses for logged in user
+// @route   GET /api/courses/enrolled
+// @access  Private
+export const getEnrolledCourses = asyncHandler(async (req, res) => {
+    const enrolledCourses = await prisma.enrollment.findMany({
+        where: { userId: req.user.id },
+        include: { course: true }
+    })
+
+    res.json(enrolledCourses)
+})
+
 // @desc    Enroll to course with id
 // @route   POST /api/courses/enroll/:id
 // @access  Private
