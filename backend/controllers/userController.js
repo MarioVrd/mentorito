@@ -44,11 +44,23 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
-    const user = await prisma.user.findUnique({ where: { email: email }, rejectOnNotFound: true })
+    const user = await prisma.user.findUnique({
+        where: { email: email },
+        rejectOnNotFound: true
+    })
 
     const correctPassword = await comparePassword(password, user.password)
 
     if (!correctPassword) throw new Error('Invalid credentials! Please try again.')
 
-    res.json({ id: user.id, email, token: generateToken({ id: user.id, role: user.role }) })
+    const { id, firstName, lastName, role } = user
+
+    res.json({
+        id,
+        firstName,
+        lastName,
+        email,
+        role,
+        token: generateToken({ id, role })
+    })
 })
