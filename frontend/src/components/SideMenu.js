@@ -3,13 +3,22 @@ import home from '../assets/icons/home'
 import book from '../assets/icons/book'
 import login from '../assets/icons/login'
 import settings from '../assets/icons/settings'
-import { NavLink } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { NavLink, useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '../assets/styles'
+import { logout } from '../actions/userActions'
 
 const SideMenu = () => {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
+
+    const dispatch = useDispatch()
+    const history = useHistory()
+
+    const handleLogout = () => {
+        dispatch(logout())
+        history.push('/login')
+    }
 
     return (
         <Nav>
@@ -47,7 +56,7 @@ const SideMenu = () => {
             </Nav.List>
             {userInfo && (
                 <User>
-                    {userInfo.firstName} <Button>Odjava</Button>
+                    {userInfo.firstName} <Button onClick={handleLogout}>Odjava</Button>
                 </User>
             )}
         </Nav>

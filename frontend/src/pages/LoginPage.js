@@ -29,9 +29,9 @@ const LoginPage = () => {
 
     return (
         <Main>
-            {error && <p>Error: {error}</p>}
-            {loading && <p>Loading...</p>}
             <Form onSubmit={handleSubmit}>
+                {error && <p>Error: {error}</p>}
+                {loading && <p>Loading...</p>}
                 <Form.Group>
                     <Form.Label htmlFor="email">Email</Form.Label>
                     <Form.Input
