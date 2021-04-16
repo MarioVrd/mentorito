@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import styled from 'styled-components/macro'
 import { login } from '../actions/userActions'
 import { Button } from '../assets/styles'
+import Alert from '../components/Alert'
 
 const LoginPage = () => {
     const [email, setEmail] = useState('')
@@ -30,8 +31,8 @@ const LoginPage = () => {
     return (
         <Main>
             <Form onSubmit={handleSubmit}>
-                {error && <p>Error: {error}</p>}
-                {loading && <p>Loading...</p>}
+                {error && <Alert>{error}</Alert>}
+                {loading && <Alert variant="info">Loading...</Alert>}
                 <Form.Group>
                     <Form.Label htmlFor="email">Email</Form.Label>
                     <Form.Input
