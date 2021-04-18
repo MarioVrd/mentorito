@@ -1,21 +1,27 @@
 import { createGlobalStyle } from 'styled-components'
-import PoppinsRegular from './fonts/Poppins-Regular.ttf'
-import PoppinsMedium from './fonts/Poppins-Medium.ttf'
-import PoppinsBold from './fonts/Poppins-Bold.ttf'
+import NunitoSansLight from './fonts/NunitoSans-Light.ttf'
+import NunitoSansRegular from './fonts/NunitoSans-Regular.ttf'
+import NunitoSansSemiBold from './fonts/NunitoSans-SemiBold.ttf'
+import NunitoSansBold from './fonts/NunitoSans-Bold.ttf'
 
 const GlobalStyle = createGlobalStyle`
 @font-face {
-  font-family: "Poppins";
-  src: url(${PoppinsRegular});
+  font-family: "Nunito Sans";
+  src: url(${NunitoSansRegular});
 }
 @font-face {
-  font-family: "Poppins";
-  src: url(${PoppinsMedium});
-  font-weight: 500;
+  font-family: "Nunito Sans";
+  src: url(${NunitoSansLight});
+  font-weight: 300;
 }
 @font-face {
-  font-family: "Poppins";
-  src: url(${PoppinsBold});
+  font-family: "Nunito Sans";
+  src: url(${NunitoSansSemiBold});
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Nunito Sans";
+  src: url(${NunitoSansBold});
   font-weight: 700;
 }
 
@@ -39,7 +45,7 @@ const GlobalStyle = createGlobalStyle`
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
 }
 
 a {

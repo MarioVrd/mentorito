@@ -16,7 +16,7 @@ const Header = () => {
 
 const Hello = styled.h3`
     margin: 0.5rem 0 1.5rem;
-    font-weight: 500;
+    font-weight: 700;
 `
 
 export default Header

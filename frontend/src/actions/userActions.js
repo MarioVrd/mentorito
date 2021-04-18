@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { contentTypeJson } from '../constants/axiosConfig'
+import { contentTypeJson } from '../utils/axiosConfig'
 import {
     USER_LOGIN_FAIL,
     USER_LOGIN_REQUEST,

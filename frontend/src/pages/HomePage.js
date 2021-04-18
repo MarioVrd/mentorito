@@ -1,18 +1,18 @@
 import Header from '../components/Header'
+import EnrolledCourses from '../components/EnrolledCourses'
 import styled from 'styled-components/macro'
 
 const HomePage = () => {
     return (
-        <>
-            <Grid>
-                <Main>
-                    <Header />
-                </Main>
-                <Sidebar>
-                    <h3>Other courses</h3>
-                </Sidebar>
-            </Grid>
-        </>
+        <Grid>
+            <Main>
+                <Header />
+                <EnrolledCourses />
+            </Main>
+            <Sidebar>
+                <h3>Other courses</h3>
+            </Sidebar>
+        </Grid>
     )
 }
 
