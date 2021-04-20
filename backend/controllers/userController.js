@@ -64,3 +64,12 @@ export const login = asyncHandler(async (req, res) => {
         token: generateToken({ id, role })
     })
 })
+
+// @desc    Fetch all users
+// @route   GET /api/users
+// @access  Admin
+export const getUserList = asyncHandler(async (req, res) => {
+    const users = await prisma.user.findMany()
+
+    res.json(users)
+})
