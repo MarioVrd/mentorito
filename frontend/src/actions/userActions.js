@@ -1,6 +1,8 @@
 import axios from 'axios'
-import { contentTypeJson } from '../utils/axiosConfig'
+import { contentTypeJson, getAuthorizedJsonConfig } from '../utils/axiosConfig'
 import {
+    USER_LIST_REQUEST,
+    USER_LIST_SUCCESS,
     USER_LOGIN_FAIL,
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
@@ -30,4 +32,26 @@ export const login = (email, password) => async dispatch => {
 export const logout = () => dispatch => {
     localStorage.removeItem('userInfo')
     dispatch({ type: USER_LOGOUT })
+}
+
+export const getUsers = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: USER_LIST_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.get(`/api/users`, getAuthorizedJsonConfig(userInfo.token))
+
+        dispatch({ type: USER_LIST_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: USER_LOGIN_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
 }

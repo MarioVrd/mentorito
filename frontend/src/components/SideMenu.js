@@ -2,11 +2,13 @@ import styled from 'styled-components/macro'
 import home from '../assets/icons/home'
 import book from '../assets/icons/book'
 import login from '../assets/icons/login'
+import users from '../assets/icons/users'
 import settings from '../assets/icons/settings'
 import { NavLink, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from '../assets/styles'
 import { logout } from '../actions/userActions'
+import { ROLE_ADMIN } from '../constants/roles'
 
 const SideMenu = () => {
     const userLogin = useSelector(state => state.userLogin)
@@ -43,6 +45,14 @@ const SideMenu = () => {
                                 {settings} Postavke
                             </Nav.Link>
                         </Nav.Item>
+
+                        {userInfo.role === ROLE_ADMIN && (
+                            <Nav.Item>
+                                <Nav.Link to="/users" activeClassName="active">
+                                    {users} Korisnici
+                                </Nav.Link>
+                            </Nav.Item>
+                        )}
                     </>
                 ) : (
                     <>

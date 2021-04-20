@@ -6,6 +6,8 @@ import GlobalStyle from './assets/GlobalStyles'
 import CoursesPage from './pages/CoursesPage'
 import SettingsPage from './pages/SettingsPage'
 import LoginPage from './pages/LoginPage'
+import UsersPage from './pages/UsersPage'
+import RegisterPage from './pages/RegisterPage'
 
 const App = () => {
     return (
@@ -14,13 +16,19 @@ const App = () => {
             <Layout>
                 <SideMenu />
                 <Switch>
-                    <Route path="/login">
+                    <Route exact path="/login">
                         <LoginPage />
                     </Route>
-                    <Route path="/courses">
+                    <Route exact path="/users/create">
+                        <RegisterPage />
+                    </Route>
+                    <Route exact path="/users">
+                        <UsersPage />
+                    </Route>
+                    <Route exact path="/courses">
                         <CoursesPage />
                     </Route>
-                    <Route path="/settings">
+                    <Route exact path="/settings">
                         <SettingsPage />
                     </Route>
                     <Route exact path="/">
