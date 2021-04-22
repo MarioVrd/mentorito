@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router'
 import styled from 'styled-components/macro'
 import { login } from '../actions/userActions'
-import { Button } from '../assets/styles'
+import { Button, UserForm } from '../assets/styles'
 import Alert from '../components/Alert'
 
 const LoginPage = () => {
@@ -30,12 +30,13 @@ const LoginPage = () => {
 
     return (
         <Main>
-            <Form onSubmit={handleSubmit}>
+            <UserForm onSubmit={handleSubmit}>
+                <UserForm.Title>Prijava</UserForm.Title>
                 {error && <Alert>{error}</Alert>}
                 {loading && <Alert variant="info">Loading...</Alert>}
-                <Form.Group>
-                    <Form.Label htmlFor="email">Email</Form.Label>
-                    <Form.Input
+                <UserForm.Group>
+                    <UserForm.Label htmlFor="email">Email</UserForm.Label>
+                    <UserForm.Input
                         type="email"
                         id="email"
                         placeholder="Unesite email"
@@ -43,10 +44,10 @@ const LoginPage = () => {
                         onChange={e => setEmail(e.target.value)}
                         required
                     />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label htmlFor="password">Lozinka</Form.Label>
-                    <Form.Input
+                </UserForm.Group>
+                <UserForm.Group>
+                    <UserForm.Label htmlFor="password">Lozinka</UserForm.Label>
+                    <UserForm.Input
                         type="password"
                         id="password"
                         placeholder="Unesite lozinku"
@@ -54,11 +55,11 @@ const LoginPage = () => {
                         onChange={e => setPassword(e.target.value)}
                         required
                     />
-                </Form.Group>
+                </UserForm.Group>
                 <Button type="submit" primary block>
                     Prijava
                 </Button>
-            </Form>
+            </UserForm>
         </Main>
     )
 }
@@ -70,31 +71,6 @@ const Main = styled.main`
     min-height: 100vh;
     width: 100%;
     padding: 1.5rem;
-`
-
-const Form = styled.form`
-    border-radius: 0.5rem;
-    padding: 2rem;
-    box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.35);
-    width: 400px;
-    max-width: 100%;
-`
-Form.Group = styled.div`
-    margin-bottom: 1rem;
-`
-
-Form.Label = styled.label`
-    display: inline-block;
-    margin-bottom: 0.25rem;
-`
-
-Form.Input = styled.input`
-    display: block;
-    width: 100%;
-    font-size: 0.92rem;
-    padding: 0.75rem;
-    border-radius: 5px;
-    border: 1px solid var(--clr-grey-200);
 `
 
 export default LoginPage

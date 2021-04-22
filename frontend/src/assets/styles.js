@@ -17,3 +17,33 @@ export const Button = styled.button`
         opacity: 0.9;
     }
 `
+
+export const UserForm = styled.form`
+    border-radius: 0.5rem;
+    padding: 2rem;
+    box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.35);
+    width: 400px;
+    max-width: 100%;
+`
+
+UserForm.Title = styled.h2`
+    margin-bottom: 1rem;
+`
+
+UserForm.Group = styled.div`
+    margin-bottom: 1rem;
+`
+
+UserForm.Label = styled.label`
+    display: inline-block;
+    margin-bottom: 0.25rem;
+`
+
+UserForm.Input = styled.input`
+    display: block;
+    width: 100%;
+    font-size: 0.92rem;
+    padding: 0.75rem;
+    border-radius: 5px;
+    border: 1px solid var(--clr-grey-200);
+`
