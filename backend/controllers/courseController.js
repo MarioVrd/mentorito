@@ -1,6 +1,7 @@
 import prisma from '../prisma/client.js'
 import asyncHandler from 'express-async-handler'
 import validator from 'validator'
+import { ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles.js'
 
 // @desc    Fetch all courses
 // @route   GET /api/courses
@@ -108,25 +109,29 @@ export const getEnrolledCourses = asyncHandler(async (req, res) => {
     res.json(enrolledCourses)
 })
 
-// @desc    Enroll to course with id
-// @route   POST /api/courses/enroll/:id
-// @access  Private
+// @desc    Enroll logged in or specified userId to selected courseId
+// @route   POST /api/courses/enroll
+// @access  Student/Teacher/Admin
 export const enrollToCourse = asyncHandler(async (req, res) => {
-    const { id } = req.params
+    const { userId, courseId } = req.body
 
-    const course = await prisma.course.findUnique({ where: { id } })
+    const course = await prisma.course.findUnique({ where: { id: courseId } })
     if (!course) throw new Error('Invalid course id')
 
+    if (course.locked && req.user.role === ROLE_STUDENT) throw new Error('Course is locked')
+
+    // If userId is specified in req.body enroll specified user (for teacher or admin)
+    // If the userId is NOT specified, enroll logged in user
     const enrollment = await prisma.enrollment.findUnique({
-        where: { userId_courseId: { userId: req.user.id, courseId: id } }
+        where: { userId_courseId: { userId: userId || req.user.id, courseId } }
     })
     if (enrollment) {
         res.status(400)
-        throw new Error('You are already enrolled in this course')
+        throw new Error('Already enrolled in this course')
     }
 
     await prisma.enrollment.create({
-        data: { courseId: id, userId: req.user.id }
+        data: { courseId, userId: userId || req.user.id }
     })
 
     res.json({ message: `Successfully enrolled to ${course.title} course` })

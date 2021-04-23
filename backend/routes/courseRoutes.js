@@ -13,7 +13,7 @@ import { admin, protect } from '../middleware/authMiddleware.js'
 const router = Router()
 
 router.get('/enrolled', protect, getEnrolledCourses)
-router.post('/enroll/:id', protect, enrollToCourse)
+router.post('/enroll', protect, enrollToCourse)
 router
     .route('/:id')
     .get(getCourseById)
