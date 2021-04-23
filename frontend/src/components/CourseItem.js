@@ -1,27 +1,45 @@
 import styled from 'styled-components/macro'
 import PropTypes from 'prop-types'
 import { Button } from '../assets/styles'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { enrollToCourse } from '../actions/courseActions'
+import { useEffect } from 'react'
+import { ENROLL_TO_COURSE_RESET } from '../constants/courseConstants'
+import Alert from './Alert'
 
 const CourseItem = ({ course }) => {
+    const dispatch = useDispatch()
+    const history = useHistory()
+
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
+    const courseEnroll = useSelector(state => state.courseEnroll)
+    const { error, success } = courseEnroll
 
-    const enrollToCourse = e => {
+    const handleEnroll = e => {
         e.preventDefault()
-        console.log(course.studentsEnrolled.map(e => e.userId).indexOf(userInfo.id))
-        console.log(`Uspjesno ste se upisali u kolegij ${course.title}`)
+
+        dispatch(enrollToCourse(course.id))
     }
+
+    useEffect(() => {
+        if (success) history.push(`/courses/${course.id}`)
+
+        return () => {
+            dispatch({ type: ENROLL_TO_COURSE_RESET })
+        }
+    }, [dispatch, success, course.id, history])
 
     const enrolled = course.studentsEnrolled.map(e => e.userId).indexOf(userInfo.id) !== -1
 
     return (
         <Course>
+            {error && <Alert>{error}</Alert>}
             <Course.Title>
                 <Link to={`/courses/${course.id}`}>{course.title}</Link>
                 {!enrolled && (
-                    <Button onClick={enrollToCourse} disabled={course.locked}>
+                    <Button onClick={handleEnroll} disabled={course.locked}>
                         Upis {course.locked && 'onemogućen'}
                     </Button>
                 )}

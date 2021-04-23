@@ -1,15 +1,16 @@
 import { combineReducers } from 'redux'
-import { courseListReducer, enrolledCoursesReducer } from './courseReducers'
+import { courseEnrollReducer, courseListReducer, enrolledCoursesReducer } from './courseReducers'
 import { globalNewsReducer } from './newsReducers'
 import { userListReducer, userLoginReducer, userRegisterReducer } from './userReducers'
 
 const rootReducer = combineReducers({
     userLogin: userLoginReducer,
-    globalNews: globalNewsReducer,
     enrolledCourses: enrolledCoursesReducer,
+    globalNews: globalNewsReducer,
     userList: userListReducer,
-    userRegister: userRegisterReducer,
-    courseList: courseListReducer
+    courseList: courseListReducer,
+    courseEnroll: courseEnrollReducer,
+    userRegister: userRegisterReducer
 })
 
 export default rootReducer
