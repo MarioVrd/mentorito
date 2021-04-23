@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { getEnrolledCourses } from '../actions/courseActions'
 import Alert from './Alert'
@@ -19,12 +20,17 @@ const EnrolledCourses = () => {
 
             {loading && 'Loading...'}
             {error && <Alert>{error}</Alert>}
-            {enrollment && (
+            {enrollment && enrollment.length ? (
                 <EnrolledGrid>
                     {enrollment.map(e => (
                         <EnrolledCourseItem key={`${e.userId}${e.courseId}`} enrollment={e} />
                     ))}
                 </EnrolledGrid>
+            ) : (
+                <p>
+                    Nemate upisanih kolegija. Popis svih možete pronaći{' '}
+                    <Link to="/courses">ovdje</Link>
+                </p>
             )}
         </div>
     )

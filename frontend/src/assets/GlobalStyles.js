@@ -50,7 +50,11 @@ body {
 
 a {
   text-decoration: none;
-  color: var(--clr-dark);
+  color: var(--clr-primary);
+
+  &:hover {
+    color: var(--clr-info)
+  }
 }
 
 .text-accent {

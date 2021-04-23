@@ -117,6 +117,7 @@ Nav.Link = styled(NavLink)`
     &:focus {
         background-color: var(--clr-grey-100);
         outline: none;
+        color: var(--clr-grey-300);
     }
 
     &.active {

@@ -1,13 +1,17 @@
 import Header from '../components/Header'
 import EnrolledCourses from '../components/EnrolledCourses'
 import styled from 'styled-components/macro'
+import { useSelector } from 'react-redux'
 
 const HomePage = () => {
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
     return (
         <Grid>
             <Main>
                 <Header />
-                <EnrolledCourses />
+                {userInfo && <EnrolledCourses />}
             </Main>
             <Sidebar>
                 <h3>Other courses</h3>
