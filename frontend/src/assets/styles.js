@@ -16,6 +16,11 @@ export const Button = styled.button`
     &:hover {
         opacity: 0.9;
     }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
 `
 
 export const UserForm = styled.form`

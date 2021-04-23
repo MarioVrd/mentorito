@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { enrolledCoursesReducer } from './courseReducers'
+import { courseListReducer, enrolledCoursesReducer } from './courseReducers'
 import { globalNewsReducer } from './newsReducers'
 import { userListReducer, userLoginReducer, userRegisterReducer } from './userReducers'
 
@@ -8,7 +8,8 @@ const rootReducer = combineReducers({
     globalNews: globalNewsReducer,
     enrolledCourses: enrolledCoursesReducer,
     userList: userListReducer,
-    userRegister: userRegisterReducer
+    userRegister: userRegisterReducer,
+    courseList: courseListReducer
 })
 
 export default rootReducer
