@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler'
 import prisma from '../prisma/client.js'
 import validator from 'validator'
 import { isValidDeadline } from '../utils/dateUtils.js'
+import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles.js'
 
 // @desc    Create the exercise for selected course
 // @route   POST /api/exercises
@@ -41,6 +42,40 @@ export const updateExercise = asyncHandler(async (req, res) => {
     })
 
     res.json(updatedExercise)
+})
+
+// @desc    Get exercise by id
+// @route   GET /api/exercises/:id
+// @access  Private
+export const getExerciseById = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    // Show all finished exercises for admin and teacher or
+    // only personal finished exercise for student
+    const inclFinishedExercises =
+        req.user.role === ROLE_ADMIN || req.user.role === ROLE_TEACHER
+            ? {
+                  // For teacher|admin include student data and upload
+                  include: {
+                      upload: true,
+                      student: { select: { firstName: true, lastName: true, email: true } }
+                  }
+              }
+            : {
+                  where: { studentId: req.user.id },
+                  // For student only include upload
+                  include: { upload: true }
+              }
+
+    const exercise = await prisma.exercise.findUnique({
+        where: { id },
+        include: {
+            course: true,
+            finishedExercises: inclFinishedExercises
+        }
+    })
+
+    res.json(exercise)
 })
 
 // @desc    Submit the exercise with selected id
