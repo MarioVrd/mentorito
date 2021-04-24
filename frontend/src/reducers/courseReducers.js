@@ -1,4 +1,7 @@
 import {
+    COURSE_DETAILS_FAIL,
+    COURSE_DETAILS_REQUEST,
+    COURSE_DETAILS_SUCCESS,
     COURSE_LIST_FAIL,
     COURSE_LIST_REQUEST,
     COURSE_LIST_SUCCESS,
@@ -47,6 +50,22 @@ export const courseEnrollReducer = (state = {}, action) => {
             return { loading: false, error: action.payload }
         case ENROLL_TO_COURSE_RESET:
             return {}
+        default:
+            return state
+    }
+}
+
+export const courseDetailsReducer = (
+    state = { course: { news: [], exercises: [], studentsEnrolled: [] } },
+    action
+) => {
+    switch (action.type) {
+        case COURSE_DETAILS_REQUEST:
+            return { loading: true }
+        case COURSE_DETAILS_SUCCESS:
+            return { loading: false, course: action.payload }
+        case COURSE_DETAILS_FAIL:
+            return { loading: false, error: action.payload }
         default:
             return state
     }

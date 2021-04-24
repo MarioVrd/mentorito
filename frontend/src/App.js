@@ -8,6 +8,7 @@ import SettingsPage from './pages/SettingsPage'
 import LoginPage from './pages/LoginPage'
 import UsersPage from './pages/UsersPage'
 import RegisterPage from './pages/RegisterPage'
+import CoursePage from './pages/CoursePage'
 
 const App = () => {
     return (
@@ -24,6 +25,9 @@ const App = () => {
                     </Route>
                     <Route exact path="/users">
                         <UsersPage />
+                    </Route>
+                    <Route exact path="/courses/:id">
+                        <CoursePage />
                     </Route>
                     <Route exact path="/courses">
                         <CoursesPage />

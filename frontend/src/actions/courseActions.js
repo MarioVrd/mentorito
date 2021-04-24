@@ -1,5 +1,8 @@
 import axios from 'axios'
 import {
+    COURSE_DETAILS_FAIL,
+    COURSE_DETAILS_REQUEST,
+    COURSE_DETAILS_SUCCESS,
     COURSE_LIST_FAIL,
     COURSE_LIST_REQUEST,
     COURSE_LIST_SUCCESS,
@@ -73,6 +76,31 @@ export const enrollToCourse = (courseId, userId = undefined) => async (dispatch,
     } catch (error) {
         dispatch({
             type: ENROLL_TO_COURSE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const getCourseDetails = courseId => async (dispatch, getState) => {
+    try {
+        dispatch({ type: COURSE_DETAILS_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.get(
+            `/api/courses/${courseId}`,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: COURSE_DETAILS_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: COURSE_DETAILS_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
