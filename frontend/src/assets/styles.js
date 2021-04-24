@@ -1,5 +1,19 @@
 import styled from 'styled-components/macro'
 
+export const Grid = styled.div`
+    display: grid;
+    grid-template-columns: 5fr minmax(400px, 1fr);
+`
+
+export const Main = styled.main`
+    padding: 1rem 2rem;
+`
+
+export const Sidebar = styled.aside`
+    padding: 1rem;
+    background-color: var(--clr-grey-100);
+`
+
 export const Button = styled.button`
     display: inline-block;
     width: ${props => (props.block ? '100%' : 'auto')};
