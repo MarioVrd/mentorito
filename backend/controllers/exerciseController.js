@@ -72,7 +72,8 @@ export const getExerciseById = asyncHandler(async (req, res) => {
         include: {
             course: true,
             finishedExercises: inclFinishedExercises
-        }
+        },
+        rejectOnNotFound: true
     })
 
     res.json(exercise)
