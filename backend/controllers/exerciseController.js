@@ -86,6 +86,11 @@ export const submitExercise = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { studentComment, uploadId } = req.body
 
+    const exercise = await prisma.exercise.findUnique({ where: { id }, rejectOnNotFound: true })
+
+    if (validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()))
+        throw new Error('Invalid request, passed the deadline')
+
     const submittedExercise = await prisma.finishedExercise.create({
         data: { exerciseId: id, studentId: req.user.id, studentComment, uploadId }
     })
@@ -99,6 +104,11 @@ export const submitExercise = asyncHandler(async (req, res) => {
 export const updateSubmittedExercise = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { studentComment, uploadId } = req.body
+
+    const exercise = await prisma.exercise.findUnique({ where: { id }, rejectOnNotFound: true })
+
+    if (validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()))
+        throw new Error('Invalid request, passed the deadline')
 
     const updatedSubmittedExercise = await prisma.finishedExercise.update({
         where: { studentId_exerciseId: { exerciseId: id, studentId: req.user.id } },
