@@ -13,7 +13,7 @@ const router = Router()
 router
     .route('/:id/submit')
     .post(protect, student, submitExercise)
-    .put(protect, student, updateSubmittedExercise)
+    .put(protect, updateSubmittedExercise)
 router.route('/:id').get(protect, getExerciseById).put(protect, teacher, updateExercise)
 router.route('/').post(protect, teacher, createExerciseForCourse)
 

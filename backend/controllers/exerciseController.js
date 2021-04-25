@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler'
 import prisma from '../prisma/client.js'
 import validator from 'validator'
 import { isValidDeadline } from '../utils/dateUtils.js'
-import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles.js'
+import { ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles.js'
 
 // @desc    Create the exercise for selected course
 // @route   POST /api/exercises
@@ -100,19 +100,33 @@ export const submitExercise = asyncHandler(async (req, res) => {
 
 // @desc    Update submitted exercise with selected id
 // @route   PUT /api/exercises/:id/submit
-// @access  Student
+// @access  Student/Teacher
 export const updateSubmittedExercise = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const { studentComment, uploadId } = req.body
+    const { studentComment, uploadId, teacherComment, grade, studentId } = req.body
+
+    if (req.user.role === ROLE_TEACHER && !studentId)
+        throw new Error('Invalid request, studentId is missing')
 
     const exercise = await prisma.exercise.findUnique({ where: { id }, rejectOnNotFound: true })
 
-    if (validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()))
+    // If the deadline is passed and user is student, throw an error
+    // Teacher can update after deadline to give a grade or add a comment
+    if (
+        validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()) &&
+        req.user.role === ROLE_STUDENT
+    )
         throw new Error('Invalid request, passed the deadline')
 
+    let data = { studentComment, uploadId }
+
+    if (req.user.role === ROLE_TEACHER) {
+        data = { teacherComment, grade }
+    }
+
     const updatedSubmittedExercise = await prisma.finishedExercise.update({
-        where: { studentId_exerciseId: { exerciseId: id, studentId: req.user.id } },
-        data: { studentComment, uploadId }
+        where: { studentId_exerciseId: { exerciseId: id, studentId: studentId || req.user.id } },
+        data
     })
 
     res.json(updatedSubmittedExercise)
