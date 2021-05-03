@@ -6,6 +6,7 @@ import {
     enrolledCoursesReducer
 } from './courseReducers'
 import { globalNewsReducer } from './newsReducers'
+import { exerciseDetailsReducer } from './exerciseReducers'
 import { userListReducer, userLoginReducer, userRegisterReducer } from './userReducers'
 
 const rootReducer = combineReducers({
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     courseList: courseListReducer,
     courseDetails: courseDetailsReducer,
     courseEnroll: courseEnrollReducer,
-    userRegister: userRegisterReducer
+    userRegister: userRegisterReducer,
+    exerciseDetails: exerciseDetailsReducer
 })
 
 export default rootReducer

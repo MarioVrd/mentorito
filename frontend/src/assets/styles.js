@@ -1,8 +1,10 @@
 import styled from 'styled-components/macro'
 
 export const Grid = styled.div`
-    display: grid;
-    grid-template-columns: 5fr minmax(400px, 1fr);
+    @media (min-width: 1250px) {
+        display: grid;
+        grid-template-columns: 5fr minmax(400px, 1fr);
+    }
 `
 
 export const Main = styled.main`
@@ -37,7 +39,48 @@ export const Button = styled.button`
     }
 `
 
-export const UserForm = styled.form`
+export const Form = styled.form`
+    border-radius: 5px;
+    padding: 1.5rem;
+    border: 1px solid var(--clr-grey-100);
+`
+
+Form.Group = styled.div`
+    margin-bottom: 1rem;
+`
+
+Form.Label = styled.label`
+    display: block;
+    margin-bottom: 0.25rem;
+`
+
+Form.Input = styled.input`
+    display: block;
+    width: 100%;
+    font-size: 0.92rem;
+    padding: 0.75rem;
+    border-radius: 5px;
+    border: 1px solid var(--clr-grey-200);
+
+    &[type='file'] {
+        border: 0;
+        padding: 0;
+        border-radius: 0;
+    }
+`
+
+Form.Textarea = styled.textarea`
+    display: block;
+    width: 100%;
+    font-size: 0.95rem;
+    font-family: inherit;
+    padding: 0.75rem;
+    border-radius: 5px;
+    border: 1px solid var(--clr-grey-200);
+    resize: vertical;
+`
+
+export const UserForm = styled(Form)`
     border-radius: 0.5rem;
     padding: 2rem;
     box-shadow: 0 0.5rem 0.75rem rgba(0, 0, 0, 0.35);
@@ -49,8 +92,8 @@ UserForm.Title = styled.h2`
     margin-bottom: 1rem;
 `
 
-UserForm.Group = styled.div`
-    margin-bottom: 1rem;
+UserForm.Group = styled(Form.Group)`
+    margin-bottom: 1.25rem;
 `
 
 UserForm.Label = styled.label`
