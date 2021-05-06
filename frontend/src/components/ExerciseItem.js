@@ -1,7 +1,31 @@
+import axios from 'axios'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import ExerciseSubmitForm from './ExerciseSubmitForm'
 
 const ExerciseItem = ({ exercise }) => {
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
+    const downloadHandler = async e => {
+        e.preventDefault()
+
+        const config = {
+            headers: {
+                Authorization: `Bearer ${userInfo.token}`
+            },
+            responseType: 'blob'
+        }
+        const response = await axios.get(`/api/upload/${exercise.upload.id}`, config)
+
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', exercise.upload.title) //or any other extension
+        document.body.appendChild(link)
+        link.click()
+    }
     return (
         <Submission>
             <Submission.Title>
@@ -15,6 +39,15 @@ const ExerciseItem = ({ exercise }) => {
                 <Submission.Comment>
                     <strong>Komentar studenta:</strong> {exercise.studentComment}
                 </Submission.Comment>
+            )}
+
+            {exercise.upload && (
+                <Submission.Upload>
+                    <strong>Predana datoteka: </strong>
+                    <Link to="" onClick={downloadHandler}>
+                        {exercise.upload.title}
+                    </Link>
+                </Submission.Upload>
             )}
 
             {exercise.teacherComment && (
@@ -44,6 +77,10 @@ Submission.UpdatedAt = styled.p`
 `
 
 Submission.Comment = styled.p`
+    margin-bottom: 1rem;
+`
+
+Submission.Upload = styled.p`
     margin-bottom: 1rem;
 `
 

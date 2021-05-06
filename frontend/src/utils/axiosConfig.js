@@ -12,3 +12,12 @@ export const getAuthorizedJsonConfig = token => {
         }
     }
 }
+
+export const getAuthorizedFormConfig = token => {
+    return {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+        }
+    }
+}

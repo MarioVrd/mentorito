@@ -102,7 +102,7 @@ const ExercisePage = () => {
                         : studentScreen
                 }
 
-                {/* 
+                {/*
                 <Route exact path={`/exercises/${params.id}/submission`}>
                     <SubmissionPage />
                 </Route>
