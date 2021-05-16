@@ -12,10 +12,12 @@ export const createExerciseForCourse = asyncHandler(async (req, res) => {
 
     if (!title || !courseId) throw new Error('Invalid request. Title and courseId are required')
 
-    if (!isValidDeadline(deadline))
-        throw new Error('Invalid request. Deadline must be date string and in the future')
+    if (deadline) {
+        if (!isValidDeadline(deadline))
+            throw new Error('Invalid request. Deadline must be date string and in the future')
 
-    deadline = validator.toDate(deadline)
+        deadline = validator.toDate(deadline)
+    }
 
     const exercise = await prisma.exercise.create({
         data: { title, description, deadline, courseId }
