@@ -11,6 +11,7 @@ import RegisterPage from './pages/RegisterPage'
 import CoursePage from './pages/CoursePage'
 import ExercisePage from './pages/ExercisePage'
 import AddExercisePage from './pages/AddExercisePage'
+import PrivateRoute from './components/PrivateRoute'
 
 const App = () => {
     return (
@@ -31,9 +32,13 @@ const App = () => {
                     <Route exact path="/exercises/:id">
                         <ExercisePage />
                     </Route>
-                    <Route exact path="/courses/:id/add-exercise">
-                        <AddExercisePage />
-                    </Route>
+                    <PrivateRoute
+                        teacher
+                        admin
+                        exact
+                        path="/courses/:id/add-exercise"
+                        component={AddExercisePage}
+                    />
                     <Route exact path="/courses/:id">
                         <CoursePage />
                     </Route>
