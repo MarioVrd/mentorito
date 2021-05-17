@@ -1,5 +1,8 @@
 import axios from 'axios'
 import {
+    EXERCISE_CREATE_FAIL,
+    EXERCISE_CREATE_REQUEST,
+    EXERCISE_CREATE_SUCCESS,
     EXERCISE_DETAILS_FAIL,
     EXERCISE_DETAILS_REQUEST,
     EXERCISE_DETAILS_SUCCESS,
@@ -66,6 +69,31 @@ export const submitExercise = submission => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: EXERCISE_SUBMIT_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const createExercise = exercise => async (dispatch, getState) => {
+    try {
+        dispatch({ type: EXERCISE_CREATE_REQUEST })
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.post(
+            '/api/exercises',
+            exercise,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: EXERCISE_CREATE_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: EXERCISE_CREATE_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

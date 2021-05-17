@@ -6,7 +6,11 @@ import {
     EXERCISE_SUBMIT_FAIL,
     EXERCISE_SUBMIT_REQUEST,
     EXERCISE_SUBMIT_SUCCESS,
-    EXERCISE_SUBMIT_RESET
+    EXERCISE_SUBMIT_RESET,
+    EXERCISE_CREATE_REQUEST,
+    EXERCISE_CREATE_SUCCESS,
+    EXERCISE_CREATE_FAIL,
+    EXERCISE_CREATE_RESET
 } from '../constants/exerciseConstants'
 
 const initialExerciseDetailsState = { exercise: { finishedExercises: [], course: {} } }
@@ -37,6 +41,22 @@ export const exerciseSubmitReducer = (state = initialExerciseSubmitState, action
             return { status: 'failed', error: action.payload }
         case EXERCISE_SUBMIT_RESET:
             return initialExerciseSubmitState
+        default:
+            return state
+    }
+}
+
+const initialExerciseCreateState = { status: 'idle' }
+export const exerciseCreateReducer = (state = initialExerciseCreateState, action) => {
+    switch (action.type) {
+        case EXERCISE_CREATE_REQUEST:
+            return { status: 'loading' }
+        case EXERCISE_CREATE_SUCCESS:
+            return { status: 'completed', exercise: action.payload }
+        case EXERCISE_CREATE_FAIL:
+            return { status: 'failed', error: action.payload }
+        case EXERCISE_CREATE_RESET:
+            return { initialExerciseCreateState }
         default:
             return state
     }

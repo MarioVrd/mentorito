@@ -6,7 +6,11 @@ import {
     enrolledCoursesReducer
 } from './courseReducers'
 import { globalNewsReducer } from './newsReducers'
-import { exerciseDetailsReducer, exerciseSubmitReducer } from './exerciseReducers'
+import {
+    exerciseDetailsReducer,
+    exerciseSubmitReducer,
+    exerciseCreateReducer
+} from './exerciseReducers'
 import { userListReducer, userLoginReducer, userRegisterReducer } from './userReducers'
 import { uploadReducer } from './uploadReducers'
 
@@ -21,7 +25,8 @@ const rootReducer = combineReducers({
     userRegister: userRegisterReducer,
     exerciseDetails: exerciseDetailsReducer,
     upload: uploadReducer,
-    exerciseSubmit: exerciseSubmitReducer
+    exerciseSubmit: exerciseSubmitReducer,
+    exerciseCreate: exerciseCreateReducer
 })
 
 export default rootReducer

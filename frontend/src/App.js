@@ -10,6 +10,7 @@ import UsersPage from './pages/UsersPage'
 import RegisterPage from './pages/RegisterPage'
 import CoursePage from './pages/CoursePage'
 import ExercisePage from './pages/ExercisePage'
+import AddExercisePage from './pages/AddExercisePage'
 
 const App = () => {
     return (
@@ -29,6 +30,9 @@ const App = () => {
                     </Route>
                     <Route exact path="/exercises/:id">
                         <ExercisePage />
+                    </Route>
+                    <Route exact path="/courses/:id/add-exercise">
+                        <AddExercisePage />
                     </Route>
                     <Route exact path="/courses/:id">
                         <CoursePage />

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { getExerciseDetails } from '../actions/exerciseActions'
-import { Grid, Main, Sidebar } from '../assets/styles'
+import { Button, Grid, Main, Sidebar } from '../assets/styles'
 import Alert from '../components/Alert'
 import ExerciseItem from '../components/ExerciseItem'
 import ExerciseSubmitForm from '../components/ExerciseSubmitForm'
@@ -112,7 +112,12 @@ const ExercisePage = () => {
                 </Route> */}
             </Main>
             <Sidebar>
-                <p>Rok za predaju: {new Date(exercise.deadline).toLocaleString()}</p>
+                <p>
+                    Rok za predaju:{' '}
+                    {exercise.deadline
+                        ? new Date(exercise.deadline).toLocaleString()
+                        : 'Nije ograničen'}
+                </p>
             </Sidebar>
         </Grid>
     )

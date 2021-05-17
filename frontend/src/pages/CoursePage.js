@@ -57,7 +57,10 @@ const CoursePage = () => {
                                 <li key={e.id}>
                                     <Link to={`/exercises/${e.id}`}>
                                         {e.title} (rok za predaju:{' '}
-                                        {new Date(e.deadline).toLocaleString()})
+                                        {e.deadline
+                                            ? new Date(e.deadline).toLocaleString()
+                                            : 'Nije ograničen'}
+                                        )
                                     </Link>
                                 </li>
                             ))}
@@ -76,6 +79,10 @@ const CoursePage = () => {
                         </li>
                     ))}
                 </ul>
+
+                {userInfo.role === ROLE_TEACHER && (
+                    <Link to={`${match.url}/add-exercise`}>Dodajte vjezbu</Link>
+                )}
             </Sidebar>
         </Grid>
     ) : (
