@@ -1,8 +1,16 @@
 import validator from 'validator'
 
 export const isValidDeadline = deadlineStr => {
-    if (deadlineStr && typeof deadlineStr === 'string' && validator.isAfter(deadlineStr))
-        return true
+    try {
+        if (
+            deadlineStr === '' ||
+            (typeof deadlineStr === 'string' && validator.isAfter(deadlineStr))
+        ) {
+            return true
+        }
 
-    return false
+        return false
+    } catch {
+        return false
+    }
 }

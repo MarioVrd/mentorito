@@ -12,9 +12,9 @@ export const createExerciseForCourse = asyncHandler(async (req, res) => {
 
     if (!title || !courseId) throw new Error('Invalid request. Title and courseId are required')
 
-    if (deadline) {
+    if (deadline != null) {
         if (!isValidDeadline(deadline))
-            throw new Error('Invalid request. Deadline must be date string and in the future')
+            throw new Error('Invalid request. Deadline must be date and in the future')
 
         deadline = validator.toDate(deadline)
     }
