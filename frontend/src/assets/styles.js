@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 export const Grid = styled.div`
@@ -19,18 +20,67 @@ export const Sidebar = styled.aside`
 export const Button = styled.button`
     display: inline-block;
     width: ${props => (props.block ? '100%' : 'auto')};
-    background-color: ${props => (props.primary ? 'var(--clr-primary)' : 'var(--clr-grey-100)')};
+    background-color: ${props =>
+        props.primary
+            ? 'var(--clr-primary)'
+            : props.danger
+            ? 'var(--clr-danger)'
+            : props.success
+            ? 'var(--clr-success)'
+            : 'var(--clr-grey-100)'};
     padding: 0.75rem 1rem;
     border-radius: 5px;
     border: 0;
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
-    color: ${props => (props.primary ? 'var(--clr-white)' : 'var(--clr-dark)')};
+    color: ${props =>
+        props.primary || props.danger || props.success ? 'var(--clr-white)' : 'var(--clr-dark)'};
     cursor: pointer;
     transition: opacity 200ms;
 
     &:hover {
         opacity: 0.9;
+        color: ${props =>
+            props.primary || props.danger || props.success
+                ? 'var(--clr-white)'
+                : 'var(--clr-dark)'};
+    }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+`
+
+export const LinkButton = styled(Link)`
+    display: inline-block;
+    width: ${props => (props.block ? '100%' : 'auto')};
+    background-color: ${props =>
+        props.variant === 'primary'
+            ? 'var(--clr-primary)'
+            : props.variant === 'danger'
+            ? 'var(--clr-danger)'
+            : props.variant === 'success'
+            ? 'var(--clr-success)'
+            : 'var(--clr-grey-100)'};
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    border: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    color: ${props =>
+        props.variant === 'primary' || props.variant === 'danger' || props.variant === 'success'
+            ? 'var(--clr-white)'
+            : 'var(--clr-dark)'};
+    cursor: pointer;
+    transition: opacity 200ms;
+
+    &:hover {
+        opacity: 0.9;
+        color: ${props =>
+            props.variant === 'primary' || props.variant === 'danger' || props.variant === 'success'
+                ? 'var(--clr-white)'
+                : 'var(--clr-dark)'};
     }
 
     &:disabled {

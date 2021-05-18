@@ -3,6 +3,7 @@ import home from '../assets/icons/home'
 import book from '../assets/icons/book'
 import login from '../assets/icons/login'
 import users from '../assets/icons/users'
+import news from '../assets/icons/news'
 import settings from '../assets/icons/settings'
 import { NavLink, useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,6 +36,11 @@ const SideMenu = () => {
                 </Nav.Item>
                 {userInfo ? (
                     <>
+                        <Nav.Item>
+                            <Nav.Link to="/news" activeClassName="active">
+                                {news} Novosti
+                            </Nav.Link>
+                        </Nav.Item>
                         <Nav.Item>
                             <Nav.Link to="/courses" activeClassName="active">
                                 {book} Kolegiji

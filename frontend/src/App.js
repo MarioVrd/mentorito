@@ -12,6 +12,7 @@ import CoursePage from './pages/CoursePage'
 import ExercisePage from './pages/ExercisePage'
 import AddExercisePage from './pages/AddExercisePage'
 import PrivateRoute from './components/PrivateRoute'
+import GlobalNewsPage from './pages/GlobalNewsPage'
 
 const App = () => {
     return (
@@ -23,6 +24,7 @@ const App = () => {
                     <Route exact path="/" component={HomePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/courses" component={CoursesPage} />
+                    <Route path="/news" component={GlobalNewsPage} />
                     <PrivateRoute admin exact path="/users/create" component={RegisterPage} />
                     <PrivateRoute admin exact path="/users" component={UsersPage} />
                     <PrivateRoute exact path="/exercises/:id" component={ExercisePage} />

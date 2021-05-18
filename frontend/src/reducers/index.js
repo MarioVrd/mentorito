@@ -5,7 +5,12 @@ import {
     courseListReducer,
     enrolledCoursesReducer
 } from './courseReducers'
-import { globalNewsReducer } from './newsReducers'
+import {
+    globalNewsCreateReducer,
+    globalNewsUpdateReducer,
+    globalNewsDeleteReducer,
+    globalNewsReducer
+} from './newsReducers'
 import {
     exerciseDetailsReducer,
     exerciseSubmitReducer,
@@ -18,6 +23,9 @@ const rootReducer = combineReducers({
     userLogin: userLoginReducer,
     enrolledCourses: enrolledCoursesReducer,
     globalNews: globalNewsReducer,
+    globalNewsCreate: globalNewsCreateReducer,
+    globalNewsUpdate: globalNewsUpdateReducer,
+    globalNewsDelete: globalNewsDeleteReducer,
     userList: userListReducer,
     courseList: courseListReducer,
     courseDetails: courseDetailsReducer,
