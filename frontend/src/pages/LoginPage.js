@@ -1,17 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router'
 import styled from 'styled-components/macro'
 import { login } from '../actions/userActions'
 import { Button, UserForm } from '../assets/styles'
 import Alert from '../components/Alert'
+import { USER_LOGOUT } from '../constants/userConstants'
 
-const LoginPage = () => {
+const LoginPage = ({ history }) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
-    const history = useHistory()
 
     const userLogin = useSelector(state => state.userLogin)
     const { loading, error, userInfo } = userLogin
@@ -23,14 +22,16 @@ const LoginPage = () => {
         }
     }, [userInfo, history])
 
-    const handleSubmit = e => {
+    const loginHandler = e => {
         e.preventDefault()
+        // reset userLogin data if error occured on previous login for better UX
+        dispatch({ type: USER_LOGOUT })
         dispatch(login(email, password))
     }
 
     return (
         <Main>
-            <UserForm onSubmit={handleSubmit}>
+            <UserForm onSubmit={loginHandler}>
                 <UserForm.Title>Prijava</UserForm.Title>
                 {error && <Alert>{error}</Alert>}
                 {loading && <Alert variant="info">Loading...</Alert>}

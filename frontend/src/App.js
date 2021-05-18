@@ -20,18 +20,12 @@ const App = () => {
             <Layout>
                 <SideMenu />
                 <Switch>
-                    <Route exact path="/login">
-                        <LoginPage />
-                    </Route>
-                    <Route exact path="/users/create">
-                        <RegisterPage />
-                    </Route>
-                    <Route exact path="/users">
-                        <UsersPage />
-                    </Route>
-                    <Route exact path="/exercises/:id">
-                        <ExercisePage />
-                    </Route>
+                    <Route exact path="/" component={HomePage} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/courses" component={CoursesPage} />
+                    <PrivateRoute admin exact path="/users/create" component={RegisterPage} />
+                    <PrivateRoute admin exact path="/users" component={UsersPage} />
+                    <PrivateRoute exact path="/exercises/:id" component={ExercisePage} />
                     <PrivateRoute
                         teacher
                         admin
@@ -39,18 +33,8 @@ const App = () => {
                         path="/courses/:id/add-exercise"
                         component={AddExercisePage}
                     />
-                    <Route exact path="/courses/:id">
-                        <CoursePage />
-                    </Route>
-                    <Route exact path="/courses">
-                        <CoursesPage />
-                    </Route>
-                    <Route exact path="/settings">
-                        <SettingsPage />
-                    </Route>
-                    <Route exact path="/">
-                        <HomePage />
-                    </Route>
+                    <PrivateRoute exact path="/courses/:id" component={CoursePage} />
+                    <PrivateRoute exact path="/settings" component={SettingsPage} />
                 </Switch>
             </Layout>
         </Router>

@@ -30,7 +30,8 @@ const ExerciseSubmitForm = () => {
     const exerciseSubmit = useSelector(state => state.exerciseSubmit)
     const { status: submitStatus, error } = exerciseSubmit
 
-    const deadlineExpired = new Date(exercise.deadline).getTime() < new Date().getTime()
+    const deadlineExpired =
+        exercise.deadline && new Date(exercise.deadline).getTime() < new Date().getTime()
 
     const submitHandler = e => {
         e.preventDefault()

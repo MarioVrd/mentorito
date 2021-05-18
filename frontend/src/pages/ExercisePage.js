@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { getExerciseDetails } from '../actions/exerciseActions'
-import { Button, Grid, Main, Sidebar } from '../assets/styles'
+import { Grid, Main, Sidebar } from '../assets/styles'
 import Alert from '../components/Alert'
 import ExerciseItem from '../components/ExerciseItem'
 import ExerciseSubmitForm from '../components/ExerciseSubmitForm'
 import { EXERCISE_DETAILS_RESET } from '../constants/exerciseConstants'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 
-const ExercisePage = () => {
-    const { id } = useParams()
-    const location = useLocation()
+const ExercisePage = ({ location, match }) => {
+    const { id } = match.params
 
     const dispatch = useDispatch()
 

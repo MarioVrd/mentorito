@@ -1,14 +1,12 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useRouteMatch } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { enrollToCourse, getCourseDetails } from '../actions/courseActions'
 import { Button, Grid, Main, Sidebar } from '../assets/styles'
 import Alert from '../components/Alert'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 
-const CoursePage = () => {
-    const match = useRouteMatch()
-
+const CoursePage = ({ match }) => {
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
