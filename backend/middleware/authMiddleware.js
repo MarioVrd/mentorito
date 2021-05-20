@@ -51,3 +51,19 @@ export const student = (req, res, next) => {
     res.status(401)
     throw new Error('Not authorized as student')
 }
+
+// To use this middleware request parameter must be :courseId
+export const enrolled = asyncHandler(async (req, res, next) => {
+    if (!req.params.courseId) throw new Error('Invalid request, course id must be specified in URL')
+
+    const userEnrolled = await prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId: req.user.id, courseId: req.params.courseId } }
+    })
+
+    if ((req.user && req.user.role === ROLE_ADMIN) || userEnrolled) {
+        return next()
+    }
+
+    res.status(401)
+    throw new Error('Only enrolled students and teachers can access this')
+})
