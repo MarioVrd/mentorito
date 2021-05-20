@@ -15,11 +15,11 @@ export const getCourses = asyncHandler(async (req, res) => {
 })
 
 // @desc    Fetch course by id
-// @route   GET /api/courses/:id
+// @route   GET /api/courses/:courseId
 // @access  Private
 export const getCourseById = asyncHandler(async (req, res) => {
     const course = await prisma.course.findUnique({
-        where: { id: req.params.id },
+        where: { id: req.params.courseId },
         include: {
             studentsEnrolled: {
                 include: {
@@ -135,4 +135,70 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
     })
 
     res.json({ message: `Successfully enrolled to ${course.title} course` })
+})
+
+// @desc    Fetch all course news
+// @route   GET /api/courses/:courseId/news
+// @access  Enrolled/Admin
+export const getCourseNews = asyncHandler(async (req, res) => {
+    const { courseId } = req.params
+
+    const news = await prisma.courseNews.findMany({ where: { courseId } })
+
+    res.json(news)
+})
+
+// @desc    Fetch course news by id
+// @route   GET /api/courses/:courseId/news/:newsId
+// @access  Enrolled/Admin
+export const getCourseNewsById = asyncHandler(async (req, res) => {
+    const { newsId } = req.params
+
+    const news = await prisma.courseNews.findUnique({ where: { id: newsId } })
+
+    res.json(news)
+})
+
+// @desc    Add news for course
+// @route   POST /api/courses/:courseId/news
+// @access  Course Teacher
+export const createNewsForCourse = asyncHandler(async (req, res) => {
+    const { courseId } = req.params
+    const { title, content } = req.body
+
+    if (!title) throw new Error('Invalid request, title is required')
+
+    const news = await prisma.courseNews.create({
+        data: { title, content, courseId, teacherId: req.user.id }
+    })
+
+    res.json(news)
+})
+
+// @desc    Update news for course
+// @route   POST /api/courses/:courseId/news/:newsId
+// @access  Course Teacher
+export const updateCourseNews = asyncHandler(async (req, res) => {
+    const { newsId } = req.params
+    const { title, content } = req.body
+
+    if (!title) throw new Error('Invalid request, title is required')
+
+    const updatedNews = await prisma.courseNews.update({
+        where: { id: newsId },
+        data: { title, content }
+    })
+
+    res.json(updatedNews)
+})
+
+// @desc    Delete the course news
+// @route   DELETE /api/courses/:courseId/news/:newsId
+// @access  Course Teacher
+export const deleteCourseNews = asyncHandler(async (req, res) => {
+    const { newsId } = req.params
+
+    const deletedNews = await prisma.courseNews.delete({ where: { id: newsId } })
+
+    res.json({ message: `Course news ${deletedNews.title} successfully deleted` })
 })
