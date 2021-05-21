@@ -31,7 +31,7 @@ const CourseItem = ({ course }) => {
         }
     }, [dispatch, success, course.id, history])
 
-    const enrolled = course.studentsEnrolled.map(e => e.userId).indexOf(userInfo.id) !== -1
+    const enrolled = course.enrolledUsers.map(e => e.userId).indexOf(userInfo.id) !== -1
 
     return (
         <Course>

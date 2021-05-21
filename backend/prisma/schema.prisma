@@ -11,55 +11,73 @@ generator client {
 }
 
 model User {
-  id                String             @id @default(uuid())
-  firstName         String
-  lastName          String
-  email             String             @unique
-  password          String
-  role              Role               @default(STUDENT)
-  uploads           Upload[]
-  coursesEnrolled   Enrollment[]
-  finishedExercises FinishedExercise[]
-  courseNews        CourseNews[]
-  globalNews        GlobalNews[]
+  id                  String               @id @default(uuid())
+  firstName           String
+  lastName            String
+  email               String               @unique
+  password            String
+  role                Role                 @default(STUDENT)
+  uploads             Upload[]
+  coursesEnrolled     Enrollment[]
+  exerciseSubmissions ExerciseSubmission[]
+  courseNews          CourseNews[]
+  globalNews          GlobalNews[]
 }
 
 model GlobalNews {
-  id      String @id @default(uuid())
-  title   String
-  content String
-  adminId String
-  admin   User   @relation(fields: [adminId], references: [id])
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  adminId   String
+  admin     User     @relation(fields: [adminId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Upload {
-  id                String             @id @default(uuid())
-  title             String
-  type              String
-  uploadedAt        DateTime           @default(now())
-  userId            String
-  user              User               @relation(fields: [userId], references: [id])
-  uploadedExercises FinishedExercise[]
+  id                      String               @id @default(uuid())
+  title                   String
+  type                    String
+  uploadedAt              DateTime             @default(now())
+  userId                  String
+  user                    User                 @relation(fields: [userId], references: [id])
+  uploadedExercises       ExerciseSubmission[]
+  uploadedCourseMaterials CourseMaterial[]
 }
 
 model Course {
-  id               String       @id @default(uuid())
-  title            String
-  description      String?
-  locked           Boolean      @default(false)
-  studentsEnrolled Enrollment[]
-  exercises        Exercise[]
-  news             CourseNews[]
+  id            String           @id @default(uuid())
+  title         String
+  description   String?
+  locked        Boolean          @default(false)
+  enrolledUsers Enrollment[]
+  exercises     Exercise[]
+  news          CourseNews[]
+  materials     CourseMaterial[]
+}
+
+model CourseMaterial {
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  uploadId    String
+  upload      Upload   @relation(fields: [uploadId], references: [id])
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@id([courseId, uploadId])
 }
 
 model CourseNews {
-  id        String  @id @default(uuid())
+  id        String   @id @default(uuid())
   title     String
   content   String?
   teacherId String
-  teacher   User    @relation(fields: [teacherId], references: [id])
+  teacher   User     @relation(fields: [teacherId], references: [id])
   courseId  String
-  course    Course  @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Enrollment {
@@ -73,17 +91,17 @@ model Enrollment {
 }
 
 model Exercise {
-  id                String             @id @default(uuid())
-  title             String
-  description       String?
-  createdAt         DateTime           @default(now())
-  deadline          DateTime?
-  courseId          String
-  course            Course             @relation(fields: [courseId], references: [id])
-  finishedExercises FinishedExercise[]
+  id                  String               @id @default(uuid())
+  title               String
+  description         String?
+  createdAt           DateTime             @default(now())
+  deadline            DateTime?
+  courseId            String
+  course              Course               @relation(fields: [courseId], references: [id])
+  exerciseSubmissions ExerciseSubmission[]
 }
 
-model FinishedExercise {
+model ExerciseSubmission {
   studentId      String
   student        User     @relation(fields: [studentId], references: [id])
   exerciseId     String

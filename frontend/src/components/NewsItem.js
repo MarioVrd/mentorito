@@ -18,7 +18,7 @@ const NewsItem = ({ news }) => {
         <News>
             <News.Title>{news.title}</News.Title>
             <News.Content>{news.content}</News.Content>
-            {userInfo.role === ROLE_ADMIN && (
+            {userInfo?.role === ROLE_ADMIN && (
                 <>
                     <LinkButton variant="success" to={`/news/${news.id}/edit`}>
                         Uredi

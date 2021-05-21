@@ -8,7 +8,7 @@ import { ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles.js'
 // @access  Public
 export const getCourses = asyncHandler(async (req, res) => {
     const courses = await prisma.course.findMany({
-        include: { studentsEnrolled: true }
+        include: { enrolledUsers: true }
     })
 
     res.json(courses)
@@ -21,7 +21,23 @@ export const getCourseById = asyncHandler(async (req, res) => {
     const course = await prisma.course.findUnique({
         where: { id: req.params.courseId },
         include: {
-            studentsEnrolled: {
+            enrolledUsers: {
+                where: {
+                    // student can only see teachers, but admin|teacher can see everyone
+                    user: {
+                        OR: [
+                            {
+                                role:
+                                    req.user.role === ROLE_STUDENT
+                                        ? ROLE_TEACHER
+                                        : { in: [ROLE_STUDENT, ROLE_ADMIN, ROLE_TEACHER] }
+                            },
+                            {
+                                id: req.user.id
+                            }
+                        ]
+                    }
+                },
                 include: {
                     user: {
                         select: {
@@ -40,10 +56,6 @@ export const getCourseById = asyncHandler(async (req, res) => {
         rejectOnNotFound: true
     })
 
-    course.studentsEnrolled.forEach(student => {
-        student.userId
-    })
-
     res.json(course)
 })
 
@@ -51,11 +63,27 @@ export const getCourseById = asyncHandler(async (req, res) => {
 // @route   POST /api/courses
 // @access  Admin
 export const createCourse = asyncHandler(async (req, res) => {
-    let { title, description, locked } = req.body
+    let { title, description, locked, teacherEmail } = req.body
 
     if (typeof locked === 'string') validator.toBoolean(locked)
 
+    let teacher = null
+
+    if (teacherEmail) {
+        teacher = await prisma.user.findUnique({
+            where: { email: teacherEmail },
+            select: { id: true, role: true },
+            rejectOnNotFound: true
+        })
+
+        if (teacher.role !== ROLE_TEACHER)
+            throw new Error('Invalid request, teacher must have TEACHER role')
+    }
+
     const course = await prisma.course.create({ data: { title, description, locked } })
+
+    if (teacher)
+        await prisma.enrollment.create({ data: { courseId: course.id, userId: teacher.id } })
 
     res.json(course)
 })

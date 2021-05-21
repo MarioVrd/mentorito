@@ -58,31 +58,33 @@ export const getAllCourses = () => async dispatch => {
     }
 }
 
-export const enrollToCourse = (courseId, userId = undefined) => async (dispatch, getState) => {
-    try {
-        dispatch({ type: ENROLL_TO_COURSE_REQUEST })
+export const enrollToCourse =
+    (courseId, userId = undefined) =>
+    async (dispatch, getState) => {
+        try {
+            dispatch({ type: ENROLL_TO_COURSE_REQUEST })
 
-        const {
-            userLogin: { userInfo }
-        } = getState()
+            const {
+                userLogin: { userInfo }
+            } = getState()
 
-        const { data } = await axios.post(
-            '/api/courses/enroll',
-            { courseId, userId },
-            getAuthorizedJsonConfig(userInfo.token)
-        )
+            const { data } = await axios.post(
+                '/api/courses/enroll',
+                { courseId, userId },
+                getAuthorizedJsonConfig(userInfo.token)
+            )
 
-        dispatch({ type: ENROLL_TO_COURSE_SUCCESS, payload: data.message })
-    } catch (error) {
-        dispatch({
-            type: ENROLL_TO_COURSE_FAIL,
-            payload:
-                error.response && error.response.data.message
-                    ? error.response.data.message
-                    : error.message
-        })
+            dispatch({ type: ENROLL_TO_COURSE_SUCCESS, payload: data.message })
+        } catch (error) {
+            dispatch({
+                type: ENROLL_TO_COURSE_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            })
+        }
     }
-}
 
 export const getCourseDetails = courseId => async (dispatch, getState) => {
     try {

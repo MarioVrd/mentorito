@@ -19,6 +19,8 @@ CREATE TABLE "GlobalNews" (
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "adminId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -45,12 +47,25 @@ CREATE TABLE "Course" (
 );
 
 -- CreateTable
+CREATE TABLE "CourseMaterial" (
+    "courseId" TEXT NOT NULL,
+    "uploadId" TEXT NOT NULL,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    PRIMARY KEY ("courseId","uploadId")
+);
+
+-- CreateTable
 CREATE TABLE "CourseNews" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT,
     "teacherId" TEXT NOT NULL,
     "courseId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -77,14 +92,14 @@ CREATE TABLE "Exercise" (
 );
 
 -- CreateTable
-CREATE TABLE "FinishedExercise" (
+CREATE TABLE "ExerciseSubmission" (
     "studentId" TEXT NOT NULL,
     "exerciseId" TEXT NOT NULL,
     "studentComment" TEXT,
     "teacherComment" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "grade" TEXT NOT NULL,
+    "grade" TEXT,
     "uploadId" TEXT,
 
     PRIMARY KEY ("studentId","exerciseId")
@@ -98,6 +113,12 @@ ALTER TABLE "GlobalNews" ADD FOREIGN KEY ("adminId") REFERENCES "User"("id") ON 
 
 -- AddForeignKey
 ALTER TABLE "Upload" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CourseMaterial" ADD FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "CourseMaterial" ADD FOREIGN KEY ("uploadId") REFERENCES "Upload"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CourseNews" ADD FOREIGN KEY ("teacherId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -115,10 +136,10 @@ ALTER TABLE "Enrollment" ADD FOREIGN KEY ("courseId") REFERENCES "Course"("id") 
 ALTER TABLE "Exercise" ADD FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FinishedExercise" ADD FOREIGN KEY ("studentId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ExerciseSubmission" ADD FOREIGN KEY ("studentId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FinishedExercise" ADD FOREIGN KEY ("exerciseId") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "ExerciseSubmission" ADD FOREIGN KEY ("exerciseId") REFERENCES "Exercise"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FinishedExercise" ADD FOREIGN KEY ("uploadId") REFERENCES "Upload"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "ExerciseSubmission" ADD FOREIGN KEY ("uploadId") REFERENCES "Upload"("id") ON DELETE SET NULL ON UPDATE CASCADE;

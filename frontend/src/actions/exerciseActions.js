@@ -48,7 +48,7 @@ export const submitExercise = submission => async (dispatch, getState) => {
 
         let response
 
-        if (exercise.finishedExercises.length === 0) {
+        if (exercise.exerciseSubmissions.length === 0) {
             response = await axios.post(
                 `/api/exercises/${exercise.id}/submit`,
                 submission,

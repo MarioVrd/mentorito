@@ -35,7 +35,7 @@ const ExercisePage = ({ location, match }) => {
     useEffect(() => {
         if (loading === false && exercise) {
             setIsSubmitted(
-                exercise.finishedExercises.some(submit => submit.studentId === userInfo.id)
+                exercise.exerciseSubmissions.some(submit => submit.studentId === userInfo.id)
             )
         }
     }, [loading, exercise, userInfo.id])
@@ -43,15 +43,15 @@ const ExercisePage = ({ location, match }) => {
     const teacherScreen =
         (userInfo.role === ROLE_TEACHER || userInfo === ROLE_ADMIN) &&
         exercise &&
-        exercise.finishedExercises.length > 0 ? (
+        exercise.exerciseSubmissions.length > 0 ? (
             submitId ? (
                 <ExerciseItem
-                    exercise={exercise.finishedExercises.find(
+                    exercise={exercise.exerciseSubmissions.find(
                         finished => finished.studentId === submitId
                     )}
                 />
             ) : (
-                exercise.finishedExercises.map(finished => (
+                exercise.exerciseSubmissions.map(finished => (
                     <Link
                         key={finished.studentId}
                         to={location => `${location.pathname}?submit=${finished.studentId}`}
@@ -68,8 +68,8 @@ const ExercisePage = ({ location, match }) => {
     // TODO: Check the deadline
     const studentScreen =
         loading === false ? (
-            exercise.finishedExercises.length === 1 && isSubmitted ? (
-                <ExerciseItem exercise={exercise.finishedExercises[0]} />
+            exercise.exerciseSubmissions.length === 1 && isSubmitted ? (
+                <ExerciseItem exercise={exercise.exerciseSubmissions[0]} />
             ) : (
                 <ExerciseSubmitForm />
                 // <Redirect push to={`${location.pathname}/submission`} />

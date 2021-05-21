@@ -13,7 +13,7 @@ import {
     EXERCISE_CREATE_RESET
 } from '../constants/exerciseConstants'
 
-const initialExerciseDetailsState = { exercise: { finishedExercises: [], course: {} } }
+const initialExerciseDetailsState = { exercise: { exerciseSubmissions: [], course: {} } }
 
 export const exerciseDetailsReducer = (state = initialExerciseDetailsState, action) => {
     switch (action.type) {

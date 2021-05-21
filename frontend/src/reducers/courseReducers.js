@@ -56,7 +56,7 @@ export const courseEnrollReducer = (state = {}, action) => {
 }
 
 export const courseDetailsReducer = (
-    state = { course: { news: [], exercises: [], studentsEnrolled: [] } },
+    state = { course: { news: [], exercises: [], enrolledUsers: [] } },
     action
 ) => {
     switch (action.type) {

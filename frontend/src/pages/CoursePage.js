@@ -16,7 +16,7 @@ const CoursePage = ({ match }) => {
 
     // Show course page only for enrolled students, teacher and admin
     const enrolled =
-        (course && course.studentsEnrolled.some(e => e.userId === userInfo.id)) ||
+        (course && course.enrolledUsers.some(e => e.userId === userInfo.id)) ||
         userInfo.role === ROLE_TEACHER ||
         userInfo.role === ROLE_ADMIN
 
@@ -33,7 +33,9 @@ const CoursePage = ({ match }) => {
     return loading ? (
         'Loading...'
     ) : error ? (
-        <Alert>{error}</Alert>
+        <Main>
+            <Alert>{error}</Alert>
+        </Main>
     ) : enrolled ? (
         <Grid>
             <Main>
@@ -71,7 +73,7 @@ const CoursePage = ({ match }) => {
             <Sidebar>
                 <h3>Upisani studenti</h3>
                 <ul>
-                    {course.studentsEnrolled.map(e => (
+                    {course.enrolledUsers.map(e => (
                         <li key={`${e.userId}${e.courseId}`}>
                             {e.user.firstName} {new Date(e.enrolledAt).toLocaleDateString()}
                         </li>

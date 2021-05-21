@@ -54,7 +54,7 @@ export const getExerciseById = asyncHandler(async (req, res) => {
 
     // Show all finished exercises for admin and teacher or
     // only personal finished exercise for student
-    const inclFinishedExercises =
+    const inclExerciseSubmissions =
         req.user.role === ROLE_ADMIN || req.user.role === ROLE_TEACHER
             ? {
                   // For teacher|admin include student data and upload
@@ -73,7 +73,7 @@ export const getExerciseById = asyncHandler(async (req, res) => {
         where: { id },
         include: {
             course: true,
-            finishedExercises: inclFinishedExercises
+            exerciseSubmissions: inclExerciseSubmissions
         },
         rejectOnNotFound: true
     })
@@ -90,10 +90,13 @@ export const submitExercise = asyncHandler(async (req, res) => {
 
     const exercise = await prisma.exercise.findUnique({ where: { id }, rejectOnNotFound: true })
 
-    if (validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()))
+    if (
+        exercise.deadline &&
+        validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString())
+    )
         throw new Error('Invalid request, passed the deadline')
 
-    const submittedExercise = await prisma.finishedExercise.create({
+    const submittedExercise = await prisma.exerciseSubmission.create({
         data: { exerciseId: id, studentId: req.user.id, studentComment, uploadId }
     })
 
@@ -115,6 +118,7 @@ export const updateSubmittedExercise = asyncHandler(async (req, res) => {
     // If the deadline is passed and user is student, throw an error
     // Teacher can update after deadline to give a grade or add a comment
     if (
+        exercise.deadline &&
         validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()) &&
         req.user.role === ROLE_STUDENT
     )
@@ -126,7 +130,7 @@ export const updateSubmittedExercise = asyncHandler(async (req, res) => {
         data = { teacherComment, grade }
     }
 
-    const updatedSubmittedExercise = await prisma.finishedExercise.update({
+    const updatedSubmittedExercise = await prisma.exerciseSubmission.update({
         where: { studentId_exerciseId: { exerciseId: id, studentId: studentId || req.user.id } },
         data
     })
