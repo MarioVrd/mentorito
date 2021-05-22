@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux'
 import {
+    courseCreateReducer,
+    courseDeleteReducer,
     courseDetailsReducer,
     courseEnrollReducer,
     courseListReducer,
+    courseUpdateReducer,
     enrolledCoursesReducer
 } from './courseReducers'
 import {
@@ -28,6 +31,9 @@ const rootReducer = combineReducers({
     globalNewsDelete: globalNewsDeleteReducer,
     userList: userListReducer,
     courseList: courseListReducer,
+    courseCreate: courseCreateReducer,
+    courseUpdate: courseUpdateReducer,
+    courseDelete: courseDeleteReducer,
     courseDetails: courseDetailsReducer,
     courseEnroll: courseEnrollReducer,
     userRegister: userRegisterReducer,

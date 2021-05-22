@@ -13,6 +13,7 @@ import ExercisePage from './pages/ExercisePage'
 import AddExercisePage from './pages/AddExercisePage'
 import PrivateRoute from './components/PrivateRoute'
 import GlobalNewsPage from './pages/GlobalNewsPage'
+import CourseForm from './components/CourseForm'
 
 const App = () => {
     return (
@@ -35,8 +36,20 @@ const App = () => {
                         path="/courses/:id/add-exercise"
                         component={AddExercisePage}
                     />
-                    <PrivateRoute exact path="/courses/:id" component={CoursePage} />
                     <PrivateRoute exact path="/settings" component={SettingsPage} />
+                    <PrivateRoute exact path="/courses/:id" component={CoursePage} />
+                    <PrivateRoute
+                        admin
+                        exact
+                        path="/admin/courses/:id/edit"
+                        component={CourseForm}
+                    />
+                    <PrivateRoute
+                        admin
+                        exact
+                        path={`/admin/courses/create`}
+                        component={CourseForm}
+                    />
                 </Switch>
             </Layout>
         </Router>

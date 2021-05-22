@@ -1,5 +1,11 @@
 import axios from 'axios'
 import {
+    COURSE_CREATE_FAIL,
+    COURSE_CREATE_REQUEST,
+    COURSE_CREATE_SUCCESS,
+    COURSE_UPDATE_FAIL,
+    COURSE_UPDATE_REQUEST,
+    COURSE_UPDATE_SUCCESS,
     COURSE_DETAILS_FAIL,
     COURSE_DETAILS_REQUEST,
     COURSE_DETAILS_SUCCESS,
@@ -11,7 +17,10 @@ import {
     ENROLLED_COURSES_LIST_SUCCESS,
     ENROLL_TO_COURSE_FAIL,
     ENROLL_TO_COURSE_REQUEST,
-    ENROLL_TO_COURSE_SUCCESS
+    ENROLL_TO_COURSE_SUCCESS,
+    COURSE_DELETE_FAIL,
+    COURSE_DELETE_REQUEST,
+    COURSE_DELETE_SUCCESS
 } from '../constants/courseConstants'
 import { getAuthorizedJsonConfig } from '../utils/axiosConfig'
 
@@ -74,7 +83,7 @@ export const enrollToCourse =
                 getAuthorizedJsonConfig(userInfo.token)
             )
 
-            dispatch({ type: ENROLL_TO_COURSE_SUCCESS, payload: data.message })
+            dispatch({ type: ENROLL_TO_COURSE_SUCCESS, payload: data })
         } catch (error) {
             dispatch({
                 type: ENROLL_TO_COURSE_FAIL,
@@ -103,6 +112,83 @@ export const getCourseDetails = courseId => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: COURSE_DETAILS_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const createCourse = course => async (dispatch, getState) => {
+    try {
+        dispatch({ type: COURSE_CREATE_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.post(
+            '/api/courses',
+            course,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: COURSE_CREATE_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: COURSE_CREATE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const updateCourse = (courseId, course) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: COURSE_UPDATE_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.put(
+            `/api/courses/${courseId}`,
+            course,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: COURSE_UPDATE_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: COURSE_UPDATE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const deleteCourse = courseId => async (dispatch, getState) => {
+    try {
+        dispatch({ type: COURSE_DELETE_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.delete(
+            `/api/courses/${courseId}`,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: COURSE_DELETE_SUCCESS, payload: data.message })
+    } catch (error) {
+        dispatch({
+            type: COURSE_DELETE_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

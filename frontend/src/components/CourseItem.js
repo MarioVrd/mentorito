@@ -1,21 +1,16 @@
 import styled from 'styled-components/macro'
 import PropTypes from 'prop-types'
-import { Button } from '../assets/styles'
-import { Link, useHistory } from 'react-router-dom'
+import { Button, LinkButton } from '../assets/styles'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { enrollToCourse } from '../actions/courseActions'
-import { useEffect } from 'react'
-import { ENROLL_TO_COURSE_RESET } from '../constants/courseConstants'
-import Alert from './Alert'
+import { deleteCourse, enrollToCourse } from '../actions/courseActions'
+import { ROLE_ADMIN } from '../constants/roles'
 
 const CourseItem = ({ course }) => {
     const dispatch = useDispatch()
-    const history = useHistory()
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
-    const courseEnroll = useSelector(state => state.courseEnroll)
-    const { error, success } = courseEnroll
 
     const handleEnroll = e => {
         e.preventDefault()
@@ -23,19 +18,14 @@ const CourseItem = ({ course }) => {
         dispatch(enrollToCourse(course.id))
     }
 
-    useEffect(() => {
-        if (success) history.push(`/courses/${course.id}`)
-
-        return () => {
-            dispatch({ type: ENROLL_TO_COURSE_RESET })
-        }
-    }, [dispatch, success, course.id, history])
+    const deleteCourseHandler = () => {
+        dispatch(deleteCourse(course.id))
+    }
 
     const enrolled = course.enrolledUsers.map(e => e.userId).indexOf(userInfo.id) !== -1
 
     return (
         <Course>
-            {error && <Alert>{error}</Alert>}
             <Course.Title>
                 <Link to={`/courses/${course.id}`}>{course.title}</Link>
                 {!enrolled && (
@@ -45,6 +35,16 @@ const CourseItem = ({ course }) => {
                 )}
             </Course.Title>
             {course.description && <Course.Description>{course.description}</Course.Description>}
+            {userInfo?.role === ROLE_ADMIN && (
+                <>
+                    <LinkButton variant="success" to={`/admin/courses/${course.id}/edit`}>
+                        Uredi
+                    </LinkButton>
+                    <Button danger onClick={deleteCourseHandler}>
+                        Izbriši
+                    </Button>
+                </>
+            )}
         </Course>
     )
 }

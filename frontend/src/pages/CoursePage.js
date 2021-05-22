@@ -12,12 +12,11 @@ const CoursePage = ({ match }) => {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
     const courseDetails = useSelector(state => state.courseDetails)
-    const { loading, error, course } = courseDetails
+    const { status, error, course } = courseDetails
 
     // Show course page only for enrolled students, teacher and admin
     const enrolled =
         (course && course.enrolledUsers.some(e => e.userId === userInfo.id)) ||
-        userInfo.role === ROLE_TEACHER ||
         userInfo.role === ROLE_ADMIN
 
     const handleEnroll = e => {
@@ -30,7 +29,7 @@ const CoursePage = ({ match }) => {
         dispatch(getCourseDetails(match.params.id))
     }, [dispatch, match.params.id])
 
-    return loading ? (
+    return status === 'loading' ? (
         'Loading...'
     ) : error ? (
         <Main>
