@@ -89,16 +89,16 @@ export const createCourse = asyncHandler(async (req, res) => {
 })
 
 // @desc    Update the course
-// @route   PUT /api/courses/:id
+// @route   PUT /api/courses/:courseId
 // @access  Admin
 export const updateCourse = asyncHandler(async (req, res) => {
-    const { id } = req.params
+    const { courseId } = req.params
     let { title, description, locked } = req.body
 
     if (typeof locked === 'string') validator.toBoolean(locked)
 
     const updatedCourse = await prisma.course.update({
-        where: { id },
+        where: { id: courseId },
         data: { title, description, locked }
     })
 
@@ -106,13 +106,13 @@ export const updateCourse = asyncHandler(async (req, res) => {
 })
 
 // @desc    Delete the course
-// @route   DELETE /api/courses/:id
+// @route   DELETE /api/courses/:courseId
 // @access  Admin
 export const deleteCourse = asyncHandler(async (req, res) => {
-    const { id } = req.params
+    const { courseId } = req.params
 
     try {
-        const deletedCourse = await prisma.course.delete({ where: { id } })
+        const deletedCourse = await prisma.course.delete({ where: { id: courseId } })
 
         res.json({ message: `Successfully deleted ${deletedCourse.title} course` })
     } catch (error) {
@@ -158,11 +158,11 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
         throw new Error('Already enrolled in this course')
     }
 
-    await prisma.enrollment.create({
+    const newEnrollment = await prisma.enrollment.create({
         data: { courseId, userId: userId || req.user.id }
     })
 
-    res.json({ message: `Successfully enrolled to ${course.title} course` })
+    res.json({ ...newEnrollment, message: `Successfully enrolled to ${course.title} course` })
 })
 
 // @desc    Fetch all course news
