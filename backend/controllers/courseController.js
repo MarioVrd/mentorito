@@ -51,7 +51,10 @@ export const getCourseById = asyncHandler(async (req, res) => {
                 }
             },
             exercises: true,
-            news: true
+            news: true,
+            materials: {
+                include: { upload: true }
+            }
         },
         rejectOnNotFound: true
     })
@@ -229,4 +232,18 @@ export const deleteCourseNews = asyncHandler(async (req, res) => {
     const deletedNews = await prisma.courseNews.delete({ where: { id: newsId } })
 
     res.json({ message: `Course news ${deletedNews.title} successfully deleted` })
+})
+
+// @desc    Create course materials
+// @route   POST /api/courses/:courseId/materials
+// @access  Course Teacher
+export const createCourseMaterial = asyncHandler(async (req, res) => {
+    const { courseId } = req.params
+    const { uploadId, description } = req.body
+
+    const material = await prisma.courseMaterial.create({
+        data: { courseId, uploadId, description }
+    })
+
+    res.json(material)
 })
