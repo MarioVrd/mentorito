@@ -5,6 +5,7 @@ import { enrollToCourse, getCourseDetails } from '../actions/courseActions'
 import { Button, Grid, Main, Sidebar } from '../assets/styles'
 import Alert from '../components/Alert'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
+import { getFileFromApi } from '../utils/downloadUtils'
 
 const CoursePage = ({ match }) => {
     const dispatch = useDispatch()
@@ -23,6 +24,11 @@ const CoursePage = ({ match }) => {
         e.preventDefault()
 
         dispatch(enrollToCourse(course.id))
+    }
+
+    const downloadMaterialHandler = async (e, materialUpload) => {
+        e.preventDefault()
+        await getFileFromApi(materialUpload, userInfo.token)
     }
 
     useEffect(() => {
@@ -68,6 +74,24 @@ const CoursePage = ({ match }) => {
                 ) : (
                     <Alert variant="info">Trenutno nema vjezbi</Alert>
                 )}
+
+                {course.materials.length > 0 && (
+                    <>
+                        <h3>Materijali</h3>
+                        <ul>
+                            {course.materials.map(material => (
+                                <li key={material.uploadId}>
+                                    <Link
+                                        to=""
+                                        onClick={e => downloadMaterialHandler(e, material.upload)}
+                                    >
+                                        {material.upload.title}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )}
             </Main>
             <Sidebar>
                 <h3>Upisani studenti</h3>
@@ -80,7 +104,10 @@ const CoursePage = ({ match }) => {
                 </ul>
 
                 {userInfo.role === ROLE_TEACHER && (
-                    <Link to={`${match.url}/add-exercise`}>Dodajte vjezbu</Link>
+                    <>
+                        <Link to={`${match.url}/add-exercise`}>Dodajte vjezbu</Link>
+                        <Link to={`${match.url}/add-material`}>Dodajte materijale</Link>
+                    </>
                 )}
             </Sidebar>
         </Grid>

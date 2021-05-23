@@ -24,7 +24,11 @@ import {
     ENROLL_TO_COURSE_REQUEST,
     ENROLL_TO_COURSE_RESET,
     ENROLL_TO_COURSE_SUCCESS,
-    COURSE_DETAILS_RESET
+    COURSE_DETAILS_RESET,
+    COURSE_MATERIAL_ADD_SUCCESS,
+    COURSE_MATERIAL_ADD_REQUEST,
+    COURSE_MATERIAL_ADD_FAIL,
+    COURSE_MATERIAL_ADD_RESET
 } from '../constants/courseConstants'
 
 export const enrolledCoursesReducer = (state = {}, action) => {
@@ -126,6 +130,21 @@ export const courseDeleteReducer = (state = { status: 'idle' }, action) => {
         case COURSE_DELETE_FAIL:
             return { status: 'failed', error: action.payload }
         case COURSE_DELETE_RESET:
+            return { status: 'idle' }
+        default:
+            return state
+    }
+}
+
+export const courseMaterialAddReducer = (state = { status: 'idle' }, action) => {
+    switch (action.type) {
+        case COURSE_MATERIAL_ADD_REQUEST:
+            return { status: 'loading' }
+        case COURSE_MATERIAL_ADD_SUCCESS:
+            return { status: 'completed', material: action.payload }
+        case COURSE_MATERIAL_ADD_FAIL:
+            return { status: 'failed', error: action.payload }
+        case COURSE_MATERIAL_ADD_RESET:
             return { status: 'idle' }
         default:
             return state

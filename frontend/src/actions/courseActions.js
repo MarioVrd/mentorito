@@ -20,7 +20,10 @@ import {
     ENROLL_TO_COURSE_SUCCESS,
     COURSE_DELETE_FAIL,
     COURSE_DELETE_REQUEST,
-    COURSE_DELETE_SUCCESS
+    COURSE_DELETE_SUCCESS,
+    COURSE_MATERIAL_ADD_FAIL,
+    COURSE_MATERIAL_ADD_REQUEST,
+    COURSE_MATERIAL_ADD_SUCCESS
 } from '../constants/courseConstants'
 import { getAuthorizedJsonConfig } from '../utils/axiosConfig'
 
@@ -189,6 +192,32 @@ export const deleteCourse = courseId => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: COURSE_DELETE_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const addCourseMaterial = (courseId, material) => async (dispatch, getState) => {
+    try {
+        dispatch({ type: COURSE_MATERIAL_ADD_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.post(
+            `/api/courses/${courseId}/materials`,
+            material,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: COURSE_MATERIAL_ADD_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: COURSE_MATERIAL_ADD_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

@@ -14,6 +14,7 @@ import AddExercisePage from './pages/AddExercisePage'
 import PrivateRoute from './components/PrivateRoute'
 import GlobalNewsPage from './pages/GlobalNewsPage'
 import CourseForm from './components/CourseForm'
+import AddMaterialPage from './pages/AddMaterialPage'
 
 const App = () => {
     return (
@@ -35,6 +36,12 @@ const App = () => {
                         exact
                         path="/courses/:id/add-exercise"
                         component={AddExercisePage}
+                    />
+                    <PrivateRoute
+                        teacher
+                        exact
+                        path="/courses/:id/add-material"
+                        component={AddMaterialPage}
                     />
                     <PrivateRoute exact path="/settings" component={SettingsPage} />
                     <PrivateRoute exact path="/courses/:id" component={CoursePage} />
