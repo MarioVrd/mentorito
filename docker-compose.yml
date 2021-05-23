@@ -1,14 +1,29 @@
 version: '3.9'
 services:
-  postgres:
-    image: postgres:13.2
-    restart: always
-    environment:
-      - POSTGRES_USER=mario
-      - POSTGRES_PASSWORD=mario123
-    volumes:
-      - postgres:/var/lib/postgresql/data
-    ports:
-      - '9876:5432'
+    postgres:
+        image: postgres:13.2
+        restart: always
+        environment:
+            - POSTGRES_USER=mario
+            - POSTGRES_PASSWORD=mario123
+        volumes:
+            - postgres:/var/lib/postgresql/data
+        ports:
+            - '9876:5432'
+    frontend:
+        build: ./frontend
+        ports:
+            - '3000:3000'
+        depends_on:
+            - backend
+    backend:
+        environment:
+            - NODE_ENV=development
+            - DATABASE_URL=postgresql://mario:mario123@postgres/mentorito?schema=public
+        depends_on:
+            - postgres
+        build: ./backend
+        ports:
+            - '5000:5000'
 volumes:
-  postgres:
+    postgres:
