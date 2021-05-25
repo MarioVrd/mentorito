@@ -74,7 +74,7 @@ export const courseEnrollReducer = (state = { status: 'idle' }, action) => {
 
 const initialCourseDetails = {
     status: 'idle',
-    course: { news: [], exercises: [], enrolledUsers: [] }
+    course: { news: [], exercises: [], enrolledUsers: [], materials: [] }
 }
 export const courseDetailsReducer = (state = initialCourseDetails, action) => {
     switch (action.type) {

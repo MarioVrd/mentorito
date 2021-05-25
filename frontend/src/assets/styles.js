@@ -95,6 +95,12 @@ export const Form = styled.form`
     border: 1px solid var(--clr-grey-100);
 `
 
+Form.Title = styled.h3`
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid var(--clr-grey-100);
+`
+
 Form.Group = styled.div`
     margin-bottom: 1rem;
 `

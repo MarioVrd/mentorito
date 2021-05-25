@@ -5,7 +5,7 @@ import { getAllCourses } from '../actions/courseActions'
 import { Grid, Main, Sidebar } from '../assets/styles'
 import { ROLE_ADMIN } from '../constants/roles'
 import Alert from '../components/Alert'
-import CourseItem from '../components/CourseItem'
+import CourseListItem from '../components/CourseListItem'
 import { COURSE_DELETE_RESET, ENROLL_TO_COURSE_RESET } from '../constants/courseConstants'
 
 const CoursesPage = ({ match: { path }, history }) => {
@@ -56,7 +56,7 @@ const CoursesPage = ({ match: { path }, history }) => {
                 ) : error ? (
                     <Alert>{error}</Alert>
                 ) : courses && courses.length ? (
-                    courses.map(course => <CourseItem key={course.id} course={course} />)
+                    courses.map(course => <CourseListItem key={course.id} course={course} />)
                 ) : (
                     <Alert variant="info">Trenutno ne postoji ni jedan kolegij.</Alert>
                 )}

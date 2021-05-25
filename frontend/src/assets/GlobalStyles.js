@@ -57,6 +57,12 @@ a {
   }
 }
 
+ul {
+  padding-left: 2rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
+}
+
 .text-accent {
   color: var(--clr-accent)
 }

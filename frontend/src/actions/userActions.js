@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { contentTypeJson, getAuthorizedJsonConfig } from '../utils/axiosConfig'
 import {
+    USER_LIST_FAIL,
     USER_LIST_REQUEST,
     USER_LIST_SUCCESS,
     USER_LOGIN_FAIL,
@@ -37,7 +38,7 @@ export const logout = () => dispatch => {
     dispatch({ type: USER_LOGOUT })
 }
 
-export const getUsers = () => async (dispatch, getState) => {
+export const getUsers = role => async (dispatch, getState) => {
     try {
         dispatch({ type: USER_LIST_REQUEST })
 
@@ -45,12 +46,15 @@ export const getUsers = () => async (dispatch, getState) => {
             userLogin: { userInfo }
         } = getState()
 
-        const { data } = await axios.get(`/api/users`, getAuthorizedJsonConfig(userInfo.token))
+        const { data } = await axios.get(
+            `/api/users${role ? `?role=${role}` : ''}`,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
 
         dispatch({ type: USER_LIST_SUCCESS, payload: data })
     } catch (error) {
         dispatch({
-            type: USER_LOGIN_FAIL,
+            type: USER_LIST_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
@@ -59,31 +63,29 @@ export const getUsers = () => async (dispatch, getState) => {
     }
 }
 
-export const register = (firstName, lastName, email, password, role) => async (
-    dispatch,
-    getState
-) => {
-    try {
-        dispatch({ type: USER_REGISTER_REQUEST })
+export const register =
+    (firstName, lastName, email, password, role) => async (dispatch, getState) => {
+        try {
+            dispatch({ type: USER_REGISTER_REQUEST })
 
-        const {
-            userLogin: { userInfo }
-        } = getState()
+            const {
+                userLogin: { userInfo }
+            } = getState()
 
-        const { data } = await axios.post(
-            '/api/users/register',
-            { firstName, lastName, email, password, role },
-            getAuthorizedJsonConfig(userInfo.token)
-        )
+            const { data } = await axios.post(
+                '/api/users/register',
+                { firstName, lastName, email, password, role },
+                getAuthorizedJsonConfig(userInfo.token)
+            )
 
-        dispatch({ type: USER_REGISTER_SUCCESS, payload: data })
-    } catch (error) {
-        dispatch({
-            type: USER_REGISTER_FAIL,
-            payload:
-                error.response && error.response.data.message
-                    ? error.response.data.message
-                    : error.message
-        })
+            dispatch({ type: USER_REGISTER_SUCCESS, payload: data })
+        } catch (error) {
+            dispatch({
+                type: USER_REGISTER_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            })
+        }
     }
-}

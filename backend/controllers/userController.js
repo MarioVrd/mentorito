@@ -65,11 +65,25 @@ export const login = asyncHandler(async (req, res) => {
     })
 })
 
-// @desc    Fetch all users
+// @desc    Fetch all users or the ones selected by role in query
 // @route   GET /api/users
-// @access  Admin
+// @access  Admin/Teacher
 export const getUserList = asyncHandler(async (req, res) => {
-    const users = await prisma.user.findMany()
+    if (req.user.role === ROLE_STUDENT) {
+        res.status(401)
+        throw new Error('Not authorized, only admin and teacher can access this')
+    }
 
+    const { role } = req.query
+
+    // fetch all users if role is not set or is invalid
+    const queryArgs = { include: { coursesEnrolled: true } }
+
+    // if role is set and is valid, filter by role
+    if (role && isIn(role.toUpperCase(), availableRoles)) {
+        queryArgs.where = { role: role.toUpperCase() }
+    }
+
+    const users = await prisma.user.findMany(queryArgs)
     res.json(users)
 })

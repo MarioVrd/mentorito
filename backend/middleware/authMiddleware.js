@@ -57,7 +57,8 @@ export const enrolled = asyncHandler(async (req, res, next) => {
     if (!req.params.courseId) throw new Error('Invalid request, course id must be specified in URL')
 
     const userEnrolled = await prisma.enrollment.findUnique({
-        where: { userId_courseId: { userId: req.user.id, courseId: req.params.courseId } }
+        where: { userId_courseId: { userId: req.user.id, courseId: req.params.courseId } },
+        rejectOnNotFound: true
     })
 
     if ((req.user && req.user.role === ROLE_ADMIN) || userEnrolled) {

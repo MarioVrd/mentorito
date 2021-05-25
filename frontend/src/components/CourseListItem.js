@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteCourse, enrollToCourse } from '../actions/courseActions'
 import { ROLE_ADMIN } from '../constants/roles'
 
-const CourseItem = ({ course }) => {
+const CourseListItem = ({ course }) => {
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
@@ -49,7 +49,7 @@ const CourseItem = ({ course }) => {
     )
 }
 
-CourseItem.propTypes = {
+CourseListItem.propTypes = {
     course: PropTypes.object.isRequired
 }
 
@@ -69,4 +69,4 @@ Course.Description = styled.p`
     margin-top: 0.5rem;
 `
 
-export default CourseItem
+export default CourseListItem

@@ -94,6 +94,8 @@ Nav.Logo = styled.h1`
 
 Nav.List = styled.ul`
     list-style: none;
+    padding: 0;
+    margin: 0;
 `
 
 Nav.Item = styled.li`

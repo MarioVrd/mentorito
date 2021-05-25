@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCourseMaterial } from '../actions/courseActions'
 import { Button, Form } from '../assets/styles'
-import Alert from '../components/Alert'
-import UploadFileInput from '../components/UploadFileInput'
+import Alert from './Alert'
+import UploadFileInput from './UploadFileInput'
 
-const AddMaterialPage = ({ match: { params } }) => {
+const AddMaterialForm = ({ match: { params } }) => {
     const [description, setDescription] = useState('')
 
     const dispatch = useDispatch()
@@ -23,6 +23,7 @@ const AddMaterialPage = ({ match: { params } }) => {
 
     return (
         <Form onSubmit={addCourseMaterialHandler}>
+            <Form.Title>Dodajte materijale</Form.Title>
             {error === <Alert>{error}</Alert>}
             <UploadFileInput />
             <Form.Group>
@@ -39,4 +40,4 @@ const AddMaterialPage = ({ match: { params } }) => {
     )
 }
 
-export default AddMaterialPage
+export default AddMaterialForm
