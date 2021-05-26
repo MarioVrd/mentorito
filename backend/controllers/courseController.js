@@ -8,7 +8,8 @@ import { ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles.js'
 // @access  Public
 export const getCourses = asyncHandler(async (req, res) => {
     const courses = await prisma.course.findMany({
-        include: { enrolledUsers: true }
+        include: { enrolledUsers: true },
+        orderBy: { title: 'asc' }
     })
 
     res.json(courses)
