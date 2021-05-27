@@ -28,7 +28,11 @@ import {
     COURSE_MATERIAL_ADD_SUCCESS,
     COURSE_MATERIAL_ADD_REQUEST,
     COURSE_MATERIAL_ADD_FAIL,
-    COURSE_MATERIAL_ADD_RESET
+    COURSE_MATERIAL_ADD_RESET,
+    COURSE_NEWS_LIST_REQUEST,
+    COURSE_NEWS_LIST_SUCCESS,
+    COURSE_NEWS_LIST_FAIL,
+    COURSE_NEWS_LIST_RESET
 } from '../constants/courseConstants'
 
 export const enrolledCoursesReducer = (state = {}, action) => {
@@ -145,6 +149,21 @@ export const courseMaterialAddReducer = (state = { status: 'idle' }, action) => 
         case COURSE_MATERIAL_ADD_FAIL:
             return { status: 'failed', error: action.payload }
         case COURSE_MATERIAL_ADD_RESET:
+            return { status: 'idle' }
+        default:
+            return state
+    }
+}
+
+export const courseNewsListReducer = (state = { status: 'idle' }, action) => {
+    switch (action.type) {
+        case COURSE_NEWS_LIST_REQUEST:
+            return { status: 'loading' }
+        case COURSE_NEWS_LIST_SUCCESS:
+            return { status: 'completed', news: action.payload }
+        case COURSE_NEWS_LIST_FAIL:
+            return { status: 'failed', error: action.payload }
+        case COURSE_NEWS_LIST_RESET:
             return { status: 'idle' }
         default:
             return state

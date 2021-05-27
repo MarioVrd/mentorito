@@ -23,7 +23,10 @@ import {
     COURSE_DELETE_SUCCESS,
     COURSE_MATERIAL_ADD_FAIL,
     COURSE_MATERIAL_ADD_REQUEST,
-    COURSE_MATERIAL_ADD_SUCCESS
+    COURSE_MATERIAL_ADD_SUCCESS,
+    COURSE_NEWS_LIST_REQUEST,
+    COURSE_NEWS_LIST_SUCCESS,
+    COURSE_NEWS_LIST_FAIL
 } from '../constants/courseConstants'
 import { getAuthorizedJsonConfig } from '../utils/axiosConfig'
 
@@ -218,6 +221,31 @@ export const addCourseMaterial = (courseId, material) => async (dispatch, getSta
     } catch (error) {
         dispatch({
             type: COURSE_MATERIAL_ADD_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}
+
+export const getCourseNews = courseId => async (dispatch, getState) => {
+    try {
+        dispatch({ type: COURSE_NEWS_LIST_REQUEST })
+
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        const { data } = await axios.get(
+            `/api/courses/${courseId}/news`,
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: COURSE_NEWS_LIST_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: COURSE_NEWS_LIST_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message

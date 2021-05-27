@@ -41,24 +41,21 @@ const CourseForm = () => {
     }, [dispatch, createStatus, createdCourse, history, match.params.id, updateStatus])
 
     useEffect(() => {
-        if (match.params.id) {
-            if (courseStatus === 'completed') {
-                setTitle(course.title)
-                setDescription(course.description || '')
-                setLocked(course.locked)
-            } else {
-                dispatch(getCourseDetails(match.params.id))
-            }
+        if (match.params.id && courseStatus === 'completed') {
+            setTitle(course.title)
+            setDescription(course.description || '')
+            setLocked(course.locked)
         }
     }, [dispatch, match.params.id, courseStatus, course])
 
     useEffect(() => {
+        dispatch(getCourseDetails(match.params.id))
         return () => {
             dispatch({ type: COURSE_DETAILS_RESET })
             dispatch({ type: COURSE_CREATE_RESET })
             dispatch({ type: COURSE_UPDATE_RESET })
         }
-    }, [dispatch])
+    }, [dispatch, match.params.id])
 
     const addOrUpdateCourseHandler = e => {
         e.preventDefault()

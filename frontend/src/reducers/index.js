@@ -7,7 +7,8 @@ import {
     courseEnrollReducer,
     courseListReducer,
     courseUpdateReducer,
-    enrolledCoursesReducer
+    enrolledCoursesReducer,
+    courseNewsListReducer
 } from './courseReducers'
 import {
     globalNewsCreateReducer,
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
     courseUpdate: courseUpdateReducer,
     courseDelete: courseDeleteReducer,
     courseDetails: courseDetailsReducer,
+    courseNewsList: courseNewsListReducer,
     courseMaterialAdd: courseMaterialAddReducer,
     courseEnroll: courseEnrollReducer,
     userRegister: userRegisterReducer,

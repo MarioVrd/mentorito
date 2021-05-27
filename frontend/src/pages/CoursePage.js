@@ -9,7 +9,10 @@ import PrivateRoute from '../components/PrivateRoute'
 import { ROLE_TEACHER } from '../constants/roles'
 import { getFileFromApi } from '../utils/downloadUtils'
 import CreateExerciseForm from '../components/CreateExerciseForm'
-import AddMaterialPage from '../components/AddMaterialForm'
+import AddMaterialForm from '../components/AddMaterialForm'
+import CourseNewsForm from '../components/CourseNewsForm'
+import CourseNewsList from '../components/CourseNewsList'
+import CourseNewsItem from '../components/CourseNewsItem'
 
 const CoursePage = ({ match }) => {
     const dispatch = useDispatch()
@@ -38,13 +41,27 @@ const CoursePage = ({ match }) => {
         <Switch>
             <Grid>
                 <Main>
+                    <h1>{course.title}</h1>
+
                     {userInfo.role === ROLE_TEACHER && (
                         <>
                             <PrivateRoute
                                 teacher
                                 exact
+                                path={`/courses/:id/news/:newsId/edit`}
+                                component={CourseNewsForm}
+                            />
+                            <PrivateRoute
+                                teacher
+                                exact
+                                path="/courses/:id/add-news"
+                                component={CourseNewsForm}
+                            />
+                            <PrivateRoute
+                                teacher
+                                exact
                                 path="/courses/:id/add-material"
-                                component={AddMaterialPage}
+                                component={AddMaterialForm}
                             />
                             <PrivateRoute
                                 teacher
@@ -61,13 +78,20 @@ const CoursePage = ({ match }) => {
                         </>
                     )}
 
-                    <Route exact path={match.path}>
-                        <h1>{course.title}</h1>
+                    <Route exact path={`${match.path}/news/:newsId`} component={CourseNewsItem} />
+                    <Route exact path={`${match.path}/news`} component={CourseNewsList} />
 
+                    <Route exact path={match.path}>
                         {course.description && <p>{course.description}</p>}
 
                         {course.news.length > 0 ? (
-                            course.news.map(n => <p key={n.id}>{n.title}</p>)
+                            <ul>
+                                {course.news.map(n => (
+                                    <li key={n.id}>
+                                        <Link to={`${match.url}/news/${n.id}`}>{n.title}</Link>
+                                    </li>
+                                ))}
+                            </ul>
                         ) : (
                             <Alert variant="info">Trenutno nema obavijesti</Alert>
                         )}
@@ -124,12 +148,18 @@ const CoursePage = ({ match }) => {
                         ))}
                     </ul>
 
-                    {userInfo.role === ROLE_TEACHER && (
-                        <>
-                            <h3>Akcije</h3>
-                            <ul>
+                    <h3>Linkovi</h3>
+                    <ul>
+                        <li>
+                            <Link to={`${match.url}/news`}>Pregled obavijesti</Link>
+                        </li>
+                        {userInfo.role === ROLE_TEACHER && (
+                            <>
                                 <li>
-                                    <Link to={`${match.url}/add-exercise`}>Dodajte vjezbu</Link>
+                                    <Link to={`${match.url}/add-news`}>Dodajte obavijest</Link>
+                                </li>
+                                <li>
+                                    <Link to={`${match.url}/add-exercise`}>Dodajte vježbu</Link>
                                 </li>
                                 <li>
                                     <Link to={`${match.url}/add-material`}>Dodajte materijale</Link>
@@ -137,9 +167,9 @@ const CoursePage = ({ match }) => {
                                 <li>
                                     <Link to={`${match.url}/students`}>Pregled studenata</Link>
                                 </li>
-                            </ul>
-                        </>
-                    )}
+                            </>
+                        )}
+                    </ul>
                 </Sidebar>
             </Grid>
         </Switch>
