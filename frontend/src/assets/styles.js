@@ -15,6 +15,15 @@ export const Main = styled.main`
 export const Sidebar = styled.aside`
     padding: 1rem;
     background-color: var(--clr-grey-100);
+
+    > * {
+        margin-bottom: 1rem;
+    }
+`
+
+Sidebar.Notifications = styled.div`
+    max-height: 50vh;
+    overflow: auto;
 `
 
 export const Button = styled.button`
@@ -28,11 +37,11 @@ export const Button = styled.button`
             : props.success
             ? 'var(--clr-success)'
             : 'var(--clr-grey-100)'};
-    padding: 0.75rem 1rem;
+    padding: 0.75em 1em;
     border-radius: 5px;
     border: 0;
     font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
+    font-size: ${props => (props.small ? '0.8rem' : '0.95rem')};
     color: ${props =>
         props.primary || props.danger || props.success ? 'var(--clr-white)' : 'var(--clr-dark)'};
     cursor: pointer;

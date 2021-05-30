@@ -2,6 +2,9 @@ import {
     USER_LIST_FAIL,
     USER_LIST_REQUEST,
     USER_LIST_SUCCESS,
+    USER_NOTIFICATIONS_FAIL,
+    USER_NOTIFICATIONS_REQUEST,
+    USER_NOTIFICATIONS_SUCCESS,
     USER_LOGIN_FAIL,
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
@@ -50,6 +53,19 @@ export const userRegisterReducer = (state = {}, action) => {
             return { loading: false, error: action.payload }
         case USER_REGISTER_RESET:
             return {}
+        default:
+            return state
+    }
+}
+
+export const userNotificationsReducer = (state = { status: 'idle' }, action) => {
+    switch (action.type) {
+        case USER_NOTIFICATIONS_REQUEST:
+            return { status: 'loading' }
+        case USER_NOTIFICATIONS_SUCCESS:
+            return { status: 'completed', notifications: action.payload }
+        case USER_NOTIFICATIONS_FAIL:
+            return { status: 'failed', error: action.payload }
         default:
             return state
     }

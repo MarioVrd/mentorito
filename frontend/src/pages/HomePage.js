@@ -1,7 +1,8 @@
 import Header from '../components/Header'
 import EnrolledCourses from '../components/EnrolledCourses'
 import { useSelector } from 'react-redux'
-import { Grid, Main, Sidebar } from '../assets/styles'
+import { Grid, Main } from '../assets/styles'
+import Sidebar from '../components/Sidebar'
 
 const HomePage = () => {
     const userLogin = useSelector(state => state.userLogin)

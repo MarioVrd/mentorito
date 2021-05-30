@@ -72,7 +72,10 @@ const SideMenu = () => {
             </Nav.List>
             {userInfo && (
                 <User>
-                    {userInfo.firstName} <Button onClick={handleLogout}>Odjava</Button>
+                    {userInfo.firstName} {userInfo.lastName}
+                    <Button small onClick={handleLogout}>
+                        Odjava
+                    </Button>
                 </User>
             )}
         </Nav>
@@ -148,10 +151,6 @@ const User = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    button {
-        transform: scale(0.85);
-    }
 `
 
 export default SideMenu

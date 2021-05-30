@@ -46,6 +46,7 @@ export const login = asyncHandler(async (req, res) => {
 
     const user = await prisma.user.findUnique({
         where: { email: email },
+        include: { notifications: { include: { notification: true } } },
         rejectOnNotFound: true
     })
 
@@ -53,7 +54,7 @@ export const login = asyncHandler(async (req, res) => {
 
     if (!correctPassword) throw new Error('Invalid credentials! Please try again.')
 
-    const { id, firstName, lastName, role } = user
+    const { id, firstName, lastName, role, notifications } = user
 
     res.json({
         id,
@@ -61,6 +62,7 @@ export const login = asyncHandler(async (req, res) => {
         lastName,
         email,
         role,
+        notifications,
         token: generateToken({ id, role })
     })
 })
@@ -86,4 +88,31 @@ export const getUserList = asyncHandler(async (req, res) => {
 
     const users = await prisma.user.findMany(queryArgs)
     res.json(users)
+})
+
+// @desc    Fetch notifications that are not seen
+// @route   GET /api/users/notifications
+// @access  Private
+export const getUserNotifications = asyncHandler(async (req, res) => {
+    const notifications = await prisma.userNotification.findMany({
+        where: { AND: [{ userId: req.user.id }, { seen: false }] },
+        include: { notification: true },
+        orderBy: { createdAt: 'desc' }
+    })
+
+    res.json(notifications)
+})
+
+// @desc    Set notification as seen
+// @route   PUT /api/users/notifications/:notificationId
+// @access  Private
+export const markNotificationAsSeen = asyncHandler(async (req, res) => {
+    const { notificationId } = req.params
+
+    const notification = await prisma.userNotification.update({
+        where: { userId_notificationId: { userId: req.user.id, notificationId } },
+        data: { seen: true }
+    })
+
+    res.json(notification)
 })

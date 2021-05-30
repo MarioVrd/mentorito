@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
 import { getGlobalNews } from '../actions/newsActions'
-import { Grid, Main, Sidebar } from '../assets/styles'
+import { Grid, Main } from '../assets/styles'
+import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
 import GlobalNewsForm from '../components/GlobalNewsForm'
 import NewsItem from '../components/NewsItem'
@@ -72,7 +73,11 @@ const GlobalNewsPage = ({ match: { path }, history }) => {
                         component={GlobalNewsForm}
                     />
                     <Route exact path={path}>
-                        {status === 'completed' && news.map(n => <NewsItem key={n.id} news={n} />)}
+                        {news?.length > 0 ? (
+                            news.map(n => <NewsItem key={n.id} news={n} />)
+                        ) : (
+                            <Alert variant="info">Trenutno nema obavijesti</Alert>
+                        )}
                     </Route>
                 </Switch>
             </Main>

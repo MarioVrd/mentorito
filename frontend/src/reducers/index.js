@@ -21,11 +21,17 @@ import {
     exerciseSubmitReducer,
     exerciseCreateReducer
 } from './exerciseReducers'
-import { userListReducer, userLoginReducer, userRegisterReducer } from './userReducers'
+import {
+    userListReducer,
+    userLoginReducer,
+    userNotificationsReducer,
+    userRegisterReducer
+} from './userReducers'
 import { uploadReducer } from './uploadReducers'
 
 const rootReducer = combineReducers({
     userLogin: userLoginReducer,
+    userNotifications: userNotificationsReducer,
     enrolledCourses: enrolledCoursesReducer,
     globalNews: globalNewsReducer,
     globalNewsCreate: globalNewsCreateReducer,

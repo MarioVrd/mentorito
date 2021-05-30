@@ -8,10 +8,14 @@ import {
     USER_LOGIN_REQUEST,
     USER_LOGIN_SUCCESS,
     USER_LOGOUT,
+    USER_NOTIFICATIONS_FAIL,
+    USER_NOTIFICATIONS_REQUEST,
+    USER_NOTIFICATIONS_SUCCESS,
     USER_REGISTER_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS
 } from '../constants/userConstants'
+import { ROLE_STUDENT } from '../constants/roles'
 
 export const login = (email, password) => async dispatch => {
     try {
@@ -89,3 +93,30 @@ export const register =
             })
         }
     }
+
+export const getUserNotifications = () => async (dispatch, getState) => {
+    const {
+        userLogin: { userInfo }
+    } = getState()
+
+    if (userInfo.role !== ROLE_STUDENT) return
+
+    try {
+        dispatch({ type: USER_NOTIFICATIONS_REQUEST })
+
+        const { data } = await axios.get(
+            '/api/users/notifications',
+            getAuthorizedJsonConfig(userInfo.token)
+        )
+
+        dispatch({ type: USER_NOTIFICATIONS_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({
+            type: USER_NOTIFICATIONS_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message
+        })
+    }
+}

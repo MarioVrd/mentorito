@@ -15,15 +15,19 @@ const GlobalNews = () => {
         dispatch(getGlobalNews())
     }, [dispatch])
 
-    return news && news.length > 0 ? (
+    return status === 'loading' ? (
+        'Loading...'
+    ) : error ? (
+        <Alert>{error}</Alert>
+    ) : news?.length > 0 ? (
         <NewsWrapper>
-            {status === 'loading' && 'Loading...'}
-            {error && <Alert>{error}</Alert>}
             {news.map(n => (
                 <NewsItem key={n.id} news={n} />
             ))}
         </NewsWrapper>
-    ) : null
+    ) : (
+        <Alert variant="info">Trenutno nema obavijesti</Alert>
+    )
 }
 
 const NewsWrapper = styled.div`
