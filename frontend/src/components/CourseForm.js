@@ -61,7 +61,7 @@ const CourseForm = () => {
         e.preventDefault()
 
         if (match.params.id) {
-            dispatch(updateCourse(match.params.id, { title, description, locked }))
+            dispatch(updateCourse(match.params.id, { title, description, locked, teacherEmail }))
         } else {
             dispatch(createCourse({ title, description, locked, teacherEmail }))
         }
@@ -83,17 +83,15 @@ const CourseForm = () => {
                         onChange={e => setTitle(e.target.value)}
                     />
                 </Form.Group>
-                {!match.params.id && (
-                    <Form.Group>
-                        <Form.Label htmlFor="teacherEmail">Email profesora</Form.Label>
-                        <Form.Input
-                            type="email"
-                            id="teacherEmail"
-                            value={teacherEmail}
-                            onChange={e => setTeacherEmail(e.target.value)}
-                        />
-                    </Form.Group>
-                )}
+                <Form.Group>
+                    <Form.Label htmlFor="teacherEmail">Email profesora</Form.Label>
+                    <Form.Input
+                        type="email"
+                        id="teacherEmail"
+                        value={teacherEmail}
+                        onChange={e => setTeacherEmail(e.target.value)}
+                    />
+                </Form.Group>
                 <Form.Group>
                     <Form.Label htmlFor="description">Opis</Form.Label>
                     <Form.Textarea

@@ -33,7 +33,7 @@ router.post('/enroll', protect, enrollToCourse)
 router
     .route('/:courseId')
     .get(protect, enrolled, getCourseById)
-    .put(protect, admin, updateCourse)
+    .put(protect, updateCourse)
     .delete(protect, admin, deleteCourse)
 router.route('/').get(getCourses).post(protect, admin, createCourse)
 

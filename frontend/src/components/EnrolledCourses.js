@@ -5,6 +5,7 @@ import styled from 'styled-components/macro'
 import { getEnrolledCourses } from '../actions/courseActions'
 import Alert from './Alert'
 import EnrolledCourseItem from './EnrolledCourseItem'
+import Loader from './Loader'
 
 const EnrolledCourses = () => {
     const dispatch = useDispatch()
@@ -18,7 +19,7 @@ const EnrolledCourses = () => {
         <div>
             <Heading>Upisani kolegiji</Heading>
 
-            {loading && 'Loading...'}
+            {loading && <Loader />}
             {error && <Alert>{error}</Alert>}
             {enrollment && enrollment.length ? (
                 <EnrolledGrid>

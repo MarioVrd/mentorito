@@ -4,6 +4,7 @@ import styled from 'styled-components/macro'
 import { register } from '../actions/userActions'
 import { Button, UserForm } from '../assets/styles'
 import Alert from '../components/Alert'
+import Loader from '../components/Loader'
 import { availableRoles, ROLE_STUDENT } from '../constants/roles'
 import { USER_REGISTER_RESET } from '../constants/userConstants'
 
@@ -38,7 +39,7 @@ const RegisterPage = () => {
             <UserForm onSubmit={handleSubmit}>
                 <UserForm.Title>Registracija</UserForm.Title>
                 {error && <Alert>{error}</Alert>}
-                {loading && <Alert variant="info">Loading...</Alert>}
+                {loading && <Loader />}
                 {user && (
                     <Alert variant="info">Korisnik je uspješno kreiran (id: {user.id}).</Alert>
                 )}

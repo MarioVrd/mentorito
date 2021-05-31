@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
+import Loader from './Loader'
 
 const CourseNewsItem = ({ match }) => {
     const courseNews = useApi()
@@ -8,10 +9,10 @@ const CourseNewsItem = ({ match }) => {
 
     useEffect(() => {
         if (fetchNews) fetchNews('GET', `/api${match.url}`)
-    }, [fetchNews])
+    }, [fetchNews, match.url])
 
     return status === 'loading' ? (
-        'Loading...'
+        <Loader />
     ) : error ? (
         <Alert>{error}</Alert>
     ) : (

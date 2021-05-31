@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { getExerciseDetails } from '../actions/exerciseActions'
-import { Grid, Main } from '../assets/styles'
+import { Grid, Main, Table } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
 import ExerciseItem from '../components/ExerciseItem'
 import ExerciseSubmitForm from '../components/ExerciseSubmitForm'
 import { EXERCISE_DETAILS_RESET } from '../constants/exerciseConstants'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
+import Loader from '../components/Loader'
 
 const ExercisePage = ({ location, match }) => {
     const { id } = match.params
@@ -52,15 +52,40 @@ const ExercisePage = ({ location, match }) => {
                     )}
                 />
             ) : (
-                exercise.exerciseSubmissions.map(finished => (
-                    <Link
-                        key={finished.studentId}
-                        to={location => `${location.pathname}?submit=${finished.studentId}`}
-                    >
-                        Vjezba studenta {finished.student.firstName} {finished.student.lastName}{' '}
-                        (predana {finished.createdAt})
-                    </Link>
-                ))
+                <Table>
+                    <Table.Head>
+                        <tr>
+                            <td>Student</td>
+                            <td className="table-lg-show">Vrijeme predaje</td>
+                            <td className="table-md-show">Ocjena</td>
+                            <td>Akcije</td>
+                        </tr>
+                    </Table.Head>
+                    <Table.Body>
+                        {exercise.exerciseSubmissions.map(submission => (
+                            <tr key={submission.studentId}>
+                                <td>
+                                    {submission.student.firstName} {submission.student.lastName}
+                                </td>
+                                <td className="table-lg-show">
+                                    {new Date(submission.createdAt).toLocaleString()}
+                                </td>
+                                <td className="table-md-show">
+                                    {submission.grade ? submission.grade : 'Nije ocijenjeno'}
+                                </td>
+                                <td>
+                                    <Link
+                                        to={location =>
+                                            `${location.pathname}?submit=${submission.studentId}`
+                                        }
+                                    >
+                                        Pregled
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </Table.Body>
+                </Table>
             )
         ) : null
 
@@ -83,33 +108,28 @@ const ExercisePage = ({ location, match }) => {
         }
     }, [dispatch])
 
-    return loading ? (
-        'Loading...'
-    ) : error ? (
-        <Alert>{error}</Alert>
-    ) : (
+    return (
         <Grid>
             <Main>
-                <Heading>
-                    Vježba '{exercise.title}' iz kolegija {exercise.course.title}
-                </Heading>
-                {exercise.description && <p>{exercise.description}</p>}
+                {loading ? (
+                    <Loader />
+                ) : error ? (
+                    <Alert>{error}</Alert>
+                ) : (
+                    <>
+                        <Main.Title>
+                            Vježba '{exercise.title}' iz kolegija {exercise.course.title}
+                        </Main.Title>
+                        {exercise.description && <p>{exercise.description}</p>}
 
-                {
-                    // If user is teacher and viewing certain student's submit
-                    userInfo.role === ROLE_TEACHER || userInfo.role === ROLE_ADMIN
-                        ? teacherScreen
-                        : studentScreen
-                }
-
-                {/*
-                <Route exact path={`/exercises/${params.id}/submission`}>
-                    <SubmissionPage />
-                </Route>
-
-                <Route path={`/exercises/${params.id}/submission/${id}`}>
-                    <ExerciseItem exercise={} />
-                </Route> */}
+                        {
+                            // If user is teacher and viewing certain student's submit
+                            userInfo.role === ROLE_TEACHER || userInfo.role === ROLE_ADMIN
+                                ? teacherScreen
+                                : studentScreen
+                        }
+                    </>
+                )}
             </Main>
             <Sidebar>
                 <p>
@@ -122,12 +142,5 @@ const ExercisePage = ({ location, match }) => {
         </Grid>
     )
 }
-
-const Heading = styled.h2`
-    margin-top: 0.5rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--clr-grey-100);
-`
 
 export default ExercisePage

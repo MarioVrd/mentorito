@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro'
 import PropTypes from 'prop-types'
-import { Button, LinkButton } from '../assets/styles'
+import { Button, Card, LinkButton } from '../assets/styles'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteCourse, enrollToCourse } from '../actions/courseActions'
@@ -37,10 +37,14 @@ const CourseListItem = ({ course }) => {
             {course.description && <Course.Description>{course.description}</Course.Description>}
             {userInfo?.role === ROLE_ADMIN && (
                 <>
-                    <LinkButton variant="success" to={`/admin/courses/${course.id}/edit`}>
+                    <LinkButton
+                        size="small"
+                        variant="success"
+                        to={`/admin/courses/${course.id}/edit`}
+                    >
                         Uredi
                     </LinkButton>
-                    <Button danger onClick={deleteCourseHandler}>
+                    <Button small danger onClick={deleteCourseHandler}>
                         Izbriši
                     </Button>
                 </>
@@ -53,10 +57,8 @@ CourseListItem.propTypes = {
     course: PropTypes.object.isRequired
 }
 
-const Course = styled.div`
+const Course = styled(Card)`
     margin-bottom: 1rem;
-    padding: 0.75rem;
-    border: 1px solid var(--clr-grey-100);
 `
 
 Course.Title = styled.h3`

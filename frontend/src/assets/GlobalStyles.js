@@ -26,16 +26,17 @@ const GlobalStyle = createGlobalStyle`
 }
 
 :root {
-  --clr-primary: #2F3CED;
+  --clr-primary: hsl(236deg 84% 56%);;
+  --clr-primary-hover: hsl(236deg 84% 42%);
   --clr-accent: #FF7C5D;
-  --clr-dark: #11142D;
+  --clr-dark: hsl(234deg 20% 22%);
   --clr-white: #fff;
   --clr-danger: hsl(3deg 100% 43%);
-  --clr-success: hsl(119deg 68% 36%);
+  --clr-success: hsl(127deg 49% 48%);
   --clr-info: hsl(197deg 74% 49%);
-  --clr-grey-100: #e4e4e4;
-  --clr-grey-200: #A3A3A5;
-  --clr-grey-300: #808191;
+  --clr-grey-100: hsl(0deg, 0%, 90%);
+  --clr-grey-200: hsl(0deg, 0%, 70%);
+  --clr-grey-300: hsl(0deg, 0%, 50%);
 }
 
 *, *::before, *::after {
@@ -53,7 +54,7 @@ a {
   color: var(--clr-primary);
 
   &:hover {
-    color: var(--clr-info)
+    color: var(--clr-primary-hover)
   }
 }
 
@@ -65,6 +66,23 @@ ul {
 
 .text-accent {
   color: var(--clr-accent)
+}
+
+.table-lg-show {
+  display: none;
+
+  @media(min-width: 1400px) {
+    display: table-cell;
+  }
+}
+
+.table-md-show {
+  display: none;
+
+  @media(min-width:1000px) {
+    display: table-cell;
+  }
+
 }
 `
 export default GlobalStyle

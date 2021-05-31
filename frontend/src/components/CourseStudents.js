@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { enrollToCourse } from '../actions/courseActions'
 import { getUsers } from '../actions/userActions'
-import { Button } from '../assets/styles'
+import { Button, Table } from '../assets/styles'
 import { ROLE_STUDENT } from '../constants/roles'
 import Alert from './Alert'
+import Loader from './Loader'
 
 const CourseStudents = ({ match }) => {
     const dispatch = useDispatch()
@@ -28,26 +29,45 @@ const CourseStudents = ({ match }) => {
     }, [dispatch, courseStatus])
 
     return loading ? (
-        'Loading...'
+        <Loader />
     ) : error ? (
         <Alert>{error}</Alert>
     ) : (
         <>
-            <h1>Popis studenata</h1>
-
+            <h2>Popis studenata</h2>
             {students && students.length > 0 ? (
-                <ul>
-                    {students.map(student => (
-                        <li key={student.id}>
-                            {student.firstName} {student.lastName}
-                            {!isEnrolled(student.coursesEnrolled) && (
-                                <Button onClick={() => enrollStudent(student.id)}>
-                                    Upiši studenta
-                                </Button>
-                            )}
-                        </li>
-                    ))}
-                </ul>
+                <Table>
+                    <Table.Head>
+                        <tr>
+                            <td>Ime i prezime</td>
+                            <td>Datum upisa</td>
+                            <td>Akcije</td>
+                        </tr>
+                    </Table.Head>
+                    <Table.Body>
+                        {students.map(student => (
+                            <tr key={student.id}>
+                                <td>
+                                    {student.firstName} {student.lastName}
+                                </td>
+                                <td colSpan={!isEnrolled(student.coursesEnrolled) ? 1 : 2}>
+                                    {new Date(
+                                        student.coursesEnrolled.find(
+                                            c => c.courseId === match.params.id
+                                        ).enrolledAt
+                                    ).toLocaleString()}
+                                </td>
+                                {!isEnrolled(student.coursesEnrolled) && (
+                                    <td>
+                                        <Button onClick={() => enrollStudent(student.id)}>
+                                            Upiši studenta
+                                        </Button>
+                                    </td>
+                                )}
+                            </tr>
+                        ))}
+                    </Table.Body>
+                </Table>
             ) : (
                 <Alert>U sustavu nema studenata</Alert>
             )}

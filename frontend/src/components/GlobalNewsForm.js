@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createGlobalNews, getGlobalNews, updateGlobalNews } from '../actions/newsActions'
-import { Button, Form } from '../assets/styles'
 import { GLOBAL_NEWS_CREATE_RESET, GLOBAL_NEWS_UPDATE_RESET } from '../constants/newsConstants'
 import Alert from './Alert'
+import NewsForm from './NewsForm'
 
 const CreateGlobalNewsForm = ({ match, history }) => {
     const [title, setTitle] = useState('')
@@ -55,34 +55,18 @@ const CreateGlobalNewsForm = ({ match, history }) => {
     return (
         <>
             {error && <Alert>{error}</Alert>}
-            <Form onSubmit={addOrUpdateGlobalNewsHandler}>
-                {createError && <Alert>{createError}</Alert>}
-                {updateError && <Alert>{updateError}</Alert>}
-                <Form.Group>
-                    <Form.Label htmlFor="title">Naslov</Form.Label>
-                    <Form.Input
-                        type="text"
-                        id="title"
-                        required
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
-                    />
-                </Form.Group>
-                <Form.Group>
-                    <Form.Label htmlFor="content">Sadržaj</Form.Label>
-                    <Form.Textarea
-                        type="text"
-                        id="content"
-                        required
-                        value={content}
-                        onChange={e => setContent(e.target.value)}
-                    />
-                </Form.Group>
-
-                <Button primary disabled={createStatus === 'loading' || updateStatus === 'loading'}>
-                    {match.params.id ? 'Uredi obavijest' : 'Dodaj obavijest'}
-                </Button>
-            </Form>
+            <NewsForm
+                formTitle={match.params.id ? 'Uredi obavijest' : 'Dodaj obavijest'}
+                submitHandler={addOrUpdateGlobalNewsHandler}
+                title={title}
+                setTitle={setTitle}
+                content={content}
+                setContent={setContent}
+                createStatus={createStatus}
+                createError={createError}
+                updateStatus={updateStatus}
+                updateError={updateError}
+            />
         </>
     )
 }

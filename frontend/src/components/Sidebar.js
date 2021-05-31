@@ -26,7 +26,7 @@ const Sidebar = ({ children }) => {
 
     useEffect(() => {
         if (apiStatus === 'completed' && isMounted) dispatch(getUserNotifications())
-    }, [apiStatus])
+    }, [apiStatus, dispatch, isMounted])
 
     useEffect(() => {
         dispatch(getUserNotifications())

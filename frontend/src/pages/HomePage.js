@@ -14,9 +14,7 @@ const HomePage = () => {
                 <Header />
                 {userInfo && <EnrolledCourses />}
             </Main>
-            <Sidebar>
-                <h3>Other courses</h3>
-            </Sidebar>
+            <Sidebar />
         </Grid>
     )
 }

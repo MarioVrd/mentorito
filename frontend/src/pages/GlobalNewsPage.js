@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
-import { getGlobalNews } from '../actions/newsActions'
+import { deleteGlobalNews, getGlobalNews } from '../actions/newsActions'
 import { Grid, Main } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
@@ -14,8 +14,9 @@ import {
     GLOBAL_NEWS_UPDATE_RESET
 } from '../constants/newsConstants'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
+import Loader from '../components/Loader'
 
-const GlobalNewsPage = ({ match: { path }, history }) => {
+const GlobalNewsPage = ({ match: { path } }) => {
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
@@ -46,40 +47,58 @@ const GlobalNewsPage = ({ match: { path }, history }) => {
     return (
         <Grid>
             <Main>
-                {error && <Alert>{error}</Alert>}
-                {message && <Alert variant="success">{message}</Alert>}
-                {createdNews && (
-                    <Alert variant="success">Uspješno dodana obavijest {createdNews.title}</Alert>
-                )}
-                {updatedNews && (
-                    <Alert variant="success">
-                        Uspješno ažurirana obavijest {updatedNews.title}
-                    </Alert>
-                )}
-
-                <Switch>
-                    <PrivateRoute
-                        admin
-                        teacher
-                        exact
-                        path={`${path}/add`}
-                        component={GlobalNewsForm}
-                    />
-                    <PrivateRoute
-                        admin
-                        teacher
-                        exact
-                        path={`${path}/:id/edit`}
-                        component={GlobalNewsForm}
-                    />
-                    <Route exact path={path}>
-                        {news?.length > 0 ? (
-                            news.map(n => <NewsItem key={n.id} news={n} />)
-                        ) : (
-                            <Alert variant="info">Trenutno nema obavijesti</Alert>
+                <Main.Title>Općenite obavijesti</Main.Title>
+                {status === 'loading' ? (
+                    <Loader />
+                ) : error ? (
+                    <Alert>{error}</Alert>
+                ) : (
+                    <>
+                        {message && <Alert variant="success">{message}</Alert>}
+                        {createdNews && (
+                            <Alert variant="success">
+                                Uspješno dodana obavijest {createdNews.title}
+                            </Alert>
                         )}
-                    </Route>
-                </Switch>
+                        {updatedNews && (
+                            <Alert variant="success">
+                                Uspješno ažurirana obavijest {updatedNews.title}
+                            </Alert>
+                        )}
+
+                        <Switch>
+                            <PrivateRoute
+                                admin
+                                teacher
+                                exact
+                                path={`${path}/add`}
+                                component={GlobalNewsForm}
+                            />
+                            <PrivateRoute
+                                admin
+                                teacher
+                                exact
+                                path={`${path}/:id/edit`}
+                                component={GlobalNewsForm}
+                            />
+                            <Route exact path={path}>
+                                {news?.length > 0 ? (
+                                    news.map(n => (
+                                        <NewsItem
+                                            key={n.id}
+                                            news={n}
+                                            canModify={userInfo.role === ROLE_ADMIN}
+                                            url={`/news/${n.id}`}
+                                            deleteHandler={() => dispatch(deleteGlobalNews(n.id))}
+                                        />
+                                    ))
+                                ) : (
+                                    <Alert variant="info">Trenutno nema obavijesti</Alert>
+                                )}
+                            </Route>
+                        </Switch>
+                    </>
+                )}
             </Main>
             <Sidebar>
                 {(userInfo.role === ROLE_ADMIN || userInfo.role === ROLE_TEACHER) && (

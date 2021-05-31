@@ -9,7 +9,13 @@ export const Grid = styled.div`
 `
 
 export const Main = styled.main`
-    padding: 1rem 2rem;
+    padding: 1.5rem 2rem;
+`
+
+Main.Title = styled.h2`
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--clr-grey-100);
 `
 
 export const Sidebar = styled.aside`
@@ -17,7 +23,7 @@ export const Sidebar = styled.aside`
     background-color: var(--clr-grey-100);
 
     > * {
-        margin-bottom: 1rem;
+        margin-bottom: 1.35rem;
     }
 `
 
@@ -72,11 +78,11 @@ export const LinkButton = styled(Link)`
             : props.variant === 'success'
             ? 'var(--clr-success)'
             : 'var(--clr-grey-100)'};
-    padding: 0.75rem 1rem;
+    padding: 0.75em 1em;
     border-radius: 5px;
     border: 0;
     font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
+    font-size: ${props => (props.size === 'small' ? '0.8rem' : '0.95rem')};
     color: ${props =>
         props.variant === 'primary' || props.variant === 'danger' || props.variant === 'success'
             ? 'var(--clr-white)'
@@ -97,6 +103,19 @@ export const LinkButton = styled(Link)`
         cursor: not-allowed;
     }
 `
+
+export const Card = styled.div`
+    ${props => props.text && `text-align: ${props.text};`}
+    box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 1rem;
+`
+
+Card.Title = styled.h3``
+
+Card.Description = styled.p``
+
+Card.Link = styled.a``
 
 export const Form = styled.form`
     border-radius: 5px;
@@ -173,4 +192,37 @@ UserForm.Input = styled.input`
     padding: 0.75rem;
     border-radius: 5px;
     border: 1px solid var(--clr-grey-200);
+`
+
+export const Table = styled.table`
+    border-radius: 5px;
+    overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+
+    td {
+        padding: 0.5rem;
+    }
+`
+
+Table.Head = styled.thead`
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.5em 0;
+    background-color: var(--clr-primary);
+    color: var(--clr-white);
+`
+
+Table.Body = styled.tbody`
+    tr:nth-child(even) {
+        background-color: var(--clr-grey-100);
+    }
+
+    tr {
+        transition: background-color 200ms ease;
+
+        &:hover {
+            background-color: var(--clr-grey-200);
+        }
+    }
 `

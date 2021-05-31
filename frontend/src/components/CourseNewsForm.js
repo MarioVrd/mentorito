@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCourseNews } from '../actions/courseActions'
-import { Button, Form } from '../assets/styles'
 import useApi from '../hooks/useApi'
-import Alert from './Alert'
+import NewsForm from './NewsForm'
 
 const CourseNewsForm = ({ match, history }) => {
     const [title, setTitle] = useState('')
@@ -23,12 +22,7 @@ const CourseNewsForm = ({ match, history }) => {
     } = createCourseNews
 
     const updateCourseNews = useApi()
-    const {
-        status: updateStatus,
-        error: updateError,
-        data: updatedNews,
-        apiFunction: putToApi
-    } = updateCourseNews
+    const { status: updateStatus, error: updateError, apiFunction: putToApi } = updateCourseNews
 
     const submitHandler = e => {
         e.preventDefault()
@@ -54,7 +48,7 @@ const CourseNewsForm = ({ match, history }) => {
             setTitle(selectedNews.title)
             setContent(selectedNews.content)
         }
-    }, [match.params.newsId, status])
+    }, [match.params.newsId, status, news])
 
     useEffect(() => {
         if (createStatus === 'completed') {
@@ -66,34 +60,18 @@ const CourseNewsForm = ({ match, history }) => {
     }, [history, match, createStatus, updateStatus, createdNews])
 
     return (
-        <Form onSubmit={submitHandler}>
-            <Form.Title>Dodajte obavijest</Form.Title>
-            {createError && <Alert>{createError}</Alert>}
-            {updateError && <Alert>{updateError}</Alert>}
-            <Form.Group>
-                <Form.Label htmlFor="title">Naslov</Form.Label>
-                <Form.Input
-                    type="text"
-                    id="title"
-                    required
-                    value={title}
-                    onChange={e => setTitle(e.target.value)}
-                />
-            </Form.Group>
-            <Form.Group>
-                <Form.Label htmlFor="content">Sadržaj</Form.Label>
-                <Form.Textarea
-                    type="text"
-                    id="content"
-                    value={content}
-                    onChange={e => setContent(e.target.value)}
-                />
-            </Form.Group>
-
-            <Button primary disabled={createStatus === 'loading' || updateStatus === 'loading'}>
-                {match.params.newsId ? 'Uredi obavijest' : 'Dodaj obavijest'}
-            </Button>
-        </Form>
+        <NewsForm
+            formTitle={match.params.newsId ? 'Uredi obavijest' : 'Dodaj obavijest'}
+            submitHandler={submitHandler}
+            title={title}
+            setTitle={setTitle}
+            content={content}
+            setContent={setContent}
+            createStatus={createStatus}
+            createError={createError}
+            updateStatus={updateStatus}
+            updateError={updateError}
+        />
     )
 }
 

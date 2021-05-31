@@ -94,12 +94,39 @@ export const createCourse = asyncHandler(async (req, res) => {
 
 // @desc    Update the course
 // @route   PUT /api/courses/:courseId
-// @access  Admin
+// @access  Admin/Enrolled teacher
 export const updateCourse = asyncHandler(async (req, res) => {
-    const { courseId } = req.params
-    let { title, description, locked } = req.body
+    if (!(req.user.role === ROLE_TEACHER || req.user.role === ROLE_ADMIN)) {
+        res.status(401)
+        throw new Error('You are not authorized to access this route')
+    }
 
-    if (typeof locked === 'string') validator.toBoolean(locked)
+    const { courseId } = req.params
+    let { title, description, locked, teacherEmail } = req.body
+
+    if (typeof locked === 'string') locked = validator.toBoolean(locked)
+
+    // Teacher can only lock/unlock enrollment
+    if (req.user.role === ROLE_TEACHER) {
+        const updated = await prisma.course.update({ where: { id: courseId }, data: { locked } })
+        return res.json(updated)
+    }
+
+    let teacher = null
+
+    if (teacherEmail) {
+        teacher = await prisma.user.findUnique({
+            where: { email: teacherEmail },
+            select: { id: true, role: true },
+            rejectOnNotFound: true
+        })
+
+        if (teacher.role !== ROLE_TEACHER)
+            throw new Error('Invalid request, teacher must have TEACHER role')
+    }
+
+    if (teacher)
+        await prisma.enrollment.create({ data: { courseId: courseId, userId: teacher.id } })
 
     const updatedCourse = await prisma.course.update({
         where: { id: courseId },

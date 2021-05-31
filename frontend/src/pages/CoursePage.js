@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
-import { getCourseDetails } from '../actions/courseActions'
+import { getCourseDetails, updateCourse } from '../actions/courseActions'
 import { Grid, Main } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
 import CourseStudents from '../components/CourseStudents'
 import PrivateRoute from '../components/PrivateRoute'
-import { ROLE_TEACHER } from '../constants/roles'
+import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import { getFileFromApi } from '../utils/downloadUtils'
 import CreateExerciseForm from '../components/CreateExerciseForm'
 import AddMaterialForm from '../components/AddMaterialForm'
 import CourseNewsForm from '../components/CourseNewsForm'
 import CourseNewsList from '../components/CourseNewsList'
 import CourseNewsItem from '../components/CourseNewsItem'
+import Loader from '../components/Loader'
+import NewsItem from '../components/NewsItem'
 
 const CoursePage = ({ match }) => {
     const dispatch = useDispatch()
@@ -22,18 +24,30 @@ const CoursePage = ({ match }) => {
     const { userInfo } = userLogin
     const courseDetails = useSelector(state => state.courseDetails)
     const { status, error, course } = courseDetails
+    const courseUpdate = useSelector(state => state.courseUpdate)
+    const { status: updateStatus } = courseUpdate
 
     const downloadMaterialHandler = async (e, materialUpload) => {
         e.preventDefault()
         await getFileFromApi(materialUpload, userInfo.token)
     }
 
+    const toggleSelfEnrollment = e => {
+        e.preventDefault()
+
+        dispatch(updateCourse(course.id, { locked: !course.locked }))
+    }
+
     useEffect(() => {
         dispatch(getCourseDetails(match.params.id))
     }, [dispatch, match.params.id])
 
+    useEffect(() => {
+        if (updateStatus === 'completed') dispatch(getCourseDetails(match.params.id))
+    }, [updateStatus, dispatch, match.params.id])
+
     return status === 'loading' ? (
-        'Loading...'
+        <Loader />
     ) : error ? (
         <Main>
             <Alert>{error}</Alert>
@@ -42,7 +56,7 @@ const CoursePage = ({ match }) => {
         <Switch>
             <Grid>
                 <Main>
-                    <h1>{course.title}</h1>
+                    <Main.Title>{course.title}</Main.Title>
 
                     {userInfo.role === ROLE_TEACHER && (
                         <>
@@ -86,13 +100,14 @@ const CoursePage = ({ match }) => {
                         {course.description && <p>{course.description}</p>}
 
                         {course.news.length > 0 ? (
-                            <ul>
-                                {course.news.map(n => (
-                                    <li key={n.id}>
-                                        <Link to={`${match.url}/news/${n.id}`}>{n.title}</Link>
-                                    </li>
-                                ))}
-                            </ul>
+                            course.news.map(n => (
+                                <NewsItem
+                                    key={n.id}
+                                    news={n}
+                                    canModify={userInfo.role === ROLE_TEACHER}
+                                    url={`${match.url}/news/${n.id}`}
+                                />
+                            ))
                         ) : (
                             <Alert variant="info">Trenutno nema obavijesti</Alert>
                         )}
@@ -140,37 +155,55 @@ const CoursePage = ({ match }) => {
                     </Route>
                 </Main>
                 <Sidebar>
-                    <h3>Upisani studenti</h3>
-                    <ul>
-                        {course.enrolledUsers.map(e => (
-                            <li key={`${e.userId}${e.courseId}`}>
-                                {e.user.firstName} {new Date(e.enrolledAt).toLocaleDateString()}
-                            </li>
-                        ))}
-                    </ul>
+                    <div>
+                        <h3>Upisani studenti</h3>
+                        <ul>
+                            {course.enrolledUsers.map(e => (
+                                <li key={`${e.userId}${e.courseId}`}>
+                                    {e.user.firstName} {new Date(e.enrolledAt).toLocaleDateString()}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
 
-                    <h3>Linkovi</h3>
-                    <ul>
-                        <li>
-                            <Link to={`${match.url}/news`}>Pregled obavijesti</Link>
-                        </li>
-                        {userInfo.role === ROLE_TEACHER && (
-                            <>
+                    <div>
+                        <h3>Linkovi</h3>
+                        <ul>
+                            <li>
+                                <Link to={`${match.url}/news`}>Pregled obavijesti</Link>
+                            </li>
+                            {userInfo.role === ROLE_TEACHER && (
+                                <>
+                                    <li>
+                                        <Link to={`${match.url}/add-news`}>Dodajte obavijest</Link>
+                                    </li>
+                                    <li>
+                                        <Link to={`${match.url}/add-exercise`}>Dodajte vježbu</Link>
+                                    </li>
+                                    <li>
+                                        <Link to={`${match.url}/add-material`}>
+                                            Dodajte materijale
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to={`${match.url}/students`}>Pregled studenata</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="" onClick={toggleSelfEnrollment}>
+                                            {course.locked ? 'Omogući' : 'Onemogući'} samostalni
+                                            upis
+                                        </Link>
+                                    </li>
+                                </>
+                            )}
+
+                            {userInfo.role === ROLE_ADMIN && (
                                 <li>
-                                    <Link to={`${match.url}/add-news`}>Dodajte obavijest</Link>
+                                    <Link to={`/admin${match.url}/edit`}>Uredi kolegij</Link>
                                 </li>
-                                <li>
-                                    <Link to={`${match.url}/add-exercise`}>Dodajte vježbu</Link>
-                                </li>
-                                <li>
-                                    <Link to={`${match.url}/add-material`}>Dodajte materijale</Link>
-                                </li>
-                                <li>
-                                    <Link to={`${match.url}/students`}>Pregled studenata</Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
+                            )}
+                        </ul>
+                    </div>
                 </Sidebar>
             </Grid>
         </Switch>
