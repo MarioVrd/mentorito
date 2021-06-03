@@ -102,7 +102,10 @@ const GlobalNewsPage = ({ match: { path } }) => {
             </Main>
             <Sidebar>
                 {(userInfo.role === ROLE_ADMIN || userInfo.role === ROLE_TEACHER) && (
-                    <Link to={`${path}/add`}>Dodaj obavijest</Link>
+                    <div>
+                        <h3>Linkovi</h3>
+                        <Link to={`${path}/add`}>Dodaj obavijest</Link>
+                    </div>
                 )}
             </Sidebar>
         </Grid>

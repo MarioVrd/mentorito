@@ -15,23 +15,25 @@ import {
 } from '../constants/newsConstants'
 import { getAuthorizedJsonConfig } from '../utils/axiosConfig'
 
-export const getGlobalNews = () => async dispatch => {
-    try {
-        dispatch({ type: GLOBAL_NEWS_REQUEST })
+export const getGlobalNews =
+    (query = '') =>
+    async dispatch => {
+        try {
+            dispatch({ type: GLOBAL_NEWS_REQUEST })
 
-        const { data } = await axios.get('/api/news')
+            const { data } = await axios.get(`/api/news${query}`)
 
-        dispatch({ type: GLOBAL_NEWS_SUCCESS, payload: data })
-    } catch (error) {
-        dispatch({
-            type: GLOBAL_NEWS_FAIL,
-            payload:
-                error.response && error.response.data.message
-                    ? error.response.data.message
-                    : error.message
-        })
+            dispatch({ type: GLOBAL_NEWS_SUCCESS, payload: data })
+        } catch (error) {
+            dispatch({
+                type: GLOBAL_NEWS_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            })
+        }
     }
-}
 
 export const createGlobalNews = news => async (dispatch, getState) => {
     try {

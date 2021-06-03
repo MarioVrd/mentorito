@@ -9,8 +9,16 @@ const NewsItem = ({ news, canModify, url, deleteHandler }) => {
             <News.Title>
                 <Link to={url}>{news.title}</Link>
             </News.Title>
-            {news.content && <News.Content>{news.content}</News.Content>}
-            <News.Published>Objavljeno: {new Date(news.createdAt).toLocaleString()}</News.Published>
+            {news.content && (
+                <News.Content>
+                    {news.content.length > 100 ? `${news.content.slice(0, 100)}...` : news.content}
+                </News.Content>
+            )}
+            <News.Published>
+                Objavio {news.admin && `${news.admin.firstName} ${news.admin.lastName}`}{' '}
+                {news.teacher && `${news.teacher.firstName} ${news.teacher.lastName}`}{' '}
+                {new Date(news.createdAt).toLocaleString()}
+            </News.Published>
             {canModify && url && (
                 <LinkButton size="small" variant="success" to={`${url}/edit`}>
                     Uredi

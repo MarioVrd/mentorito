@@ -21,7 +21,7 @@ export const globalNewsReducer = (state = { status: 'idle', news: [] }, action) 
         case GLOBAL_NEWS_REQUEST:
             return { status: 'loading' }
         case GLOBAL_NEWS_SUCCESS:
-            return { status: 'completed', news: action.payload }
+            return { status: 'completed', ...action.payload }
         case GLOBAL_NEWS_FAIL:
             return { status: 'failed', error: action.payload }
         default:

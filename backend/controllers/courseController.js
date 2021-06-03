@@ -52,7 +52,10 @@ export const getCourseById = asyncHandler(async (req, res) => {
                 }
             },
             exercises: true,
-            news: true,
+            news: {
+                include: { teacher: { select: { firstName: true, lastName: true } } },
+                orderBy: { createdAt: 'desc' }
+            },
             materials: {
                 include: { upload: true }
             }
@@ -202,7 +205,11 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
 export const getCourseNews = asyncHandler(async (req, res) => {
     const { courseId } = req.params
 
-    const news = await prisma.courseNews.findMany({ where: { courseId } })
+    const news = await prisma.courseNews.findMany({
+        where: { courseId },
+        include: { teacher: { select: { firstName: true, lastName: true } } },
+        orderBy: { createdAt: 'desc' }
+    })
 
     res.json(news)
 })
@@ -213,7 +220,10 @@ export const getCourseNews = asyncHandler(async (req, res) => {
 export const getCourseNewsById = asyncHandler(async (req, res) => {
     const { newsId } = req.params
 
-    const news = await prisma.courseNews.findUnique({ where: { id: newsId } })
+    const news = await prisma.courseNews.findUnique({
+        where: { id: newsId },
+        include: { teacher: { select: { firstName: true } } }
+    })
 
     res.json(news)
 })

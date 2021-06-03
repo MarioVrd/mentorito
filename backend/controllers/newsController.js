@@ -1,13 +1,31 @@
 import asyncHandler from 'express-async-handler'
 import prisma from '../prisma/client.js'
 
-// @desc    Fetch all news
+// @desc    Fetch news by page and size (if not specified, default page is 1 and size is 10)
 // @route   GET /api/news
 // @access  Public
 export const getNews = asyncHandler(async (req, res) => {
-    const news = await prisma.globalNews.findMany()
+    let { page = 1, size = 10 } = req.query
 
-    res.json(news)
+    page = parseInt(page) - 1
+    size = parseInt(size)
+
+    const numOfRecords = await prisma.globalNews.count()
+    const numOfPages = Math.ceil(numOfRecords / size)
+
+    if (page < 0 || page > numOfPages - 1) {
+        res.status(404)
+        throw new Error(`Page must be between 1 and ${numOfPages}`)
+    }
+
+    const news = await prisma.globalNews.findMany({
+        include: { admin: { select: { firstName: true, lastName: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip: page * size,
+        take: size
+    })
+
+    res.json({ news, numOfPages })
 })
 
 // @desc    Fetch news by id
@@ -16,7 +34,11 @@ export const getNews = asyncHandler(async (req, res) => {
 export const getNewsById = asyncHandler(async (req, res) => {
     const { id } = req.params
 
-    const news = await prisma.globalNews.findUnique({ where: { id }, rejectOnNotFound: true })
+    const news = await prisma.globalNews.findUnique({
+        where: { id },
+        include: { admin: { select: { firstName: true, lastName: true } } },
+        rejectOnNotFound: true
+    })
 
     res.json(news)
 })

@@ -11,65 +11,63 @@ import { COURSE_DELETE_RESET, ENROLL_TO_COURSE_RESET } from '../constants/course
 import Loader from '../components/Loader'
 
 const CoursesPage = ({ match: { path }, history }) => {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-    const userLogin = useSelector(state => state.userLogin)
-    const { userInfo } = userLogin
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 
-    const courseList = useSelector(state => state.courseList)
-    const { loading, error, courses } = courseList
+  const courseList = useSelector(state => state.courseList)
+  const { loading, error, courses } = courseList
 
-    const courseEnroll = useSelector(state => state.courseEnroll)
-    const { status: enrollStatus, error: enrollError, enrollment } = courseEnroll
+  const courseEnroll = useSelector(state => state.courseEnroll)
+  const { status: enrollStatus, error: enrollError, enrollment } = courseEnroll
 
-    const courseDelete = useSelector(state => state.courseDelete)
-    const { status: deleteStatus, error: deleteError, message: deleteMessage } = courseDelete
+  const courseDelete = useSelector(state => state.courseDelete)
+  const { status: deleteStatus, error: deleteError, message: deleteMessage } = courseDelete
 
-    useEffect(() => {
-        if (enrollStatus === 'completed') {
-            history.push(`/courses/${enrollment.courseId}`)
-            dispatch({ type: ENROLL_TO_COURSE_RESET })
-        }
-    }, [dispatch, history, enrollStatus, enrollment?.courseId])
+  useEffect(() => {
+    if (enrollStatus === 'completed') {
+      history.push(`/courses/${enrollment.courseId}`)
+      dispatch({ type: ENROLL_TO_COURSE_RESET })
+    }
+  }, [dispatch, history, enrollStatus, enrollment?.courseId])
 
-    useEffect(() => {
-        if (deleteStatus === 'completed') {
-            dispatch(getAllCourses())
-        }
-    }, [dispatch, deleteStatus])
+  useEffect(() => {
+    if (deleteStatus === 'completed') {
+      dispatch(getAllCourses())
+    }
+  }, [dispatch, deleteStatus])
 
-    useEffect(() => {
-        dispatch(getAllCourses())
+  useEffect(() => {
+    dispatch(getAllCourses())
 
-        return () => {
-            dispatch({ type: COURSE_DELETE_RESET })
-        }
-    }, [dispatch])
+    return () => {
+      dispatch({ type: COURSE_DELETE_RESET })
+    }
+  }, [dispatch])
 
-    return (
-        <Grid>
-            <Main>
-                <Main.Title>Kolegiji</Main.Title>
-                {enrollError && <Alert>{enrollError}</Alert>}
-                {deleteError && <Alert>{deleteError}</Alert>}
-                {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
-                {loading ? (
-                    <Loader />
-                ) : error ? (
-                    <Alert>{error}</Alert>
-                ) : courses && courses.length ? (
-                    courses.map(course => <CourseListItem key={course.id} course={course} />)
-                ) : (
-                    <Alert variant="info">Trenutno ne postoji ni jedan kolegij.</Alert>
-                )}
-            </Main>
-            <Sidebar>
-                {userInfo?.role === ROLE_ADMIN && (
-                    <Link to="/admin/courses/create">Kreiraj kolegij</Link>
-                )}
-            </Sidebar>
-        </Grid>
-    )
+  return (
+    <Grid>
+      <Main>
+        <Main.Title>Kolegiji</Main.Title>
+        {enrollError && <Alert>{enrollError}</Alert>}
+        {deleteError && <Alert>{deleteError}</Alert>}
+        {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Alert>{error}</Alert>
+        ) : courses && courses.length ? (
+          courses.map(course => <CourseListItem key={course.id} course={course} />)
+        ) : (
+          <Alert variant="info">Trenutno ne postoji ni jedan kolegij.</Alert>
+        )}
+      </Main>
+      <Sidebar>
+        {userInfo?.role === ROLE_ADMIN && <Link to="/admin/courses/create">Kreiraj kolegij</Link>}
+      </Sidebar>
+    </Grid>
+  )
 }
 
 export default CoursesPage

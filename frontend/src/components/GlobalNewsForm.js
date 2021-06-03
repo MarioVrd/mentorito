@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createGlobalNews, getGlobalNews, updateGlobalNews } from '../actions/newsActions'
+import { createGlobalNews, updateGlobalNews } from '../actions/newsActions'
 import { GLOBAL_NEWS_CREATE_RESET, GLOBAL_NEWS_UPDATE_RESET } from '../constants/newsConstants'
+import useApi from '../hooks/useApi'
 import Alert from './Alert'
 import NewsForm from './NewsForm'
 
-const CreateGlobalNewsForm = ({ match, history }) => {
+const GlobalNewsForm = ({ match, history }) => {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
 
     const dispatch = useDispatch()
 
-    const globalNews = useSelector(state => state.globalNews)
-    const { status, error, news } = globalNews
+    const api = useApi()
+    const { status, error, data: news, apiFunction } = api
 
     const globalNewsCreate = useSelector(state => state.globalNewsCreate)
     const { status: createStatus, error: createError } = globalNewsCreate
@@ -31,16 +32,15 @@ const CreateGlobalNewsForm = ({ match, history }) => {
     }
 
     useEffect(() => {
-        if (status !== 'completed') {
-            dispatch(getGlobalNews())
+        if (status === 'idle' && match.params.id && apiFunction) {
+            apiFunction('GET', `/api/news/${match.params.id}`)
         }
-    }, [status, dispatch])
+    }, [status, apiFunction, match.params.id])
 
     useEffect(() => {
         if (match.params.id && status === 'completed') {
-            const selectedNews = news.find(n => n.id === match.params.id)
-            setTitle(selectedNews.title)
-            setContent(selectedNews.content)
+            setTitle(news.title)
+            setContent(news.content)
         }
     }, [match.params.id, status, news])
 
@@ -71,4 +71,4 @@ const CreateGlobalNewsForm = ({ match, history }) => {
     )
 }
 
-export default CreateGlobalNewsForm
+export default GlobalNewsForm

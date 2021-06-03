@@ -118,7 +118,10 @@ const ExercisePage = ({ location, match }) => {
                 ) : (
                     <>
                         <Main.Title>
-                            Vježba '{exercise.title}' iz kolegija {exercise.course.title}
+                            Vježba '{exercise.title}' iz kolegija{' '}
+                            <Link to={`/courses/${exercise.course.id}`}>
+                                {exercise.course.title}
+                            </Link>
                         </Main.Title>
                         {exercise.description && <p>{exercise.description}</p>}
 

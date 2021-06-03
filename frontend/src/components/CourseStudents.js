@@ -13,6 +13,9 @@ const CourseStudents = ({ match }) => {
     const courseDetails = useSelector(state => state.courseDetails)
     const { status: courseStatus } = courseDetails
 
+    const courseEnroll = useSelector(state => state.courseEnroll)
+    const { status: enrollStatus } = courseEnroll
+
     const userList = useSelector(state => state.userList)
     const { loading, error, users: students } = userList
 
@@ -26,7 +29,7 @@ const CourseStudents = ({ match }) => {
 
     useEffect(() => {
         if (courseStatus === 'completed') dispatch(getUsers(ROLE_STUDENT))
-    }, [dispatch, courseStatus])
+    }, [dispatch, courseStatus, enrollStatus])
 
     return loading ? (
         <Loader />
@@ -51,15 +54,21 @@ const CourseStudents = ({ match }) => {
                                     {student.firstName} {student.lastName}
                                 </td>
                                 <td colSpan={!isEnrolled(student.coursesEnrolled) ? 1 : 2}>
-                                    {new Date(
-                                        student.coursesEnrolled.find(
-                                            c => c.courseId === match.params.id
-                                        ).enrolledAt
-                                    ).toLocaleString()}
+                                    {isEnrolled(student.coursesEnrolled)
+                                        ? new Date(
+                                              student.coursesEnrolled.find(
+                                                  c => c.courseId === match.params.id
+                                              ).enrolledAt
+                                          ).toLocaleString()
+                                        : 'Nije upisan'}
                                 </td>
                                 {!isEnrolled(student.coursesEnrolled) && (
                                     <td>
-                                        <Button onClick={() => enrollStudent(student.id)}>
+                                        <Button
+                                            success
+                                            small
+                                            onClick={() => enrollStudent(student.id)}
+                                        >
                                             Upiši studenta
                                         </Button>
                                     </td>

@@ -19,7 +19,7 @@ Main.Title = styled.h2`
 `
 
 export const Sidebar = styled.aside`
-    padding: 1rem;
+    padding: 1.5rem;
     background-color: var(--clr-grey-100);
 
     > * {

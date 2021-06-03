@@ -56,7 +56,9 @@ const CoursePage = ({ match }) => {
         <Switch>
             <Grid>
                 <Main>
-                    <Main.Title>{course.title}</Main.Title>
+                    <Main.Title>
+                        <Link to={`/courses/${course.id}`}>{course.title}</Link>
+                    </Main.Title>
 
                     {userInfo.role === ROLE_TEACHER && (
                         <>
@@ -112,8 +114,8 @@ const CoursePage = ({ match }) => {
                             <Alert variant="info">Trenutno nema obavijesti</Alert>
                         )}
 
-                        {course.exercises.length > 0 ? (
-                            <>
+                        {course.exercises?.length > 0 ? (
+                            <section>
                                 <h3>Vježbe</h3>
                                 <ul>
                                     {course.exercises.map(e => (
@@ -128,13 +130,13 @@ const CoursePage = ({ match }) => {
                                         </li>
                                     ))}
                                 </ul>
-                            </>
+                            </section>
                         ) : (
                             <Alert variant="info">Trenutno nema vjezbi</Alert>
                         )}
 
                         {course.materials.length > 0 && (
-                            <>
+                            <section>
                                 <h3>Materijali</h3>
                                 <ul>
                                     {course.materials.map(material => (
@@ -150,17 +152,18 @@ const CoursePage = ({ match }) => {
                                         </li>
                                     ))}
                                 </ul>
-                            </>
+                            </section>
                         )}
                     </Route>
                 </Main>
                 <Sidebar>
                     <div>
-                        <h3>Upisani studenti</h3>
+                        <h3>Upisani u kolegij</h3>
                         <ul>
                             {course.enrolledUsers.map(e => (
                                 <li key={`${e.userId}${e.courseId}`}>
-                                    {e.user.firstName} {new Date(e.enrolledAt).toLocaleDateString()}
+                                    {e.user.firstName} {e.user.lastName}
+                                    {e.user.role === ROLE_TEACHER && <strong>, profesor</strong>}
                                 </li>
                             ))}
                         </ul>
