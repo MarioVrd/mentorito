@@ -15,12 +15,15 @@ export const register = asyncHandler(async (req, res) => {
 
     if (user) {
         res.status(409)
-        throw new Error('User already exists')
+        throw new Error(`Korisnik sa emailom ${email} već postoji`)
     }
 
-    if (!isIn(role, availableRoles)) throw new Error('Invalid role selected for new user')
+    if (!isIn(role, availableRoles))
+        throw new Error(
+            `Nepravilan zahtjev! Uloga mora biti jedna od sljedećih: ${availableRoles.join(', ')}`
+        )
 
-    if (!isEmail(email)) throw new Error('Invalid email')
+    if (!isEmail(email)) throw new Error('Nepravilan email')
 
     const encryptedPassword = await encrypt(password)
 
@@ -46,13 +49,14 @@ export const login = asyncHandler(async (req, res) => {
 
     const user = await prisma.user.findUnique({
         where: { email: email },
-        include: { notifications: { include: { notification: true } } },
-        rejectOnNotFound: true
+        include: { notifications: { include: { notification: true } } }
     })
+
+    if (!user) throw new Error('Nepravilni podaci za prijavu')
 
     const correctPassword = await comparePassword(password, user.password)
 
-    if (!correctPassword) throw new Error('Invalid credentials! Please try again.')
+    if (!correctPassword) throw new Error('Nepravilni podaci za prijavu')
 
     const { id, firstName, lastName, role, notifications } = user
 
@@ -73,7 +77,7 @@ export const login = asyncHandler(async (req, res) => {
 export const getUserList = asyncHandler(async (req, res) => {
     if (req.user.role === ROLE_STUDENT) {
         res.status(401)
-        throw new Error('Not authorized, only admin and teacher can access this')
+        throw new Error('Nemate dopuštenje za pristup')
     }
 
     const { role } = req.query

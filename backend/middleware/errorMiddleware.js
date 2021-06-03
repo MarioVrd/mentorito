@@ -14,18 +14,19 @@ export const notFound = (req, res, next) => {
 export const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode === 200 ? 500 : res.statusCode
 
-    if (contains(err.message, 'invalid', { ignoreCase: true })) {
+    if (contains(err.message, 'nepravil', { ignoreCase: true })) {
         statusCode = 400
     } else if (err.name === 'NotFoundError') {
         statusCode = 404
     }
 
     let message = err.message
-    if (err.name === 'TypeError') message = 'Something went wrong'
-    if (err.code === PRISMA_NOT_FOUND) message = 'Requested data cannot be found'
+    if (err.name === 'TypeError') message = 'Došlo je do pogreške'
+    if (err.code === PRISMA_NOT_FOUND) message = 'Nije moguće dohvatiti tražene povezane podatke'
     if (err.code === PRISMA_UNIQUE_PRIMARY_KEY_FAILED)
-        message = 'There is already record with provided data'
-    if (err.code === PRISMA_FOREIGN_KEY_FAILED) message = 'There is problem with related data'
+        message = 'Već postoji zapis sa istim podacima'
+    if (err.code === PRISMA_FOREIGN_KEY_FAILED)
+        message = 'Došlo je do pogreške sa povezanim podacima'
 
     res.status(statusCode).json({
         message,

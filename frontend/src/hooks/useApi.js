@@ -43,7 +43,7 @@ const useApi = () => {
                 } else if (method.toUpperCase() === 'DELETE') {
                     response = await axios.delete(url, config)
                 } else {
-                    throw new Error('Invalid request')
+                    throw new Error('Nepravilan zahtjev!')
                 }
 
                 dispatch({ type: API_SUCCESS, payload: response.data })

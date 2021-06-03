@@ -59,9 +59,13 @@ export const getCourseById = asyncHandler(async (req, res) => {
             materials: {
                 include: { upload: true }
             }
-        },
-        rejectOnNotFound: true
+        }
     })
+
+    if (!course) {
+        res.status(404)
+        throw new Error('Nije pronađen kolegij sa odabranim ID-om')
+    }
 
     res.json(course)
 })
@@ -79,12 +83,16 @@ export const createCourse = asyncHandler(async (req, res) => {
     if (teacherEmail) {
         teacher = await prisma.user.findUnique({
             where: { email: teacherEmail },
-            select: { id: true, role: true },
-            rejectOnNotFound: true
+            select: { id: true, role: true }
         })
 
+        if (!teacher) {
+            res.status(404)
+            throw new Error('Nije pronađen profesor sa odabranim emailom')
+        }
+
         if (teacher.role !== ROLE_TEACHER)
-            throw new Error('Invalid request, teacher must have TEACHER role')
+            throw new Error('Nepravilan zahtjev! Pogrešan email profesora.')
     }
 
     const course = await prisma.course.create({ data: { title, description, locked } })
@@ -101,7 +109,7 @@ export const createCourse = asyncHandler(async (req, res) => {
 export const updateCourse = asyncHandler(async (req, res) => {
     if (!(req.user.role === ROLE_TEACHER || req.user.role === ROLE_ADMIN)) {
         res.status(401)
-        throw new Error('You are not authorized to access this route')
+        throw new Error('Nemate dopuštenje za pristup.')
     }
 
     const { courseId } = req.params
@@ -120,12 +128,16 @@ export const updateCourse = asyncHandler(async (req, res) => {
     if (teacherEmail) {
         teacher = await prisma.user.findUnique({
             where: { email: teacherEmail },
-            select: { id: true, role: true },
-            rejectOnNotFound: true
+            select: { id: true, role: true }
         })
 
+        if (!teacher) {
+            res.status(404)
+            throw new Error('Nije pronađen profesor sa odabranim emailom')
+        }
+
         if (teacher.role !== ROLE_TEACHER)
-            throw new Error('Invalid request, teacher must have TEACHER role')
+            throw new Error('Nepravilan zahtjev! Pogrešan email profesora.')
     }
 
     if (teacher)
@@ -178,9 +190,10 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
     const { userId, courseId } = req.body
 
     const course = await prisma.course.findUnique({ where: { id: courseId } })
-    if (!course) throw new Error('Invalid course id')
+    if (!course) throw new Error('Ne postoji kolegij sa odabranim ID-om')
 
-    if (course.locked && req.user.role === ROLE_STUDENT) throw new Error('Course is locked')
+    if (course.locked && req.user.role === ROLE_STUDENT)
+        throw new Error('Kolegij je zatvoren za samostalni upis')
 
     // If userId is specified in req.body enroll specified user (for teacher or admin)
     // If the userId is NOT specified, enroll logged in user
@@ -189,14 +202,14 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
     })
     if (enrollment) {
         res.status(400)
-        throw new Error('Already enrolled in this course')
+        throw new Error('Već ste upisani u ovaj kolegij')
     }
 
     const newEnrollment = await prisma.enrollment.create({
         data: { courseId, userId: userId || req.user.id }
     })
 
-    res.json({ ...newEnrollment, message: `Successfully enrolled to ${course.title} course` })
+    res.json({ ...newEnrollment, message: `Uspješno ste se upisali u kolegij ${course.title}` })
 })
 
 // @desc    Fetch all course news
@@ -235,7 +248,7 @@ export const createNewsForCourse = asyncHandler(async (req, res) => {
     const { courseId } = req.params
     const { title, content } = req.body
 
-    if (!title) throw new Error('Invalid request, title is required')
+    if (!title) throw new Error('Nepravilan zahtjev! Naslov je obavezan')
 
     const news = await prisma.courseNews.create({
         data: { title, content, courseId, teacherId: req.user.id }
@@ -251,7 +264,7 @@ export const updateCourseNews = asyncHandler(async (req, res) => {
     const { newsId } = req.params
     const { title, content } = req.body
 
-    if (!title) throw new Error('Invalid request, title is required')
+    if (!title) throw new Error('Nepravilan zahtjev! Naslov je obavezan')
 
     const updatedNews = await prisma.courseNews.update({
         where: { id: newsId },

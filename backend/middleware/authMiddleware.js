@@ -21,13 +21,13 @@ export const protect = asyncHandler(async (req, res, next) => {
         } catch (error) {
             console.error(error)
             res.status(401)
-            throw new Error('Not authorized, token failed')
+            throw new Error('Pogreška prilikom provjere identiteta, pokušajte ponovno')
         }
     }
 
     if (!token) {
         res.status(401)
-        throw new Error('Not authorized, no token')
+        throw new Error('Morate se prijaviti')
     }
 })
 
@@ -35,26 +35,26 @@ export const admin = (req, res, next) => {
     if (req.user && req.user.role === ROLE_ADMIN) return next()
 
     res.status(401)
-    throw new Error('Not authorized as an admin')
+    throw new Error('Morate biti prijavljeni kao admin')
 }
 
 export const teacher = (req, res, next) => {
     if (req.user && req.user.role === ROLE_TEACHER) return next()
 
     res.status(401)
-    throw new Error('Not authorized as teacher')
+    throw new Error('Morate biti prijavljeni kao profesor')
 }
 
 export const student = (req, res, next) => {
     if (req.user && req.user.role === ROLE_STUDENT) return next()
 
     res.status(401)
-    throw new Error('Not authorized as student')
+    throw new Error('Morate biti prijavljeni kao student')
 }
 
 // To use this middleware request parameter must be :courseId
 export const enrolled = asyncHandler(async (req, res, next) => {
-    if (!req.params.courseId) throw new Error('Invalid request, course id must be specified in URL')
+    if (!req.params.courseId) throw new Error('Nepravilan zahtjev, ID kolegija mora biti zadan')
 
     const userEnrolled = await prisma.enrollment.findUnique({
         where: { userId_courseId: { userId: req.user.id, courseId: req.params.courseId } }
@@ -62,7 +62,7 @@ export const enrolled = asyncHandler(async (req, res, next) => {
 
     if (!userEnrolled && req.user.role !== ROLE_ADMIN) {
         res.status(401)
-        throw new Error('Not enrolled to selected course')
+        throw new Error('Niste upisani u odabrani kolegij')
     }
 
     if ((req.user && req.user.role === ROLE_ADMIN) || userEnrolled) {
@@ -70,5 +70,5 @@ export const enrolled = asyncHandler(async (req, res, next) => {
     }
 
     res.status(401)
-    throw new Error('Only enrolled students and teachers can access this')
+    throw new Error('Samo upisani studenti i profesori mogu ovdje pristupiti')
 })

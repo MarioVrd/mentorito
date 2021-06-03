@@ -13,10 +13,8 @@ export const getNews = asyncHandler(async (req, res) => {
     const numOfRecords = await prisma.globalNews.count()
     const numOfPages = Math.ceil(numOfRecords / size)
 
-    if (page < 0 || page > numOfPages - 1) {
-        res.status(404)
-        throw new Error(`Page must be between 1 and ${numOfPages}`)
-    }
+    if (page < 0 || page > numOfPages - 1)
+        throw new Error(`Nepravilan zahtjev! Stranica mora biti između 1 i ${numOfPages}`)
 
     const news = await prisma.globalNews.findMany({
         include: { admin: { select: { firstName: true, lastName: true } } },
@@ -36,9 +34,13 @@ export const getNewsById = asyncHandler(async (req, res) => {
 
     const news = await prisma.globalNews.findUnique({
         where: { id },
-        include: { admin: { select: { firstName: true, lastName: true } } },
-        rejectOnNotFound: true
+        include: { admin: { select: { firstName: true, lastName: true } } }
     })
+
+    if (!news) {
+        res.status(404)
+        throw new Error('Nije pronađena odabrana obavijest')
+    }
 
     res.json(news)
 })

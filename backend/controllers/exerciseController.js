@@ -10,11 +10,13 @@ import { ROLE_ADMIN, ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles.js'
 export const createExerciseForCourse = asyncHandler(async (req, res) => {
     let { title, description, deadline, courseId } = req.body
 
-    if (!title || !courseId) throw new Error('Invalid request. Title and courseId are required')
+    if (!title || !courseId) throw new Error('Nepravilan zahtjev! Naslov i ID kolegija su obavezni')
 
     if (deadline != null) {
         if (!isValidDeadline(deadline))
-            throw new Error('Invalid request. Deadline must be date and in the future')
+            throw new Error(
+                'Nepravilan zahtjev! Rok za predaju mora biti u obliku datuma i u budućnosti'
+            )
 
         deadline = validator.toDate(deadline)
     }
@@ -34,7 +36,9 @@ export const updateExercise = asyncHandler(async (req, res) => {
     let { title, description, deadline } = req.body
 
     if (!isValidDeadline(deadline))
-        throw new Error('Invalid request. Deadline must be date string and in the future')
+        throw new Error(
+            'Nepravilan zahtjev! Rok za predaju mora biti u obliku datuma i u budućnosti'
+        )
 
     deadline = validator.toDate(deadline)
 
@@ -74,9 +78,13 @@ export const getExerciseById = asyncHandler(async (req, res) => {
         include: {
             course: true,
             exerciseSubmissions: inclExerciseSubmissions
-        },
-        rejectOnNotFound: true
+        }
     })
+
+    if (!exercise) {
+        res.status(404)
+        throw new Error('Nije pronađena odabrana vježba')
+    }
 
     res.json(exercise)
 })
@@ -88,13 +96,18 @@ export const submitExercise = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { studentComment, uploadId } = req.body
 
-    const exercise = await prisma.exercise.findUnique({ where: { id }, rejectOnNotFound: true })
+    const exercise = await prisma.exercise.findUnique({ where: { id } })
+
+    if (!exercise) {
+        res.status(404)
+        throw new Error('Nije pronađena odabrana vježba')
+    }
 
     if (
         exercise.deadline &&
         validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString())
     )
-        throw new Error('Invalid request, passed the deadline')
+        throw new Error('Nepravilan zahtjev! Rok za predaju je prošao')
 
     const submittedExercise = await prisma.exerciseSubmission.create({
         data: { exerciseId: id, studentId: req.user.id, studentComment, uploadId }
@@ -111,9 +124,14 @@ export const updateSubmittedExercise = asyncHandler(async (req, res) => {
     const { studentComment, uploadId, teacherComment, grade, studentId } = req.body
 
     if (req.user.role === ROLE_TEACHER && !studentId)
-        throw new Error('Invalid request, studentId is missing')
+        throw new Error('Nepravilan zahtjev! ID studenta mora biti sadržan')
 
-    const exercise = await prisma.exercise.findUnique({ where: { id }, rejectOnNotFound: true })
+    const exercise = await prisma.exercise.findUnique({ where: { id } })
+
+    if (!exercise) {
+        res.status(404)
+        throw new Error('Nije pronađena odabrana vježba')
+    }
 
     // If the deadline is passed and user is student, throw an error
     // Teacher can update after deadline to give a grade or add a comment
@@ -122,7 +140,7 @@ export const updateSubmittedExercise = asyncHandler(async (req, res) => {
         validator.isAfter(new Date().toISOString(), exercise.deadline.toISOString()) &&
         req.user.role === ROLE_STUDENT
     )
-        throw new Error('Invalid request, passed the deadline')
+        throw new Error('Nepravilan zahtjev! Rok za predaju je prošao')
 
     let data = { studentComment, uploadId }
 

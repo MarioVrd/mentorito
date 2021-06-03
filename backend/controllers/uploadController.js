@@ -6,15 +6,21 @@ import prisma from '../prisma/client.js'
 export const getFileById = asyncHandler(async (req, res) => {
     const { uploadId } = req.params
 
-    const { title: fileName, userId } = await prisma.upload.findUnique({
+    const upload = await prisma.upload.findUnique({
         where: { id: uploadId },
-        select: { title: true, userId: true },
-        rejectOnNotFound: true
+        select: { title: true, userId: true }
     })
+
+    if (!upload) {
+        res.status(404)
+        throw new Error('Nije pronađena odabrana datoteka')
+    }
+
+    const { title: fileName, userId } = upload
 
     if (req.user.role === ROLE_STUDENT && userId !== req.user.id) {
         res.status(401)
-        throw new Error('Not authorized to get this file')
+        throw new Error('Nemate dopuštenje za preuzimanje ove datoteke')
     }
 
     const __dirname = path.resolve()
