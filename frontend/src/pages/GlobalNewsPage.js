@@ -87,7 +87,7 @@ const GlobalNewsPage = ({ match: { path } }) => {
                                         <NewsItem
                                             key={n.id}
                                             news={n}
-                                            canModify={userInfo.role === ROLE_ADMIN}
+                                            canModify={userInfo?.role === ROLE_ADMIN}
                                             url={`/news/${n.id}`}
                                             deleteHandler={() => dispatch(deleteGlobalNews(n.id))}
                                         />
@@ -101,7 +101,7 @@ const GlobalNewsPage = ({ match: { path } }) => {
                 )}
             </Main>
             <Sidebar>
-                {(userInfo.role === ROLE_ADMIN || userInfo.role === ROLE_TEACHER) && (
+                {(userInfo?.role === ROLE_ADMIN || userInfo?.role === ROLE_TEACHER) && (
                     <div>
                         <h3>Linkovi</h3>
                         <Link to={`${path}/add`}>Dodaj obavijest</Link>

@@ -99,7 +99,7 @@ export const getUserNotifications = () => async (dispatch, getState) => {
         userLogin: { userInfo }
     } = getState()
 
-    if (userInfo.role !== ROLE_STUDENT) return
+    if (userInfo?.role !== ROLE_STUDENT) return
 
     try {
         dispatch({ type: USER_NOTIFICATIONS_REQUEST })

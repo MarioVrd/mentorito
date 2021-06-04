@@ -42,7 +42,7 @@ const ExercisePage = ({ location, match }) => {
     }, [loading, exercise, userInfo.id])
 
     const teacherScreen =
-        (userInfo.role === ROLE_TEACHER || userInfo === ROLE_ADMIN) &&
+        (userInfo?.role === ROLE_TEACHER || userInfo?.role === ROLE_ADMIN) &&
         exercise &&
         exercise.exerciseSubmissions.length > 0 ? (
             submitId ? (

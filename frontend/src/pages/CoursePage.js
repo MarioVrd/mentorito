@@ -60,7 +60,7 @@ const CoursePage = ({ match }) => {
                         <Link to={`/courses/${course.id}`}>{course.title}</Link>
                     </Main.Title>
 
-                    {userInfo.role === ROLE_TEACHER && (
+                    {userInfo?.role === ROLE_TEACHER && (
                         <>
                             <PrivateRoute
                                 teacher
@@ -106,7 +106,7 @@ const CoursePage = ({ match }) => {
                                 <NewsItem
                                     key={n.id}
                                     news={n}
-                                    canModify={userInfo.role === ROLE_TEACHER}
+                                    canModify={userInfo?.role === ROLE_TEACHER}
                                     url={`${match.url}/news/${n.id}`}
                                 />
                             ))
@@ -175,7 +175,7 @@ const CoursePage = ({ match }) => {
                             <li>
                                 <Link to={`${match.url}/news`}>Pregled obavijesti</Link>
                             </li>
-                            {userInfo.role === ROLE_TEACHER && (
+                            {userInfo?.role === ROLE_TEACHER && (
                                 <>
                                     <li>
                                         <Link to={`${match.url}/add-news`}>Dodajte obavijest</Link>
@@ -200,7 +200,7 @@ const CoursePage = ({ match }) => {
                                 </>
                             )}
 
-                            {userInfo.role === ROLE_ADMIN && (
+                            {userInfo?.role === ROLE_ADMIN && (
                                 <li>
                                     <Link to={`/admin${match.url}/edit`}>Uredi kolegij</Link>
                                 </li>

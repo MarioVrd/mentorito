@@ -57,7 +57,7 @@ const useApi = () => {
                 })
             }
         },
-        [userInfo.token]
+        [userInfo?.token]
     )
 
     useEffect(() => {

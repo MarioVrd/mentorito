@@ -38,11 +38,11 @@ const ExerciseSubmitForm = () => {
 
         let submitData = {}
 
-        if (userInfo.role === ROLE_STUDENT && studentComment) {
+        if (userInfo?.role === ROLE_STUDENT && studentComment) {
             submitData.studentComment = studentComment
         }
 
-        if (userInfo.role === ROLE_TEACHER) {
+        if (userInfo?.role === ROLE_TEACHER) {
             submitData.studentId = studentId
             if (teacherComment) submitData.teacherComment = teacherComment
             if (grade) submitData.grade = grade
@@ -61,13 +61,13 @@ const ExerciseSubmitForm = () => {
         }
     }, [dispatch])
 
-    return userInfo.role === ROLE_STUDENT && deadlineExpired ? (
+    return userInfo?.role === ROLE_STUDENT && deadlineExpired ? (
         <Alert>Rok za predaju ove vježbe je istekao</Alert>
     ) : (
         <Form onSubmit={submitHandler}>
             {error && <Alert>{error}</Alert>}
             {submitStatus === 'completed' && <Alert variant="info">Uspješno</Alert>}
-            {userInfo.role === ROLE_STUDENT && (
+            {userInfo?.role === ROLE_STUDENT && (
                 <>
                     <UploadFileInput />
                     <Form.Group>
@@ -82,7 +82,7 @@ const ExerciseSubmitForm = () => {
                 </>
             )}
 
-            {userInfo.role === ROLE_TEACHER && (
+            {userInfo?.role === ROLE_TEACHER && (
                 <>
                     <Form.Group>
                         <Form.Label htmlFor="teacherComment">Komentar profesora</Form.Label>
