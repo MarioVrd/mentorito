@@ -69,8 +69,9 @@ const CourseForm = () => {
 
     return (
         <>
-            {courseError && <Alert>{courseError}</Alert>}
+            {match.params.id && courseError && <Alert>{courseError}</Alert>}
             <Form onSubmit={addOrUpdateCourseHandler}>
+                <Form.Title>{match.params.id ? 'Uredi kolegij' : 'Dodaj kolegij'}</Form.Title>
                 {createError && <Alert>{createError}</Alert>}
                 {updateError && <Alert>{updateError}</Alert>}
                 <Form.Group>

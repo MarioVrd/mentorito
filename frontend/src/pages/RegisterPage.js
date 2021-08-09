@@ -17,7 +17,7 @@ const RegisterPage = () => {
 
     const dispatch = useDispatch()
     const userRegister = useSelector(state => state.userRegister)
-    const { loading, error, user } = userRegister
+    const { status, error, user } = userRegister
 
     const handleSubmit = e => {
         e.preventDefault()
@@ -39,7 +39,7 @@ const RegisterPage = () => {
             <UserForm onSubmit={handleSubmit}>
                 <UserForm.Title>Registracija</UserForm.Title>
                 {error && <Alert>{error}</Alert>}
-                {loading && <Loader />}
+                {status === 'loading' && <Loader />}
                 {user && (
                     <Alert variant="info">Korisnik je uspješno kreiran (id: {user.id}).</Alert>
                 )}

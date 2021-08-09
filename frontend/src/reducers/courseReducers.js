@@ -34,60 +34,62 @@ import {
     COURSE_NEWS_LIST_FAIL,
     COURSE_NEWS_LIST_RESET
 } from '../constants/courseConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 
-export const enrolledCoursesReducer = (state = {}, action) => {
+
+export const enrolledCoursesReducer = (state = {status: STATUS.idle}, action) => {
     switch (action.type) {
         case ENROLLED_COURSES_LIST_REQUEST:
-            return { loading: true }
+            return { status: STATUS.loading }
         case ENROLLED_COURSES_LIST_SUCCESS:
-            return { loading: false, enrollment: action.payload }
+            return { status: STATUS.completed, enrollment: action.payload }
         case ENROLLED_COURSES_LIST_FAIL:
-            return { loading: false, error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         default:
             return state
     }
 }
 
-export const courseListReducer = (state = {}, action) => {
+export const courseListReducer = (state = {status: STATUS.idle}, action) => {
     switch (action.type) {
         case COURSE_LIST_REQUEST:
-            return { loading: true }
+            return { status: STATUS.loading }
         case COURSE_LIST_SUCCESS:
-            return { loading: false, courses: action.payload }
+            return { status: STATUS.completed, courses: action.payload }
         case COURSE_LIST_FAIL:
-            return { loading: false, error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         default:
             return state
     }
 }
 
-export const courseEnrollReducer = (state = { status: 'idle' }, action) => {
+export const courseEnrollReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case ENROLL_TO_COURSE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case ENROLL_TO_COURSE_SUCCESS:
-            return { status: 'completed', enrollment: action.payload }
+            return { status: STATUS.completed, enrollment: action.payload }
         case ENROLL_TO_COURSE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case ENROLL_TO_COURSE_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }
 }
 
 const initialCourseDetails = {
-    status: 'idle',
+    status: STATUS.idle,
     course: { news: [], exercises: [], enrolledUsers: [], materials: [] }
 }
 export const courseDetailsReducer = (state = initialCourseDetails, action) => {
     switch (action.type) {
         case COURSE_DETAILS_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case COURSE_DETAILS_SUCCESS:
-            return { status: 'completed', course: action.payload }
+            return { status: STATUS.completed, course: action.payload }
         case COURSE_DETAILS_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case COURSE_DETAILS_RESET:
             return initialCourseDetails
         default:
@@ -95,76 +97,76 @@ export const courseDetailsReducer = (state = initialCourseDetails, action) => {
     }
 }
 
-export const courseCreateReducer = (state = { status: 'idle' }, action) => {
+export const courseCreateReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case COURSE_CREATE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case COURSE_CREATE_SUCCESS:
-            return { status: 'completed', course: action.payload }
+            return { status: STATUS.completed, course: action.payload }
         case COURSE_CREATE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case COURSE_CREATE_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }
 }
 
-export const courseUpdateReducer = (state = { status: 'idle' }, action) => {
+export const courseUpdateReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case COURSE_UPDATE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case COURSE_UPDATE_SUCCESS:
-            return { status: 'completed', course: action.payload }
+            return { status: STATUS.completed, course: action.payload }
         case COURSE_UPDATE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case COURSE_UPDATE_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }
 }
 
-export const courseDeleteReducer = (state = { status: 'idle' }, action) => {
+export const courseDeleteReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case COURSE_DELETE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case COURSE_DELETE_SUCCESS:
-            return { status: 'completed', message: action.payload }
+            return { status: STATUS.completed, message: action.payload }
         case COURSE_DELETE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case COURSE_DELETE_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }
 }
 
-export const courseMaterialAddReducer = (state = { status: 'idle' }, action) => {
+export const courseMaterialAddReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case COURSE_MATERIAL_ADD_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case COURSE_MATERIAL_ADD_SUCCESS:
-            return { status: 'completed', material: action.payload }
+            return { status: STATUS.completed, material: action.payload }
         case COURSE_MATERIAL_ADD_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case COURSE_MATERIAL_ADD_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }
 }
 
-export const courseNewsListReducer = (state = { status: 'idle' }, action) => {
+export const courseNewsListReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case COURSE_NEWS_LIST_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case COURSE_NEWS_LIST_SUCCESS:
-            return { status: 'completed', news: action.payload }
+            return { status: STATUS.completed, news: action.payload }
         case COURSE_NEWS_LIST_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case COURSE_NEWS_LIST_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }

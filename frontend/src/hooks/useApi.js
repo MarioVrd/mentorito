@@ -3,24 +3,25 @@ import { useCallback, useEffect, useReducer } from 'react'
 import { useSelector } from 'react-redux'
 import { API_REQUEST, API_SUCCESS, API_FAIL, API_FUNCTION } from '../constants/apiConstants'
 import { getAuthorizedJsonConfig } from '../utils/axiosConfig'
+import { STATUS } from '../constants/requestStatusConstants'
 
 const apiReducer = (state, action) => {
     switch (action.type) {
         case API_FUNCTION:
             return { ...state, apiFunction: action.function }
         case API_REQUEST:
-            return { ...state, status: 'loading' }
+            return { ...state, status: STATUS.loading }
         case API_SUCCESS:
-            return { ...state, status: 'completed', data: action.payload }
+            return { ...state, status: STATUS.completed, data: action.payload }
         case API_FAIL:
-            return { apiFunction: state.apiFunction, status: 'failed', error: action.payload }
+            return { apiFunction: state.apiFunction, status: STATUS.failed, error: action.payload }
         default:
             return state
     }
 }
 
 const useApi = () => {
-    const [state, dispatch] = useReducer(apiReducer, { status: 'idle' })
+    const [state, dispatch] = useReducer(apiReducer, { status: STATUS.idle })
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin

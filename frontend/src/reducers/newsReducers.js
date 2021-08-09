@@ -15,29 +15,31 @@ import {
     GLOBAL_NEWS_SUCCESS,
     GLOBAL_NEWS_DELETE_RESET
 } from '../constants/newsConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 
-export const globalNewsReducer = (state = { status: 'idle', news: [] }, action) => {
+
+export const globalNewsReducer = (state = { status: STATUS.idle, news: [] }, action) => {
     switch (action.type) {
         case GLOBAL_NEWS_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case GLOBAL_NEWS_SUCCESS:
-            return { status: 'completed', ...action.payload }
+            return { status: STATUS.completed, ...action.payload }
         case GLOBAL_NEWS_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         default:
             return state
     }
 }
 
-const initialGlobalNewsCreateState = { status: 'idle' }
+const initialGlobalNewsCreateState = { status: STATUS.idle }
 export const globalNewsCreateReducer = (state = initialGlobalNewsCreateState, action) => {
     switch (action.type) {
         case GLOBAL_NEWS_CREATE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case GLOBAL_NEWS_CREATE_SUCCESS:
-            return { status: 'completed', news: action.payload }
+            return { status: STATUS.completed, news: action.payload }
         case GLOBAL_NEWS_CREATE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case GLOBAL_NEWS_CREATE_RESET:
             return initialGlobalNewsCreateState
         default:
@@ -45,15 +47,15 @@ export const globalNewsCreateReducer = (state = initialGlobalNewsCreateState, ac
     }
 }
 
-const initialGlobalNewsUpdateState = { status: 'idle' }
+const initialGlobalNewsUpdateState = { status: STATUS.idle }
 export const globalNewsUpdateReducer = (state = initialGlobalNewsUpdateState, action) => {
     switch (action.type) {
         case GLOBAL_NEWS_UPDATE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case GLOBAL_NEWS_UPDATE_SUCCESS:
-            return { status: 'completed', news: action.payload }
+            return { status: STATUS.completed, news: action.payload }
         case GLOBAL_NEWS_UPDATE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case GLOBAL_NEWS_UPDATE_RESET:
             return initialGlobalNewsUpdateState
         default:
@@ -61,16 +63,16 @@ export const globalNewsUpdateReducer = (state = initialGlobalNewsUpdateState, ac
     }
 }
 
-export const globalNewsDeleteReducer = (state = { status: 'idle' }, action) => {
+export const globalNewsDeleteReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case GLOBAL_NEWS_DELETE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case GLOBAL_NEWS_DELETE_SUCCESS:
-            return { status: 'completed', message: action.payload }
+            return { status: STATUS.completed, message: action.payload }
         case GLOBAL_NEWS_DELETE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case GLOBAL_NEWS_DELETE_RESET:
-            return { status: 'idle' }
+            return { status: STATUS.idle }
         default:
             return state
     }

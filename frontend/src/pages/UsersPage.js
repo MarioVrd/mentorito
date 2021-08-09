@@ -17,7 +17,7 @@ const UsersPage = () => {
     const { userInfo } = userLogin
 
     const userList = useSelector(state => state.userList)
-    const { loading, error, users } = userList
+    const { status, error, users } = userList
 
     useEffect(() => {
         dispatch(getUsers())
@@ -27,7 +27,7 @@ const UsersPage = () => {
         <Grid>
             <Main>
                 <Main.Title>Popis korisnika</Main.Title>
-                {loading && <Loader />}
+                {status === 'loading' && <Loader />}
                 {error && <Alert>{error}</Alert>}
                 <CardGrid>
                     {users && users.map(user => <UserCard key={user.id} user={user} />)}

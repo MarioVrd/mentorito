@@ -20,7 +20,7 @@ const ExercisePage = ({ location, match }) => {
     const { userInfo } = userLogin
 
     const exerciseDetails = useSelector(state => state.exerciseDetails)
-    const { loading, error, exercise } = exerciseDetails
+    const { status, error, exercise } = exerciseDetails
 
     const [submitId, setSubmitId] = useState(location.search.split('=')[1])
     const [isSubmitted, setIsSubmitted] = useState(true)
@@ -34,12 +34,12 @@ const ExercisePage = ({ location, match }) => {
     }, [location.search])
 
     useEffect(() => {
-        if (loading === false && exercise) {
+        if (status === 'completed' && exercise) {
             setIsSubmitted(
                 exercise.exerciseSubmissions.some(submit => submit.studentId === userInfo.id)
             )
         }
-    }, [loading, exercise, userInfo.id])
+    }, [status, exercise, userInfo.id])
 
     const teacherScreen =
         (userInfo?.role === ROLE_TEACHER || userInfo?.role === ROLE_ADMIN) &&
@@ -93,7 +93,7 @@ const ExercisePage = ({ location, match }) => {
     // If not submitted exercise, redirect to submission form
     // TODO: Check the deadline
     const studentScreen =
-        loading === false ? (
+        status === 'completed' ? (
             exercise.exerciseSubmissions.length === 1 && isSubmitted ? (
                 <ExerciseItem exercise={exercise.exerciseSubmissions[0]} />
             ) : (
@@ -111,7 +111,7 @@ const ExercisePage = ({ location, match }) => {
     return (
         <Grid>
             <Main>
-                {loading ? (
+                {status === 'loading' ? (
                     <Loader />
                 ) : error ? (
                     <Alert>{error}</Alert>

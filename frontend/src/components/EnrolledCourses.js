@@ -10,7 +10,7 @@ import Loader from './Loader'
 const EnrolledCourses = () => {
     const dispatch = useDispatch()
     const enrolledCourses = useSelector(state => state.enrolledCourses)
-    const { loading, error, enrollment } = enrolledCourses
+    const { status, error, enrollment } = enrolledCourses
 
     useEffect(() => {
         dispatch(getEnrolledCourses())
@@ -19,7 +19,7 @@ const EnrolledCourses = () => {
         <div>
             <Heading>Upisani kolegiji</Heading>
 
-            {loading && <Loader />}
+            {status === 'loading' && <Loader />}
             {error && <Alert>{error}</Alert>}
             {enrollment && enrollment.length ? (
                 <EnrolledGrid>

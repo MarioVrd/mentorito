@@ -17,7 +17,7 @@ const CoursesPage = ({ match: { path }, history }) => {
   const { userInfo } = userLogin
 
   const courseList = useSelector(state => state.courseList)
-  const { loading, error, courses } = courseList
+  const { status, error, courses } = courseList
 
   const courseEnroll = useSelector(state => state.courseEnroll)
   const { status: enrollStatus, error: enrollError, enrollment } = courseEnroll
@@ -53,7 +53,7 @@ const CoursesPage = ({ match: { path }, history }) => {
         {enrollError && <Alert>{enrollError}</Alert>}
         {deleteError && <Alert>{deleteError}</Alert>}
         {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
-        {loading ? (
+        {status === 'loading' ? (
           <Loader />
         ) : error ? (
           <Alert>{error}</Alert>

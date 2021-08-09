@@ -14,7 +14,7 @@ const LoginPage = ({ history }) => {
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
-    const { loading, error, userInfo } = userLogin
+    const { status, error, userInfo } = userLogin
 
     useEffect(() => {
         // Redirect to home if user is logged in
@@ -35,7 +35,7 @@ const LoginPage = ({ history }) => {
             <UserForm onSubmit={loginHandler}>
                 <UserForm.Title>Prijava</UserForm.Title>
                 {error && <Alert>{error}</Alert>}
-                {loading && <Loader />}
+                {status === 'loading' && <Loader />}
                 <UserForm.Group>
                     <UserForm.Label htmlFor="email">Email</UserForm.Label>
                     <UserForm.Input

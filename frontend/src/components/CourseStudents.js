@@ -17,7 +17,7 @@ const CourseStudents = ({ match }) => {
     const { status: enrollStatus } = courseEnroll
 
     const userList = useSelector(state => state.userList)
-    const { loading, error, users: students } = userList
+    const { status, error, users: students } = userList
 
     const isEnrolled = enrolledCourses => {
         return enrolledCourses.some(enrCourse => enrCourse.courseId === match.params.id)
@@ -31,7 +31,7 @@ const CourseStudents = ({ match }) => {
         if (courseStatus === 'completed') dispatch(getUsers(ROLE_STUDENT))
     }, [dispatch, courseStatus, enrollStatus])
 
-    return loading ? (
+    return status === 'loading' ? (
         <Loader />
     ) : error ? (
         <Alert>{error}</Alert>

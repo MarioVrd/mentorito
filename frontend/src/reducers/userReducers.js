@@ -14,58 +14,59 @@ import {
     USER_REGISTER_SUCCESS,
     USER_REGISTER_RESET
 } from '../constants/userConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 
-export const userLoginReducer = (state = {}, action) => {
+export const userLoginReducer = (state = { status: STATUS.idle}, action) => {
     switch (action.type) {
         case USER_LOGIN_REQUEST:
-            return { ...state, loading: true }
+            return { ...state, status: STATUS.loading }
         case USER_LOGIN_SUCCESS:
-            return { ...state, loading: false, userInfo: action.payload }
+            return { ...state, status: STATUS.completed, userInfo: action.payload }
         case USER_LOGIN_FAIL:
-            return { ...state, loading: false, error: action.payload }
+            return { ...state, status: STATUS.failed, error: action.payload }
         case USER_LOGOUT:
-            return {}
+            return { status: STATUS.idle}
         default:
             return state
     }
 }
 
-export const userListReducer = (state = { users: [] }, action) => {
+export const userListReducer = (state = { status: STATUS.idle, users: [] }, action) => {
     switch (action.type) {
         case USER_LIST_REQUEST:
-            return { loading: true }
+            return { status: STATUS.loading }
         case USER_LIST_SUCCESS:
-            return { loading: false, users: action.payload }
+            return { status: STATUS.completed, users: action.payload }
         case USER_LIST_FAIL:
-            return { loading: false, error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         default:
             return state
     }
 }
 
-export const userRegisterReducer = (state = {}, action) => {
+export const userRegisterReducer = (state = { status: STATUS.idle}, action) => {
     switch (action.type) {
         case USER_REGISTER_REQUEST:
-            return { loading: true }
+            return { status: STATUS.loading }
         case USER_REGISTER_SUCCESS:
-            return { loading: false, user: action.payload }
+            return { status: STATUS.completed, user: action.payload }
         case USER_REGISTER_FAIL:
-            return { loading: false, error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case USER_REGISTER_RESET:
-            return {}
+            return {status: STATUS.idle}
         default:
             return state
     }
 }
 
-export const userNotificationsReducer = (state = { status: 'idle' }, action) => {
+export const userNotificationsReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case USER_NOTIFICATIONS_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case USER_NOTIFICATIONS_SUCCESS:
-            return { status: 'completed', notifications: action.payload }
+            return { status: STATUS.completed, notifications: action.payload }
         case USER_NOTIFICATIONS_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         default:
             return state
     }

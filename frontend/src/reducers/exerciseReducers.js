@@ -12,17 +12,19 @@ import {
     EXERCISE_CREATE_FAIL,
     EXERCISE_CREATE_RESET
 } from '../constants/exerciseConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 
-const initialExerciseDetailsState = { exercise: { exerciseSubmissions: [], course: {} } }
+
+const initialExerciseDetailsState = { status: STATUS.idle, exercise: { exerciseSubmissions: [], course: {} } }
 
 export const exerciseDetailsReducer = (state = initialExerciseDetailsState, action) => {
     switch (action.type) {
         case EXERCISE_DETAILS_REQUEST:
-            return { ...state, loading: true }
+            return { ...state, status: STATUS.loading }
         case EXERCISE_DETAILS_SUCCESS:
-            return { ...state, loading: false, exercise: action.payload }
+            return { ...state, status: STATUS.completed, exercise: action.payload }
         case EXERCISE_DETAILS_FAIL:
-            return { ...state, loading: false, error: action.payload }
+            return { ...state, status: STATUS.failed, error: action.payload }
         case EXERCISE_DETAILS_RESET:
             return initialExerciseDetailsState
         default:
@@ -30,15 +32,15 @@ export const exerciseDetailsReducer = (state = initialExerciseDetailsState, acti
     }
 }
 
-const initialExerciseSubmitState = { status: 'idle' }
+const initialExerciseSubmitState = { status: STATUS.idle }
 export const exerciseSubmitReducer = (state = initialExerciseSubmitState, action) => {
     switch (action.type) {
         case EXERCISE_SUBMIT_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case EXERCISE_SUBMIT_SUCCESS:
-            return { status: 'completed', submission: action.payload }
+            return { status: STATUS.completed, submission: action.payload }
         case EXERCISE_SUBMIT_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case EXERCISE_SUBMIT_RESET:
             return initialExerciseSubmitState
         default:
@@ -46,15 +48,15 @@ export const exerciseSubmitReducer = (state = initialExerciseSubmitState, action
     }
 }
 
-const initialExerciseCreateState = { status: 'idle' }
+const initialExerciseCreateState = { status: STATUS.idle }
 export const exerciseCreateReducer = (state = initialExerciseCreateState, action) => {
     switch (action.type) {
         case EXERCISE_CREATE_REQUEST:
-            return { status: 'loading' }
+            return { status: STATUS.loading }
         case EXERCISE_CREATE_SUCCESS:
-            return { status: 'completed', exercise: action.payload }
+            return { status: STATUS.completed, exercise: action.payload }
         case EXERCISE_CREATE_FAIL:
-            return { status: 'failed', error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case EXERCISE_CREATE_RESET:
             return { initialExerciseCreateState }
         default:
