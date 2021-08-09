@@ -28,6 +28,7 @@ import {
     userRegisterReducer
 } from './userReducers'
 import { uploadReducer } from './uploadReducers'
+import { uiGlobalsReducer } from './uiReducers'
 
 const rootReducer = combineReducers({
     userLogin: userLoginReducer,
@@ -50,7 +51,8 @@ const rootReducer = combineReducers({
     exerciseDetails: exerciseDetailsReducer,
     upload: uploadReducer,
     exerciseSubmit: exerciseSubmitReducer,
-    exerciseCreate: exerciseCreateReducer
+    exerciseCreate: exerciseCreateReducer,
+    uiGlobals: uiGlobalsReducer
 })
 
 export default rootReducer

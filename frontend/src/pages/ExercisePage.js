@@ -87,7 +87,9 @@ const ExercisePage = ({ location, match }) => {
                     </Table.Body>
                 </Table>
             )
-        ) : null
+        ) : (
+            <Alert variant="info">Nema predanih vježbi</Alert>
+        )
 
     // If user is student show his submitted exercise if he submitted
     // If not submitted exercise, redirect to submission form

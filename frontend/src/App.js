@@ -13,11 +13,13 @@ import ExercisePage from './pages/ExercisePage'
 import PrivateRoute from './components/PrivateRoute'
 import GlobalNewsPage from './pages/GlobalNewsPage'
 import CourseForm from './components/CourseForm'
+import ScrollTop from './components/ScrollTop'
 
 const App = () => {
     return (
         <Router>
             <GlobalStyle />
+            <ScrollTop />
             <Layout>
                 <SideMenu />
                 <Switch>
@@ -51,7 +53,10 @@ const App = () => {
 
 const Layout = styled.div`
     display: grid;
-    grid-template-columns: minmax(300px, 1fr) 7fr;
+
+    @media (min-width: 1000px) {
+        grid-template-columns: minmax(300px, 1fr) 7fr;
+    }
 `
 
 export default App

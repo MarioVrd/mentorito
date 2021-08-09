@@ -13,6 +13,11 @@ export const getNews = asyncHandler(async (req, res) => {
     const numOfRecords = await prisma.globalNews.count()
     const numOfPages = Math.ceil(numOfRecords / size)
 
+    if (numOfRecords === 0) {
+        res.status(204)
+        throw new Error('Trenutno nema novosti.')
+    }
+
     if (page < 0 || page > numOfPages - 1)
         throw new Error(`Nepravilan zahtjev! Stranica mora biti između 1 i ${numOfPages}`)
 
