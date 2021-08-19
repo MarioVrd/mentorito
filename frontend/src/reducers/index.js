@@ -25,7 +25,8 @@ import {
     userListReducer,
     userLoginReducer,
     userNotificationsReducer,
-    userRegisterReducer
+    userRegisterReducer,
+    userUpdateReducer
 } from './userReducers'
 import { uploadReducer } from './uploadReducers'
 import { uiGlobalsReducer } from './uiReducers'
@@ -48,6 +49,7 @@ const rootReducer = combineReducers({
     courseMaterialAdd: courseMaterialAddReducer,
     courseEnroll: courseEnrollReducer,
     userRegister: userRegisterReducer,
+    userUpdate: userUpdateReducer,
     exerciseDetails: exerciseDetailsReducer,
     upload: uploadReducer,
     exerciseSubmit: exerciseSubmitReducer,

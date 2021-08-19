@@ -12,11 +12,15 @@ import {
     USER_REGISTER_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
-    USER_REGISTER_RESET
+    USER_REGISTER_RESET,
+    USER_UPDATE_FAIL,
+    USER_UPDATE_SUCCESS,
+    USER_UPDATE_RESET,
+    USER_UPDATE_REQUEST
 } from '../constants/userConstants'
 import { STATUS } from '../constants/requestStatusConstants'
 
-export const userLoginReducer = (state = { status: STATUS.idle}, action) => {
+export const userLoginReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case USER_LOGIN_REQUEST:
             return { ...state, status: STATUS.loading }
@@ -25,7 +29,7 @@ export const userLoginReducer = (state = { status: STATUS.idle}, action) => {
         case USER_LOGIN_FAIL:
             return { ...state, status: STATUS.failed, error: action.payload }
         case USER_LOGOUT:
-            return { status: STATUS.idle}
+            return { status: STATUS.idle }
         default:
             return state
     }
@@ -44,7 +48,7 @@ export const userListReducer = (state = { status: STATUS.idle, users: [] }, acti
     }
 }
 
-export const userRegisterReducer = (state = { status: STATUS.idle}, action) => {
+export const userRegisterReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case USER_REGISTER_REQUEST:
             return { status: STATUS.loading }
@@ -53,7 +57,22 @@ export const userRegisterReducer = (state = { status: STATUS.idle}, action) => {
         case USER_REGISTER_FAIL:
             return { status: STATUS.failed, error: action.payload }
         case USER_REGISTER_RESET:
-            return {status: STATUS.idle}
+            return { status: STATUS.idle }
+        default:
+            return state
+    }
+}
+
+export const userUpdateReducer = (state = { status: STATUS.idle }, action) => {
+    switch (action.type) {
+        case USER_UPDATE_REQUEST:
+            return { status: STATUS.loading }
+        case USER_UPDATE_SUCCESS:
+            return { status: STATUS.completed, user: action.payload }
+        case USER_UPDATE_FAIL:
+            return { status: STATUS.failed, error: action.payload }
+        case USER_UPDATE_RESET:
+            return { status: STATUS.idle }
         default:
             return state
     }

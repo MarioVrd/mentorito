@@ -13,7 +13,10 @@ import {
     USER_NOTIFICATIONS_SUCCESS,
     USER_REGISTER_FAIL,
     USER_REGISTER_REQUEST,
-    USER_REGISTER_SUCCESS
+    USER_REGISTER_SUCCESS,
+    USER_UPDATE_FAIL,
+    USER_UPDATE_REQUEST,
+    USER_UPDATE_SUCCESS
 } from '../constants/userConstants'
 import { ROLE_STUDENT } from '../constants/roles'
 
@@ -86,6 +89,36 @@ export const register =
         } catch (error) {
             dispatch({
                 type: USER_REGISTER_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message
+            })
+        }
+    }
+
+export const updateMyAccount =
+    (firstName, lastName, oldPassword, newPassword) => async (dispatch, getState) => {
+        const {
+            userLogin: { userInfo }
+        } = getState()
+
+        try {
+            dispatch({ type: USER_UPDATE_REQUEST })
+
+            const { data } = await axios.put(
+                '/api/users/me',
+                { firstName, lastName, oldPassword, newPassword },
+                getAuthorizedJsonConfig(userInfo.token)
+            )
+
+            dispatch({ type: USER_UPDATE_SUCCESS, payload: data })
+
+            // Login with new data to refresh userInfo
+            dispatch(login(data.email, newPassword?.length > 0 ? newPassword : oldPassword))
+        } catch (error) {
+            dispatch({
+                type: USER_UPDATE_FAIL,
                 payload:
                     error.response && error.response.data.message
                         ? error.response.data.message

@@ -71,6 +71,35 @@ export const login = asyncHandler(async (req, res) => {
     })
 })
 
+// @desc    Update my account
+// @route   PUT /api/users/me
+// @access  Private
+export const updateMyAccount = asyncHandler(async (req, res) => {
+    const { firstName, lastName, oldPassword, newPassword } = req.body
+
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } })
+
+    let validOldPassword = false
+
+    validOldPassword = await comparePassword(oldPassword, user.password)
+    if (!validOldPassword) throw new Error('Nepravilna trenutna lozinka')
+
+    const newData = { firstName, lastName }
+
+    if (newPassword) {
+        const encryptedPassword = await encrypt(newPassword)
+        newData.password = encryptedPassword
+    }
+
+    const updatedUser = await prisma.user.update({
+        where: { id: req.user.id },
+        data: newData,
+        select: { id: true, email: true, firstName: true, lastName: true }
+    })
+
+    res.json(updatedUser)
+})
+
 // @desc    Fetch all users or the ones selected by role in query
 // @route   GET /api/users
 // @access  Admin/Teacher
