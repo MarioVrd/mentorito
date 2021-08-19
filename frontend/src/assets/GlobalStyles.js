@@ -64,6 +64,18 @@ ul {
   margin-bottom: 1rem;
 }
 
+button + button {
+  margin-left: .4rem;
+}
+
+a + a {
+  margin-left: .4rem;
+}
+
+a + button {
+  margin-left: .4rem;
+}
+
 .text-accent {
   color: var(--clr-accent)
 }

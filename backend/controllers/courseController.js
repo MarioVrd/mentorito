@@ -74,31 +74,17 @@ export const getCourseById = asyncHandler(async (req, res) => {
 // @route   POST /api/courses
 // @access  Admin
 export const createCourse = asyncHandler(async (req, res) => {
-    let { title, description, locked, teacherEmail } = req.body
+    let { title, description, locked, teachers } = req.body
 
     if (typeof locked === 'string') validator.toBoolean(locked)
 
-    let teacher = null
-
-    if (teacherEmail) {
-        teacher = await prisma.user.findUnique({
-            where: { email: teacherEmail },
-            select: { id: true, role: true }
-        })
-
-        if (!teacher) {
-            res.status(404)
-            throw new Error('Nije pronađen profesor sa odabranim emailom')
-        }
-
-        if (teacher.role !== ROLE_TEACHER)
-            throw new Error('Nepravilan zahtjev! Pogrešan email profesora.')
-    }
-
     const course = await prisma.course.create({ data: { title, description, locked } })
 
-    if (teacher)
-        await prisma.enrollment.create({ data: { courseId: course.id, userId: teacher.id } })
+    if (teachers?.length > 0) {
+        teachers.forEach(async teacherId => {
+            await prisma.enrollment.create({ data: { courseId: course.id, userId: teacherId } })
+        })
+    }
 
     res.json(course)
 })
@@ -113,7 +99,7 @@ export const updateCourse = asyncHandler(async (req, res) => {
     }
 
     const { courseId } = req.params
-    let { title, description, locked, teacherEmail } = req.body
+    let { title, description, locked, teachers } = req.body
 
     if (typeof locked === 'string') locked = validator.toBoolean(locked)
 
@@ -123,25 +109,34 @@ export const updateCourse = asyncHandler(async (req, res) => {
         return res.json(updated)
     }
 
-    let teacher = null
-
-    if (teacherEmail) {
-        teacher = await prisma.user.findUnique({
-            where: { email: teacherEmail },
-            select: { id: true, role: true }
-        })
-
-        if (!teacher) {
-            res.status(404)
-            throw new Error('Nije pronađen profesor sa odabranim emailom')
+    // Get all enrolled teachers
+    const { enrolledUsers: enrolledTeachers } = await prisma.course.findUnique({
+        where: { id: courseId },
+        select: {
+            enrolledUsers: { where: { user: { role: ROLE_TEACHER } }, select: { userId: true } }
         }
+    })
 
-        if (teacher.role !== ROLE_TEACHER)
-            throw new Error('Nepravilan zahtjev! Pogrešan email profesora.')
+    // Unenroll teachers that are not in teachers array
+    if (teachers != null) {
+        enrolledTeachers.forEach(async teacher => {
+            if (teachers.indexOf(teacher.userId) === -1) {
+                await prisma.enrollment.delete({
+                    where: { userId_courseId: { userId: teacher.userId, courseId } }
+                })
+            }
+        })
     }
 
-    if (teacher)
-        await prisma.enrollment.create({ data: { courseId: courseId, userId: teacher.id } })
+    if (teachers?.length > 0) {
+        teachers.forEach(async teacherId => {
+            await prisma.enrollment.upsert({
+                where: { userId_courseId: { userId: teacherId, courseId } },
+                update: {},
+                create: { courseId: courseId, userId: teacherId }
+            })
+        })
+    }
 
     const updatedCourse = await prisma.course.update({
         where: { id: courseId },
@@ -160,12 +155,12 @@ export const deleteCourse = asyncHandler(async (req, res) => {
     try {
         const deletedCourse = await prisma.course.delete({ where: { id: courseId } })
 
-        res.json({ message: `Successfully deleted ${deletedCourse.title} course` })
+        res.json({ message: `Kolegij ${deletedCourse.title} uspješno obrisan` })
     } catch (error) {
         let message = error.message
 
         if (error.code === 'P2014')
-            message = 'There are still enrolled students, unenroll everyone and then delete'
+            message = 'Kolegij se ne može izbrisati dok ima upisanih korisnika'
 
         res.status(400).json({ message })
     }

@@ -86,5 +86,5 @@ export const deleteNews = asyncHandler(async (req, res) => {
 
     const deletedNews = await prisma.globalNews.delete({ where: { id } })
 
-    res.json({ message: `Successfully deleted ${deletedNews.title}` })
+    res.json({ message: `Uspješno obrisana obavijest ${deletedNews.title}` })
 })

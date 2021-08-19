@@ -132,7 +132,7 @@ const CoursePage = ({ match }) => {
                                 </ul>
                             </section>
                         ) : (
-                            <Alert variant="info">Trenutno nema vjezbi</Alert>
+                            <Alert variant="info">Trenutno nema vježbi</Alert>
                         )}
 
                         {course.materials.length > 0 && (
