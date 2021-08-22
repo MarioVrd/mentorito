@@ -89,6 +89,24 @@ export const getExerciseById = asyncHandler(async (req, res) => {
     res.json(exercise)
 })
 
+// @desc    Delete exercise with selected id
+// @route   DELETE /api/exercises/:id
+// @access  Teacher
+export const deleteExercise = asyncHandler(async (req, res) => {
+    const { id } = req.params
+
+    // To delete exercise we must first delete all related submissions
+    const deleteSubmissions = prisma.exerciseSubmission.deleteMany({
+        where: { exerciseId: id }
+    })
+
+    const deleteExercise = prisma.exercise.delete({ where: { id } })
+
+    const transaction = await prisma.$transaction([deleteSubmissions, deleteExercise])
+
+    res.json({ message: 'Vježba uspješno obrisana' })
+})
+
 // @desc    Submit the exercise with selected id
 // @route   POST /api/exercises/:id/submit
 // @access  Student
@@ -172,8 +190,6 @@ export const updateSubmittedExercise = asyncHandler(async (req, res) => {
             const userNotification = await prisma.userNotification.create({
                 data: { notificationId: notification.id, userId: studentId }
             })
-
-            console.log(userNotification)
         }
 
         data = { teacherComment, grade }

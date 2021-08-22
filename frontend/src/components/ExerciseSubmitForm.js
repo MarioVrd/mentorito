@@ -108,7 +108,7 @@ const ExerciseSubmitForm = () => {
                 </>
             )}
             <Button primary disabled={uploadStatus === 'loading' || submitStatus === 'loading'}>
-                Submit
+                Predaj
             </Button>
         </Form>
     )

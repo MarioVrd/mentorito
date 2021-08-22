@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getCourseNews } from '../actions/courseActions'
+import { getCourseDetails, getCourseNews } from '../actions/courseActions'
 import useApi from '../hooks/useApi'
 import NewsForm from './NewsForm'
 
@@ -37,27 +37,29 @@ const CourseNewsForm = ({ match, history }) => {
     }
 
     useEffect(() => {
-        if (status !== 'completed') {
-            dispatch(getCourseNews(match.params.id))
-        }
-    }, [match.params.id, status, dispatch])
+        dispatch(getCourseNews(match.params.id))
+    }, [match.params.id, dispatch])
 
     useEffect(() => {
         if (match.params.newsId && status === 'completed') {
             const selectedNews = news.find(n => n.id === match.params.newsId)
-            setTitle(selectedNews.title)
-            setContent(selectedNews.content)
+            if (selectedNews) {
+                setTitle(selectedNews.title)
+                setContent(selectedNews.content)
+            }
         }
     }, [match.params.newsId, status, news])
 
     useEffect(() => {
         if (createStatus === 'completed') {
+            dispatch(getCourseDetails(match.params.id))
             history.push(`/courses/${match.params.id}/news/${createdNews.id}`)
         }
         if (updateStatus === 'completed') {
+            dispatch(getCourseDetails(match.params.id))
             history.push(`/courses/${match.params.id}/news/${match.params.newsId}`)
         }
-    }, [history, match, createStatus, updateStatus, createdNews])
+    }, [dispatch, history, match, createStatus, updateStatus, createdNews])
 
     return (
         <NewsForm

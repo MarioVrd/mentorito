@@ -58,7 +58,7 @@ const ExercisePage = ({ location, match }) => {
                             <td>Student</td>
                             <td className="table-lg-show">Vrijeme predaje</td>
                             <td className="table-md-show">Ocjena</td>
-                            <td>Akcije</td>
+                            <td>Poveznice</td>
                         </tr>
                     </Table.Head>
                     <Table.Body>
@@ -125,7 +125,9 @@ const ExercisePage = ({ location, match }) => {
                                 {exercise.course.title}
                             </Link>
                         </Main.Title>
-                        {exercise.description && <p>{exercise.description}</p>}
+                        {exercise.description && (
+                            <Main.Description>{exercise.description}</Main.Description>
+                        )}
 
                         {
                             // If user is teacher and viewing certain student's submit

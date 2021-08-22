@@ -44,7 +44,7 @@ const CourseStudents = ({ match }) => {
                         <tr>
                             <td>Ime i prezime</td>
                             <td>Datum upisa</td>
-                            <td>Akcije</td>
+                            <td>Poveznice</td>
                         </tr>
                     </Table.Head>
                     <Table.Body>

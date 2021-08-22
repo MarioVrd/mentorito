@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, Route, Switch } from 'react-router-dom'
+import { Link, Route, Switch, useLocation } from 'react-router-dom'
 import { deleteGlobalNews, getGlobalNews } from '../actions/newsActions'
 import { Grid, Main } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
@@ -15,15 +15,20 @@ import {
 } from '../constants/newsConstants'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import Loader from '../components/Loader'
+import Pagination from '../components/Pagination'
 
 const GlobalNewsPage = ({ match: { path } }) => {
+    const location = useLocation()
+
+    const page = location.search.split('page=')[1]
+
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
     const globalNews = useSelector(state => state.globalNews)
-    const { status, error, news } = globalNews
+    const { status, error, news, numOfPages } = globalNews
 
     const globalNewsCreate = useSelector(state => state.globalNewsCreate)
     const { news: createdNews } = globalNewsCreate
@@ -35,14 +40,14 @@ const GlobalNewsPage = ({ match: { path } }) => {
     const { message } = globalNewsDelete
 
     useEffect(() => {
-        dispatch(getGlobalNews())
+        dispatch(getGlobalNews(location.search))
 
         return () => {
             dispatch({ type: GLOBAL_NEWS_CREATE_RESET })
             dispatch({ type: GLOBAL_NEWS_UPDATE_RESET })
             dispatch({ type: GLOBAL_NEWS_DELETE_RESET })
         }
-    }, [dispatch])
+    }, [dispatch, location.search])
 
     return (
         <Grid>
@@ -83,15 +88,25 @@ const GlobalNewsPage = ({ match: { path } }) => {
                             />
                             <Route exact path={path}>
                                 {news?.length > 0 ? (
-                                    news.map(n => (
-                                        <NewsItem
-                                            key={n.id}
-                                            news={n}
-                                            canModify={userInfo?.role === ROLE_ADMIN}
-                                            url={`/news/${n.id}`}
-                                            deleteHandler={() => dispatch(deleteGlobalNews(n.id))}
-                                        />
-                                    ))
+                                    <>
+                                        {news.map(n => (
+                                            <NewsItem
+                                                key={n.id}
+                                                news={n}
+                                                canModify={userInfo?.role === ROLE_ADMIN}
+                                                url={`/news/${n.id}`}
+                                                deleteHandler={() =>
+                                                    dispatch(deleteGlobalNews(n.id))
+                                                }
+                                            />
+                                        ))}
+                                        {numOfPages > 1 && (
+                                            <Pagination
+                                                numOfPages={+numOfPages}
+                                                currentPage={+page || 1}
+                                            />
+                                        )}
+                                    </>
                                 ) : (
                                     <Alert variant="info">Trenutno nema obavijesti</Alert>
                                 )}
@@ -103,7 +118,7 @@ const GlobalNewsPage = ({ match: { path } }) => {
             <Sidebar>
                 {(userInfo?.role === ROLE_ADMIN || userInfo?.role === ROLE_TEACHER) && (
                     <div>
-                        <h3>Linkovi</h3>
+                        <h3>Poveznice</h3>
                         <Link to={`${path}/add`}>Dodaj obavijest</Link>
                     </div>
                 )}

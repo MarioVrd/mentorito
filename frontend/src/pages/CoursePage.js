@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
 import { getCourseDetails, updateCourse } from '../actions/courseActions'
-import { Grid, Main } from '../assets/styles'
+import { Button, Grid, Main } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
 import CourseStudents from '../components/CourseStudents'
@@ -16,6 +16,8 @@ import CourseNewsList from '../components/CourseNewsList'
 import CourseNewsItem from '../components/CourseNewsItem'
 import Loader from '../components/Loader'
 import NewsItem from '../components/NewsItem'
+import { COURSE_DETAILS_RESET } from '../constants/courseConstants'
+import useApi from '../hooks/useApi'
 
 const CoursePage = ({ match }) => {
     const dispatch = useDispatch()
@@ -26,6 +28,9 @@ const CoursePage = ({ match }) => {
     const { status, error, course } = courseDetails
     const courseUpdate = useSelector(state => state.courseUpdate)
     const { status: updateStatus } = courseUpdate
+
+    const api = useApi()
+    const { status: apiStatus, error: apiError, apiFunction } = api
 
     const downloadMaterialHandler = async (e, materialUpload) => {
         e.preventDefault()
@@ -39,12 +44,16 @@ const CoursePage = ({ match }) => {
     }
 
     useEffect(() => {
-        dispatch(getCourseDetails(match.params.id))
-    }, [dispatch, match.params.id])
+        if (match.params.id) dispatch(getCourseDetails(match.params.id))
+    }, [dispatch, match.params.id, apiStatus])
 
     useEffect(() => {
         if (updateStatus === 'completed') dispatch(getCourseDetails(match.params.id))
     }, [updateStatus, dispatch, match.params.id])
+
+    useEffect(() => {
+        return () => dispatch({ type: COURSE_DETAILS_RESET })
+    }, [dispatch])
 
     return status === 'loading' ? (
         <Loader />
@@ -99,17 +108,25 @@ const CoursePage = ({ match }) => {
                     <Route exact path={`${match.path}/news`} component={CourseNewsList} />
 
                     <Route exact path={match.path}>
-                        {course.description && <p>{course.description}</p>}
+                        {course.description && (
+                            <Main.Description>{course.description}</Main.Description>
+                        )}
 
                         {course.news.length > 0 ? (
-                            course.news.map(n => (
-                                <NewsItem
-                                    key={n.id}
-                                    news={n}
-                                    canModify={userInfo?.role === ROLE_TEACHER}
-                                    url={`${match.url}/news/${n.id}`}
-                                />
-                            ))
+                            <>
+                                {apiError && <Alert>{apiError}</Alert>}
+                                {course.news.map(n => (
+                                    <NewsItem
+                                        key={n.id}
+                                        news={n}
+                                        canModify={userInfo?.role === ROLE_TEACHER}
+                                        url={`${match.url}/news/${n.id}`}
+                                        deleteHandler={() =>
+                                            apiFunction('DELETE', `/api/${match.url}/news/${n.id}`)
+                                        }
+                                    />
+                                ))}
+                            </>
                         ) : (
                             <Alert variant="info">Trenutno nema obavijesti</Alert>
                         )}
@@ -127,6 +144,15 @@ const CoursePage = ({ match }) => {
                                                     : 'Nije ograničen'}
                                                 )
                                             </Link>
+                                            <Button
+                                                small
+                                                danger
+                                                onClick={() =>
+                                                    apiFunction('DELETE', `/api/exercises/${e.id}`)
+                                                }
+                                            >
+                                                Izbriši
+                                            </Button>
                                         </li>
                                     ))}
                                 </ul>
@@ -135,7 +161,7 @@ const CoursePage = ({ match }) => {
                             <Alert variant="info">Trenutno nema vježbi</Alert>
                         )}
 
-                        {course.materials.length > 0 && (
+                        {course.materials?.length > 0 && (
                             <section>
                                 <h3>Materijali</h3>
                                 <ul>
@@ -170,7 +196,7 @@ const CoursePage = ({ match }) => {
                     </div>
 
                     <div>
-                        <h3>Linkovi</h3>
+                        <h3>Poveznice</h3>
                         <ul>
                             <li>
                                 <Link to={`${match.url}/news`}>Pregled obavijesti</Link>

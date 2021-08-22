@@ -35,7 +35,7 @@ const UsersPage = () => {
             </Main>
             <Sidebar>
                 <div>
-                    <h3>Linkovi</h3>
+                    <h3>Poveznice</h3>
                     <ul>
                         <li>
                             <Link to="/users/create">Dodaj novog korisnika</Link>

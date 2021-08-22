@@ -18,9 +18,9 @@ export const users = [
         password
     },
     {
-        firstName: 'teacher',
+        firstName: 'profesor',
         lastName: 'mentorito',
-        email: 'teacher@gmail.com',
+        email: 'profesor@gmail.com',
         password,
         role: ROLE_TEACHER
     }
@@ -28,10 +28,10 @@ export const users = [
 
 export const courses = [
     {
-        title: 'Programming Basics'
+        title: 'Programiranje na internetu'
     },
     {
-        title: 'Web Programming',
+        title: 'Uvod u programiranje',
         locked: true
     }
 ]

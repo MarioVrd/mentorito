@@ -1,5 +1,4 @@
-import styled from 'styled-components/macro'
-import { Button, Card, LinkButton } from '../assets/styles'
+import { Button, News, LinkButton } from '../assets/styles'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
@@ -44,26 +43,5 @@ NewsItem.propTypes = {
     url: PropTypes.string,
     deleteHandler: PropTypes.func
 }
-
-const News = styled(Card)`
-    width: 100%;
-    border-bottom: 1px solid var(--clr-grey-100);
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
-`
-
-News.Published = styled.p`
-    font-size: 0.85rem;
-    margin-bottom: 0.5em;
-    color: var(--clr-grey-300);
-`
-
-News.Title = styled.h3`
-    margin-bottom: 0.75rem;
-`
-
-News.Content = styled.p`
-    margin-bottom: 1rem;
-`
 
 export default NewsItem

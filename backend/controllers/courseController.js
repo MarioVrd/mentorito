@@ -277,7 +277,7 @@ export const deleteCourseNews = asyncHandler(async (req, res) => {
 
     const deletedNews = await prisma.courseNews.delete({ where: { id: newsId } })
 
-    res.json({ message: `Course news ${deletedNews.title} successfully deleted` })
+    res.json({ message: `Uspješno obrisana obavijest ${deletedNews.title}` })
 })
 
 // @desc    Create course materials

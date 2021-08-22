@@ -18,6 +18,10 @@ Main.Title = styled.h2`
     border-bottom: 1px solid var(--clr-grey-100);
 `
 
+Main.Description = styled.p`
+    margin-bottom: 1rem;
+`
+
 export const Sidebar = styled.aside`
     padding: 1.5rem;
     background-color: var(--clr-grey-100);
@@ -225,4 +229,25 @@ Table.Body = styled.tbody`
             background-color: var(--clr-grey-200);
         }
     }
+`
+
+export const News = styled(Card)`
+    width: 100%;
+    border-bottom: 1px solid var(--clr-grey-100);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+`
+
+News.Published = styled.p`
+    font-size: 0.85rem;
+    margin-bottom: 0.5em;
+    color: var(--clr-grey-300);
+`
+
+News.Title = styled.h3`
+    margin-bottom: 0.75rem;
+`
+
+News.Content = styled.p`
+    margin-bottom: 1rem;
 `
