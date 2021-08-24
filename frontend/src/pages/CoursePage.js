@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
 import { getCourseDetails, updateCourse } from '../actions/courseActions'
@@ -19,7 +19,9 @@ import NewsItem from '../components/NewsItem'
 import { COURSE_DETAILS_RESET } from '../constants/courseConstants'
 import useApi from '../hooks/useApi'
 
-const CoursePage = ({ match }) => {
+const CoursePage = ({ match, history }) => {
+    const [isMounted, setIsMounted] = useState(true)
+
     const dispatch = useDispatch()
 
     const userLogin = useSelector(state => state.userLogin)
@@ -32,6 +34,13 @@ const CoursePage = ({ match }) => {
     const api = useApi()
     const { status: apiStatus, error: apiError, apiFunction } = api
 
+    const unenroll = useApi()
+    const {
+        status: unenrollStatus,
+        error: unenrollError,
+        apiFunction: unenrollApiFunction
+    } = unenroll
+
     const downloadMaterialHandler = async (e, materialUpload) => {
         e.preventDefault()
         await getFileFromApi(materialUpload, userInfo.token)
@@ -43,6 +52,10 @@ const CoursePage = ({ match }) => {
         dispatch(updateCourse(course.id, { locked: !course.locked }))
     }
 
+    const unenrollMe = () => {
+        unenrollApiFunction('DELETE', `/api/courses/${match.params.id}/enroll/${userInfo.id}`)
+    }
+
     useEffect(() => {
         if (match.params.id) dispatch(getCourseDetails(match.params.id))
     }, [dispatch, match.params.id, apiStatus])
@@ -52,7 +65,14 @@ const CoursePage = ({ match }) => {
     }, [updateStatus, dispatch, match.params.id])
 
     useEffect(() => {
-        return () => dispatch({ type: COURSE_DETAILS_RESET })
+        if (unenrollStatus === 'completed' && isMounted) history.push('/courses')
+    }, [history, unenrollStatus, isMounted])
+
+    useEffect(() => {
+        return () => {
+            setIsMounted(false)
+            dispatch({ type: COURSE_DETAILS_RESET })
+        }
     }, [dispatch])
 
     return status === 'loading' ? (
@@ -112,7 +132,9 @@ const CoursePage = ({ match }) => {
                             <Main.Description>{course.description}</Main.Description>
                         )}
 
-                        {course.news.length > 0 ? (
+                        {unenrollError && <Alert>{unenrollError}</Alert>}
+
+                        {course.news?.length > 0 ? (
                             <>
                                 {apiError && <Alert>{apiError}</Alert>}
                                 {course.news.map(n => (
@@ -225,6 +247,12 @@ const CoursePage = ({ match }) => {
                                     </li>
                                 </>
                             )}
+
+                            <li>
+                                <Link to="" onClick={unenrollMe}>
+                                    Ispis iz kolegija
+                                </Link>
+                            </li>
 
                             {userInfo?.role === ROLE_ADMIN && (
                                 <li>

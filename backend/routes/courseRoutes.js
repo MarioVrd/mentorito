@@ -12,7 +12,8 @@ import {
     updateCourseNews,
     deleteCourseNews,
     getCourseNewsById,
-    createCourseMaterial
+    createCourseMaterial,
+    unenrollCourse
 } from '../controllers/courseController.js'
 import { admin, enrolled, protect, teacher } from '../middleware/authMiddleware.js'
 
@@ -30,6 +31,7 @@ router
 router.route('/:courseId/materials').post(protect, teacher, enrolled, createCourseMaterial)
 router.get('/enrolled', protect, getEnrolledCourses)
 router.post('/enroll', protect, enrollToCourse)
+router.delete('/:courseId/enroll/:userId', protect, unenrollCourse)
 router
     .route('/:courseId')
     .get(protect, enrolled, getCourseById)

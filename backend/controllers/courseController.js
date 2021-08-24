@@ -207,6 +207,42 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
     res.json({ ...newEnrollment, message: `Uspješno ste se upisali u kolegij ${course.title}` })
 })
 
+// @desc    Unenroll logged in or specified userId to selected courseId
+// @route   DELETE /api/courses/:courseId/enroll/:userId
+// @access  Student/Teacher/Admin
+export const unenrollCourse = asyncHandler(async (req, res) => {
+    const { userId, courseId } = req.params
+
+    if (!courseId) throw new Error('Nepravilan zahtjev! Potreban ID kolegija.')
+
+    if (userId && req.user.role === ROLE_STUDENT) {
+        res.status(401)
+        throw new Error('Nemate dopuštenje za ispisivanje drugih studenata')
+    }
+
+    const enrollment = await prisma.enrollment.findUnique({
+        where: { userId_courseId: { userId: userId || req.user.id, courseId } }
+    })
+
+    if (!enrollment) {
+        const errMsg = userId
+            ? 'Odabrani korisnik nije upisan na odabrani kolegij'
+            : 'Niste upisani na odabrani kolegij'
+
+        throw new Error(`Nepravilan zahtjev! ${errMsg}`)
+    }
+
+    await prisma.enrollment.delete({
+        where: { userId_courseId: { userId: userId || req.user.id, courseId } }
+    })
+
+    const resMsg = userId
+        ? 'Odabrani korisnik uspješno ispisan sa kolegija'
+        : 'Ipisani ste sa odabranog kolegija'
+
+    res.json({ message: resMsg })
+})
+
 // @desc    Fetch all course news
 // @route   GET /api/courses/:courseId/news
 // @access  Enrolled/Admin
