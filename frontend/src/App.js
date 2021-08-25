@@ -14,6 +14,7 @@ import PrivateRoute from './components/PrivateRoute'
 import GlobalNewsPage from './pages/GlobalNewsPage'
 import CourseForm from './components/CourseForm'
 import ScrollTop from './components/ScrollTop'
+import NotFound from './components/NotFound'
 
 const App = () => {
     return (
@@ -29,7 +30,7 @@ const App = () => {
                     <Route path="/news" component={GlobalNewsPage} />
                     <PrivateRoute admin exact path="/users/create" component={RegisterPage} />
                     <PrivateRoute admin exact path="/users" component={UsersPage} />
-                    <PrivateRoute exact path="/exercises/:id" component={ExercisePage} />
+                    <PrivateRoute path="/exercises/:id" component={ExercisePage} />
 
                     <PrivateRoute exact path="/settings" component={SettingsPage} />
                     <PrivateRoute path="/courses/:id" component={CoursePage} />
@@ -45,6 +46,8 @@ const App = () => {
                         path={`/admin/courses/create`}
                         component={CourseForm}
                     />
+
+                    <Route path="*" component={NotFound} />
                 </Switch>
             </Layout>
         </Router>

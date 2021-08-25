@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, Route, Switch } from 'react-router-dom'
 import { getExerciseDetails } from '../actions/exerciseActions'
 import { Grid, Main, Table } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
@@ -10,6 +10,8 @@ import ExerciseSubmitForm from '../components/ExerciseSubmitForm'
 import { EXERCISE_DETAILS_RESET } from '../constants/exerciseConstants'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import Loader from '../components/Loader'
+import ExerciseForm from '../components/ExerciseForm'
+import PrivateRoute from '../components/PrivateRoute'
 
 const ExercisePage = ({ location, match }) => {
     const { id } = match.params
@@ -125,16 +127,32 @@ const ExercisePage = ({ location, match }) => {
                                 {exercise.course.title}
                             </Link>
                         </Main.Title>
-                        {exercise.description && (
-                            <Main.Description>{exercise.description}</Main.Description>
-                        )}
 
-                        {
-                            // If user is teacher and viewing certain student's submit
-                            userInfo.role === ROLE_TEACHER || userInfo.role === ROLE_ADMIN
-                                ? teacherScreen
-                                : studentScreen
-                        }
+                        <Switch>
+                            {userInfo?.role === ROLE_TEACHER && (
+                                <PrivateRoute teacher path={`/exercises/${id}/edit`}>
+                                    <ExerciseForm
+                                        type="edit"
+                                        exerciseId={id}
+                                        currTitle={exercise.title}
+                                        currDescription={exercise.description}
+                                    />
+                                </PrivateRoute>
+                            )}
+
+                            <Route path="/">
+                                {exercise.description && (
+                                    <Main.Description>{exercise.description}</Main.Description>
+                                )}
+
+                                {
+                                    // If user is teacher and viewing certain student's submit
+                                    userInfo.role === ROLE_TEACHER || userInfo.role === ROLE_ADMIN
+                                        ? teacherScreen
+                                        : studentScreen
+                                }
+                            </Route>
+                        </Switch>
                     </>
                 )}
             </Main>
@@ -145,6 +163,14 @@ const ExercisePage = ({ location, match }) => {
                         ? new Date(exercise.deadline).toLocaleString()
                         : 'Nije ograničen'}
                 </p>
+                <div>
+                    <h3>Poveznice</h3>
+                    <ul>
+                        <li>
+                            <Link to={`/exercises/${exercise.id}/edit`}>Uredi vježbu</Link>
+                        </li>
+                    </ul>
+                </div>
             </Sidebar>
         </Grid>
     )

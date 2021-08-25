@@ -35,12 +35,13 @@ export const updateExercise = asyncHandler(async (req, res) => {
     const { id } = req.params
     let { title, description, deadline } = req.body
 
-    if (!isValidDeadline(deadline))
-        throw new Error(
-            'Nepravilan zahtjev! Rok za predaju mora biti u obliku datuma i u budućnosti'
-        )
-
-    deadline = validator.toDate(deadline)
+    if (deadline != null) {
+        if (!isValidDeadline(deadline))
+            throw new Error(
+                'Nepravilan zahtjev! Rok za predaju mora biti u obliku datuma i u budućnosti'
+            )
+        deadline = validator.toDate(deadline)
+    }
 
     const updatedExercise = await prisma.exercise.update({
         where: { id },

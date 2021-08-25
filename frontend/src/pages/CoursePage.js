@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
 import { getCourseDetails, updateCourse } from '../actions/courseActions'
-import { Button, Grid, Main } from '../assets/styles'
+import { Button, Grid, LinkButton, Main } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
 import CourseStudents from '../components/CourseStudents'
 import PrivateRoute from '../components/PrivateRoute'
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import { getFileFromApi } from '../utils/downloadUtils'
-import CreateExerciseForm from '../components/CreateExerciseForm'
+import ExerciseForm from '../components/ExerciseForm'
 import AddMaterialForm from '../components/AddMaterialForm'
 import CourseNewsForm from '../components/CourseNewsForm'
 import CourseNewsList from '../components/CourseNewsList'
@@ -109,12 +109,9 @@ const CoursePage = ({ match, history }) => {
                                 path="/courses/:id/add-material"
                                 component={AddMaterialForm}
                             />
-                            <PrivateRoute
-                                teacher
-                                exact
-                                path="/courses/:id/add-exercise"
-                                component={CreateExerciseForm}
-                            />
+                            <PrivateRoute teacher exact path="/courses/:id/add-exercise">
+                                <ExerciseForm type="create" />
+                            </PrivateRoute>
                             <PrivateRoute
                                 teacher
                                 exact
@@ -166,6 +163,13 @@ const CoursePage = ({ match, history }) => {
                                                     : 'Nije ograničen'}
                                                 )
                                             </Link>
+                                            <LinkButton
+                                                size="small"
+                                                variant="success"
+                                                to={`/exercises/${e.id}/edit`}
+                                            >
+                                                Uredi
+                                            </LinkButton>
                                             <Button
                                                 small
                                                 danger
