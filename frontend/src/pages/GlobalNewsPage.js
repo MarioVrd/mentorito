@@ -16,6 +16,7 @@ import {
 import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import Loader from '../components/Loader'
 import Pagination from '../components/Pagination'
+import GlobalNewsItem from '../components/GlobalNewsItem'
 
 const GlobalNewsPage = ({ match: { path } }) => {
     const location = useLocation()
@@ -52,7 +53,9 @@ const GlobalNewsPage = ({ match: { path } }) => {
     return (
         <Grid>
             <Main>
-                <Main.Title>Općenite obavijesti</Main.Title>
+                <Main.Title>
+                    <Link to="/news">Općenite obavijesti</Link>
+                </Main.Title>
                 {status === 'loading' ? (
                     <Loader />
                 ) : error ? (
@@ -74,18 +77,19 @@ const GlobalNewsPage = ({ match: { path } }) => {
                         <Switch>
                             <PrivateRoute
                                 admin
-                                teacher
                                 exact
                                 path={`${path}/add`}
                                 component={GlobalNewsForm}
                             />
                             <PrivateRoute
                                 admin
-                                teacher
                                 exact
                                 path={`${path}/:id/edit`}
                                 component={GlobalNewsForm}
                             />
+
+                            <Route exact path={`${path}/:id`} component={GlobalNewsItem} />
+
                             <Route exact path={path}>
                                 {news?.length > 0 ? (
                                     <>

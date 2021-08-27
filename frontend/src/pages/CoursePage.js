@@ -163,22 +163,29 @@ const CoursePage = ({ match, history }) => {
                                                     : 'Nije ograničen'}
                                                 )
                                             </Link>
-                                            <LinkButton
-                                                size="small"
-                                                variant="success"
-                                                to={`/exercises/${e.id}/edit`}
-                                            >
-                                                Uredi
-                                            </LinkButton>
-                                            <Button
-                                                small
-                                                danger
-                                                onClick={() =>
-                                                    apiFunction('DELETE', `/api/exercises/${e.id}`)
-                                                }
-                                            >
-                                                Izbriši
-                                            </Button>
+                                            {userInfo?.role === ROLE_TEACHER && (
+                                                <>
+                                                    <LinkButton
+                                                        size="small"
+                                                        variant="success"
+                                                        to={`/exercises/${e.id}/edit`}
+                                                    >
+                                                        Uredi
+                                                    </LinkButton>
+                                                    <Button
+                                                        small
+                                                        danger
+                                                        onClick={() =>
+                                                            apiFunction(
+                                                                'DELETE',
+                                                                `/api/exercises/${e.id}`
+                                                            )
+                                                        }
+                                                    >
+                                                        Izbriši
+                                                    </Button>
+                                                </>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>

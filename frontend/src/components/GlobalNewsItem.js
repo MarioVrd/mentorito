@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { getCourseDetails } from '../actions/courseActions'
-import { ROLE_TEACHER } from '../constants/roles'
+import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { getGlobalNews } from '../actions/newsActions'
+import { ROLE_ADMIN } from '../constants/roles'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
 import Loader from './Loader'
 import NewsItemDetails from './NewsItemDetails'
 
-const CourseNewsItem = ({ match, history }) => {
+const GlobalNewsItem = ({ match, history }) => {
     const [isMounted, setIsMounted] = useState(true)
 
     const dispatch = useDispatch()
@@ -15,8 +15,8 @@ const CourseNewsItem = ({ match, history }) => {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
-    const courseNews = useApi()
-    const { status, error, data: news, apiFunction } = courseNews
+    const globalNews = useApi()
+    const { status, error, data: news, apiFunction } = globalNews
 
     useEffect(() => {
         if (apiFunction && isMounted) apiFunction('GET', `/api${match.url}`)
@@ -30,8 +30,8 @@ const CourseNewsItem = ({ match, history }) => {
 
     const deleteHandler = () => {
         apiFunction('DELETE', `/api${match.url}`)
-        dispatch(getCourseDetails(match.params.id))
-        history.push(`/courses/${match.params.id}`)
+        dispatch(getGlobalNews())
+        history.push('/news')
     }
 
     return status === 'loading' ? (
@@ -41,7 +41,7 @@ const CourseNewsItem = ({ match, history }) => {
     ) : news ? (
         <NewsItemDetails
             news={news}
-            canModify={userInfo?.role === ROLE_TEACHER}
+            canModify={userInfo?.role === ROLE_ADMIN}
             deleteHandler={deleteHandler}
             editUrl={`${match.url}/edit`}
         />
@@ -50,4 +50,4 @@ const CourseNewsItem = ({ match, history }) => {
     )
 }
 
-export default CourseNewsItem
+export default GlobalNewsItem

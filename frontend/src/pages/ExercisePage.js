@@ -94,15 +94,13 @@ const ExercisePage = ({ location, match }) => {
         )
 
     // If user is student show his submitted exercise if he submitted
-    // If not submitted exercise, redirect to submission form
-    // TODO: Check the deadline
+    // If not submitted exercise, show submission form
     const studentScreen =
         status === 'completed' ? (
             exercise.exerciseSubmissions.length === 1 && isSubmitted ? (
                 <ExerciseItem exercise={exercise.exerciseSubmissions[0]} />
             ) : (
                 <ExerciseSubmitForm />
-                // <Redirect push to={`${location.pathname}/submission`} />
             )
         ) : null
 
@@ -130,7 +128,7 @@ const ExercisePage = ({ location, match }) => {
 
                         <Switch>
                             {userInfo?.role === ROLE_TEACHER && (
-                                <PrivateRoute teacher path={`/exercises/${id}/edit`}>
+                                <PrivateRoute teacher exact path={`/exercises/${id}/edit`}>
                                     <ExerciseForm
                                         type="edit"
                                         exerciseId={id}
@@ -140,7 +138,7 @@ const ExercisePage = ({ location, match }) => {
                                 </PrivateRoute>
                             )}
 
-                            <Route path="/">
+                            <Route exact path={`/exercises/${id}`}>
                                 {exercise.description && (
                                     <Main.Description>{exercise.description}</Main.Description>
                                 )}
