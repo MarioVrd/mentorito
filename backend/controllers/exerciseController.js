@@ -168,29 +168,24 @@ export const updateSubmittedExercise = asyncHandler(async (req, res) => {
 
         if (teacherComment && grade) {
             notifData = {
-                exerciseId: exercise.id,
-                courseId: exercise.courseId,
                 text: `Profesor ${req.user.firstName} ${req.user.lastName} je komentirao i dodao ocjenu na vježbu ${exercise.title}`
             }
         } else if (teacherComment) {
             notifData = {
-                exerciseId: exercise.id,
-                courseId: exercise.courseId,
                 text: `Profesor ${req.user.firstName} ${req.user.lastName} je komentirao vježbu ${exercise.title}`
             }
         } else if (grade) {
             notifData = {
-                exerciseId: exercise.id,
-                courseId: exercise.courseId,
                 text: `Profesor ${req.user.firstName} ${req.user.lastName} je  dodao ocjenu na vježbu ${exercise.title}`
             }
         }
 
         if (notifData) {
-            const notification = await prisma.notification.create({ data: notifData })
-            const userNotification = await prisma.userNotification.create({
-                data: { notificationId: notification.id, userId: studentId }
-            })
+            notifData.exerciseId = exercise.id
+            notifData.courseId = exercise.courseId
+            notifData.userId = studentId
+
+            await prisma.notification.create({ data: notifData })
         }
 
         data = { teacherComment, grade }

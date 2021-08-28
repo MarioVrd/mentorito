@@ -22,26 +22,18 @@ model User {
   exerciseSubmissions ExerciseSubmission[]
   courseNews          CourseNews[]
   globalNews          GlobalNews[]
-  notifications       UserNotification[]
+  notifications       Notification[]
 }
 
 model Notification {
-  id               String             @id @default(uuid())
-  courseId         String?
-  exerciseId       String?
-  text             String
-  userNotification UserNotification[]
-}
-
-model UserNotification {
-  userId         String
-  user           User         @relation(fields: [userId], references: [id])
-  notificationId String
-  notification   Notification @relation(fields: [notificationId], references: [id])
-  seen           Boolean      @default(false)
-  createdAt      DateTime     @default(now())
-
-  @@id([userId, notificationId])
+  id         String   @id @default(uuid())
+  courseId   String?
+  exerciseId String
+  text       String
+  seen       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model GlobalNews {

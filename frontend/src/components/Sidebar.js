@@ -43,15 +43,13 @@ const Sidebar = ({ children }) => {
                 {userInfo?.role === ROLE_STUDENT && notifications?.length > 0 ? (
                     <ul>
                         {notifications.map(n => (
-                            <li key={n.notificationId}>
-                                <Link to={`/exercises/${n.notification.exerciseId}`}>
-                                    {n.notification.text}
-                                </Link>
+                            <li key={n.id}>
+                                <Link to={`/exercises/${n.exerciseId}`}>{n.text}</Link>
                                 <p>{new Date(n.createdAt).toLocaleString()}</p>
                                 <Button
                                     danger
                                     small
-                                    onClick={() => markNotificationAsSeenHandler(n.notificationId)}
+                                    onClick={() => markNotificationAsSeenHandler(n.id)}
                                 >
                                     Označi kao pročitano
                                 </Button>

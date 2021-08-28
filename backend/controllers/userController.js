@@ -49,7 +49,7 @@ export const login = asyncHandler(async (req, res) => {
 
     const user = await prisma.user.findUnique({
         where: { email: email },
-        include: { notifications: { include: { notification: true } } }
+        include: { notifications: true }
     })
 
     if (!user) throw new Error('Nepravilni podaci za prijavu')
@@ -127,9 +127,8 @@ export const getUserList = asyncHandler(async (req, res) => {
 // @route   GET /api/users/notifications
 // @access  Private
 export const getUserNotifications = asyncHandler(async (req, res) => {
-    const notifications = await prisma.userNotification.findMany({
+    const notifications = await prisma.notification.findMany({
         where: { AND: [{ userId: req.user.id }, { seen: false }] },
-        include: { notification: true },
         orderBy: { createdAt: 'desc' }
     })
 
@@ -142,8 +141,8 @@ export const getUserNotifications = asyncHandler(async (req, res) => {
 export const markNotificationAsSeen = asyncHandler(async (req, res) => {
     const { notificationId } = req.params
 
-    const notification = await prisma.userNotification.update({
-        where: { userId_notificationId: { userId: req.user.id, notificationId } },
+    const notification = await prisma.notification.update({
+        where: { id: notificationId },
         data: { seen: true }
     })
 

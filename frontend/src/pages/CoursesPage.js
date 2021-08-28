@@ -64,16 +64,16 @@ const CoursesPage = ({ match: { path }, history }) => {
                 )}
             </Main>
             <Sidebar>
-                <div>
-                    <h3>Poveznice</h3>
-                    <ul>
-                        <li>
-                            {userInfo?.role === ROLE_ADMIN && (
+                {userInfo?.role === ROLE_ADMIN && (
+                    <div>
+                        <h3>Poveznice</h3>
+                        <ul>
+                            <li>
                                 <Link to="/admin/courses/create">Kreiraj kolegij</Link>
-                            )}
-                        </li>
-                    </ul>
-                </div>
+                            </li>
+                        </ul>
+                    </div>
+                )}
             </Sidebar>
         </Grid>
     )
