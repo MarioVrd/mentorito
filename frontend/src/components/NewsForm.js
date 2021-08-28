@@ -1,6 +1,7 @@
 // Shared component for global and course news create and update
 import PropTypes from 'prop-types'
 import { Button, Form } from '../assets/styles'
+import { STATUS } from '../constants/requestStatusConstants'
 import Alert from './Alert'
 
 const NewsForm = props => {
@@ -42,7 +43,10 @@ const NewsForm = props => {
                 />
             </Form.Group>
 
-            <Button primary disabled={createStatus === 'loading' || updateStatus === 'loading'}>
+            <Button
+                primary
+                disabled={createStatus === STATUS.loading || updateStatus === STATUS.loading}
+            >
                 {formTitle}
             </Button>
         </Form>

@@ -10,6 +10,7 @@ import {
     COURSE_DETAILS_RESET,
     COURSE_UPDATE_RESET
 } from '../constants/courseConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_TEACHER } from '../constants/roles'
 import Alert from './Alert'
 
@@ -37,17 +38,17 @@ const CourseForm = () => {
     const { status: updateStatus, error: updateError } = courseUpdate
 
     useEffect(() => {
-        if (createStatus === 'completed') {
+        if (createStatus === STATUS.completed) {
             history.push(`/courses/${createdCourse.id}`)
         }
 
-        if (updateStatus === 'completed') {
+        if (updateStatus === STATUS.completed) {
             history.push(`/courses/${match.params.id}`)
         }
     }, [dispatch, createStatus, createdCourse, history, match.params.id, updateStatus])
 
     useEffect(() => {
-        if (match.params.id && courseStatus === 'completed') {
+        if (match.params.id && courseStatus === STATUS.completed) {
             setTitle(course.title)
             setDescription(course.description || '')
             setLocked(course.locked)
@@ -194,7 +195,10 @@ const CourseForm = () => {
                     </Form.Group>
                 )}
 
-                <Button primary disabled={createStatus === 'loading' || updateStatus === 'loading'}>
+                <Button
+                    primary
+                    disabled={createStatus === STATUS.loading || updateStatus === STATUS.loading}
+                >
                     {match.params.id ? 'Uredi kolegij' : 'Dodaj kolegij'}
                 </Button>
             </Form>

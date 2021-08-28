@@ -18,6 +18,7 @@ import Loader from '../components/Loader'
 import NewsItem from '../components/NewsItem'
 import { COURSE_DETAILS_RESET } from '../constants/courseConstants'
 import useApi from '../hooks/useApi'
+import { STATUS } from '../constants/requestStatusConstants'
 
 const CoursePage = ({ match, history }) => {
     const [isMounted, setIsMounted] = useState(true)
@@ -61,11 +62,11 @@ const CoursePage = ({ match, history }) => {
     }, [dispatch, match.params.id, apiStatus])
 
     useEffect(() => {
-        if (updateStatus === 'completed') dispatch(getCourseDetails(match.params.id))
+        if (updateStatus === STATUS.completed) dispatch(getCourseDetails(match.params.id))
     }, [updateStatus, dispatch, match.params.id])
 
     useEffect(() => {
-        if (unenrollStatus === 'completed' && isMounted) history.push('/courses')
+        if (unenrollStatus === STATUS.completed && isMounted) history.push('/courses')
     }, [history, unenrollStatus, isMounted])
 
     useEffect(() => {
@@ -75,7 +76,7 @@ const CoursePage = ({ match, history }) => {
         }
     }, [dispatch])
 
-    return status === 'loading' ? (
+    return status === STATUS.loading ? (
         <Loader />
     ) : error ? (
         <Main>

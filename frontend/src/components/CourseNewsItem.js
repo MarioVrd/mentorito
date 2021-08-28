@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCourseDetails } from '../actions/courseActions'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_TEACHER } from '../constants/roles'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
@@ -34,7 +35,7 @@ const CourseNewsItem = ({ match, history }) => {
         history.push(`/courses/${match.params.id}`)
     }
 
-    return status === 'loading' ? (
+    return status === STATUS.loading ? (
         <Loader />
     ) : error ? (
         <Alert>{error}</Alert>

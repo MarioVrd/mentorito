@@ -8,6 +8,7 @@ import Alert from '../components/Alert'
 import Loader from '../components/Loader'
 import Sidebar from '../components/Sidebar'
 import UserCard from '../components/UserCard'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_ADMIN } from '../constants/roles'
 
 const UsersPage = () => {
@@ -27,7 +28,7 @@ const UsersPage = () => {
         <Grid>
             <Main>
                 <Main.Title>Popis korisnika</Main.Title>
-                {status === 'loading' && <Loader />}
+                {status === STATUS.loading && <Loader />}
                 {error && <Alert>{error}</Alert>}
                 <CardGrid>
                     {users && users.map(user => <UserCard key={user.id} user={user} />)}

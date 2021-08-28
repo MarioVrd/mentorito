@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCourseNews } from '../actions/courseActions'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_TEACHER } from '../constants/roles'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
@@ -25,7 +26,7 @@ const CourseNewsList = ({ match }) => {
         apiFunction('DELETE', `/api/courses/${match.params.id}/news/${newsId}`)
     }
     useEffect(() => {
-        if (apiStatus === 'completed' && isMounted) dispatch(getCourseNews(match.params.id))
+        if (apiStatus === STATUS.completed && isMounted) dispatch(getCourseNews(match.params.id))
     }, [apiStatus, dispatch, isMounted, match.params.id])
 
     useEffect(() => {
@@ -38,7 +39,7 @@ const CourseNewsList = ({ match }) => {
         }
     }, [])
 
-    return status === 'loading' ? (
+    return status === STATUS.loading ? (
         <Loader />
     ) : error ? (
         <Alert>{error}</Alert>

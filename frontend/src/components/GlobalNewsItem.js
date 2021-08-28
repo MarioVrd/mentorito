@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getGlobalNews } from '../actions/newsActions'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_ADMIN } from '../constants/roles'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
@@ -34,7 +35,7 @@ const GlobalNewsItem = ({ match, history }) => {
         history.push('/news')
     }
 
-    return status === 'loading' ? (
+    return status === STATUS.loading ? (
         <Loader />
     ) : error ? (
         <Alert>{error}</Alert>

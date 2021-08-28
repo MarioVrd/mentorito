@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addCourseMaterial } from '../actions/courseActions'
 import { Button, Form } from '../assets/styles'
+import { STATUS } from '../constants/requestStatusConstants'
 import Alert from './Alert'
 import UploadFileInput from './UploadFileInput'
 
@@ -16,7 +17,7 @@ const AddMaterialForm = ({ match: { params } }) => {
     const addCourseMaterialHandler = e => {
         e.preventDefault()
 
-        if (status === 'completed') {
+        if (status === STATUS.completed) {
             dispatch(addCourseMaterial(params.id, { uploadId: uploadData.id, description }))
         }
     }

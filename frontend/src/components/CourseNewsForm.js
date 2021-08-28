@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getCourseDetails, getCourseNews } from '../actions/courseActions'
+import { STATUS } from '../constants/requestStatusConstants'
 import useApi from '../hooks/useApi'
 import NewsForm from './NewsForm'
 
@@ -41,7 +42,7 @@ const CourseNewsForm = ({ match, history }) => {
     }, [match.params.id, dispatch])
 
     useEffect(() => {
-        if (match.params.newsId && status === 'completed') {
+        if (match.params.newsId && status === STATUS.completed) {
             const selectedNews = news.find(n => n.id === match.params.newsId)
             if (selectedNews) {
                 setTitle(selectedNews.title)
@@ -51,11 +52,11 @@ const CourseNewsForm = ({ match, history }) => {
     }, [match.params.newsId, status, news])
 
     useEffect(() => {
-        if (createStatus === 'completed') {
+        if (createStatus === STATUS.completed) {
             dispatch(getCourseDetails(match.params.id))
             history.push(`/courses/${match.params.id}/news/${createdNews.id}`)
         }
-        if (updateStatus === 'completed') {
+        if (updateStatus === STATUS.completed) {
             dispatch(getCourseDetails(match.params.id))
             history.push(`/courses/${match.params.id}/news/${match.params.newsId}`)
         }

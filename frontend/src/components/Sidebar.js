@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getUserNotifications } from '../actions/userActions'
 import { Button, Sidebar as StyledSidebar } from '../assets/styles'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_STUDENT } from '../constants/roles'
 import useApi from '../hooks/useApi'
 
@@ -25,7 +26,7 @@ const Sidebar = ({ children }) => {
     }
 
     useEffect(() => {
-        if (apiStatus === 'completed' && isMounted) dispatch(getUserNotifications())
+        if (apiStatus === STATUS.completed && isMounted) dispatch(getUserNotifications())
     }, [apiStatus, dispatch, isMounted])
 
     useEffect(() => {

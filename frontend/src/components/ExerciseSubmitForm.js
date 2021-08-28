@@ -4,6 +4,7 @@ import { useLocation } from 'react-router'
 import { submitExercise } from '../actions/exerciseActions'
 import { Button, Form } from '../assets/styles'
 import { EXERCISE_SUBMIT_RESET } from '../constants/exerciseConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_STUDENT, ROLE_TEACHER } from '../constants/roles'
 import Alert from './Alert'
 import UploadFileInput from './UploadFileInput'
@@ -48,7 +49,7 @@ const ExerciseSubmitForm = () => {
             if (grade) submitData.grade = grade
         }
 
-        if (uploadStatus === 'completed') {
+        if (uploadStatus === STATUS.completed) {
             submitData.uploadId = uploadData.id
         }
 
@@ -66,7 +67,7 @@ const ExerciseSubmitForm = () => {
     ) : (
         <Form onSubmit={submitHandler}>
             {error && <Alert>{error}</Alert>}
-            {submitStatus === 'completed' && <Alert variant="info">Uspješno</Alert>}
+            {submitStatus === STATUS.completed && <Alert variant="info">Uspješno</Alert>}
             {userInfo?.role === ROLE_STUDENT && (
                 <>
                     <UploadFileInput />
@@ -107,7 +108,10 @@ const ExerciseSubmitForm = () => {
                     </Form.Group>
                 </>
             )}
-            <Button primary disabled={uploadStatus === 'loading' || submitStatus === 'loading'}>
+            <Button
+                primary
+                disabled={uploadStatus === STATUS.loading || submitStatus === STATUS.loading}
+            >
                 Predaj
             </Button>
         </Form>

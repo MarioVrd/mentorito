@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { getEnrolledCourses } from '../actions/courseActions'
+import { STATUS } from '../constants/requestStatusConstants'
 import Alert from './Alert'
 import EnrolledCourseItem from './EnrolledCourseItem'
 import Loader from './Loader'
@@ -19,7 +20,7 @@ const EnrolledCourses = () => {
         <div>
             <Heading>Upisani kolegiji</Heading>
 
-            {status === 'loading' && <Loader />}
+            {status === STATUS.loading && <Loader />}
             {error && <Alert>{error}</Alert>}
             {enrollment && enrollment.length ? (
                 <EnrolledGrid>

@@ -5,6 +5,7 @@ import { login } from '../actions/userActions'
 import { Button, UserForm } from '../assets/styles'
 import Alert from '../components/Alert'
 import Loader from '../components/Loader'
+import { STATUS } from '../constants/requestStatusConstants'
 import { USER_LOGOUT } from '../constants/userConstants'
 
 const LoginPage = ({ history }) => {
@@ -35,7 +36,7 @@ const LoginPage = ({ history }) => {
             <UserForm onSubmit={loginHandler}>
                 <UserForm.Title>Prijava</UserForm.Title>
                 {error && <Alert>{error}</Alert>}
-                {status === 'loading' && <Loader />}
+                {status === STATUS.loading && <Loader />}
                 <UserForm.Group>
                     <UserForm.Label htmlFor="email">Email</UserForm.Label>
                     <UserForm.Input

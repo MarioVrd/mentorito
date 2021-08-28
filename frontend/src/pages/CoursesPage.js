@@ -9,6 +9,7 @@ import Sidebar from '../components/Sidebar'
 import CourseListItem from '../components/CourseListItem'
 import { COURSE_DELETE_RESET, ENROLL_TO_COURSE_RESET } from '../constants/courseConstants'
 import Loader from '../components/Loader'
+import { STATUS } from '../constants/requestStatusConstants'
 
 const CoursesPage = ({ match: { path }, history }) => {
     const dispatch = useDispatch()
@@ -26,14 +27,14 @@ const CoursesPage = ({ match: { path }, history }) => {
     const { status: deleteStatus, error: deleteError, message: deleteMessage } = courseDelete
 
     useEffect(() => {
-        if (enrollStatus === 'completed') {
+        if (enrollStatus === STATUS.completed) {
             history.push(`/courses/${enrollment.courseId}`)
             dispatch({ type: ENROLL_TO_COURSE_RESET })
         }
     }, [dispatch, history, enrollStatus, enrollment?.courseId])
 
     useEffect(() => {
-        if (deleteStatus === 'completed') {
+        if (deleteStatus === STATUS.completed) {
             dispatch(getAllCourses())
         }
     }, [dispatch, deleteStatus])
@@ -53,7 +54,7 @@ const CoursesPage = ({ match: { path }, history }) => {
                 {enrollError && <Alert>{enrollError}</Alert>}
                 {deleteError && <Alert>{deleteError}</Alert>}
                 {deleteMessage && <Alert variant="success">{deleteMessage}</Alert>}
-                {status === 'loading' ? (
+                {status === STATUS.loading ? (
                     <Loader />
                 ) : error ? (
                     <Alert>{error}</Alert>

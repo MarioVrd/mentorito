@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { enrollToCourse } from '../actions/courseActions'
 import { getUsers } from '../actions/userActions'
 import { Button, Table } from '../assets/styles'
+import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_STUDENT } from '../constants/roles'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
@@ -36,11 +37,11 @@ const CourseStudents = ({ match }) => {
     }
 
     useEffect(() => {
-        if (courseStatus === 'completed' || apiStatus === 'complete')
+        if (courseStatus === STATUS.completed || apiStatus === STATUS.completed)
             dispatch(getUsers(ROLE_STUDENT))
     }, [dispatch, courseStatus, enrollStatus, apiStatus])
 
-    return status === 'loading' ? (
+    return status === STATUS.loading ? (
         <Loader />
     ) : error ? (
         <Alert>{error}</Alert>

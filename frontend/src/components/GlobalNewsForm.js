@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createGlobalNews, updateGlobalNews } from '../actions/newsActions'
 import { GLOBAL_NEWS_CREATE_RESET, GLOBAL_NEWS_UPDATE_RESET } from '../constants/newsConstants'
+import { STATUS } from '../constants/requestStatusConstants'
 import useApi from '../hooks/useApi'
 import Alert from './Alert'
 import NewsForm from './NewsForm'
@@ -32,20 +33,20 @@ const GlobalNewsForm = ({ match, history }) => {
     }
 
     useEffect(() => {
-        if (status === 'idle' && match.params.id && apiFunction) {
+        if (status === STATUS.idle && match.params.id && apiFunction) {
             apiFunction('GET', `/api/news/${match.params.id}`)
         }
     }, [status, apiFunction, match.params.id])
 
     useEffect(() => {
-        if (match.params.id && status === 'completed') {
+        if (match.params.id && status === STATUS.completed) {
             setTitle(news.title)
             setContent(news.content)
         }
     }, [match.params.id, status, news])
 
     useEffect(() => {
-        if (updateStatus === 'completed' || createStatus === 'completed') {
+        if (updateStatus === STATUS.completed || createStatus === STATUS.completed) {
             dispatch({ type: GLOBAL_NEWS_UPDATE_RESET })
             dispatch({ type: GLOBAL_NEWS_CREATE_RESET })
             history.push('/news')

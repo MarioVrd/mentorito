@@ -84,7 +84,7 @@ const SettingsPage = () => {
                     />
                 </Form.Group>
 
-                <Button type="submit" primary block disabled={status === 'loading'}>
+                <Button type="submit" primary block disabled={status === STATUS.loading}>
                     Ažuriraj
                 </Button>
             </Form>

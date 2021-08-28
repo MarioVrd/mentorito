@@ -12,6 +12,7 @@ import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import Loader from '../components/Loader'
 import ExerciseForm from '../components/ExerciseForm'
 import PrivateRoute from '../components/PrivateRoute'
+import { STATUS } from '../constants/requestStatusConstants'
 
 const ExercisePage = ({ location, match }) => {
     const { id } = match.params
@@ -36,7 +37,7 @@ const ExercisePage = ({ location, match }) => {
     }, [location.search])
 
     useEffect(() => {
-        if (status === 'completed' && exercise) {
+        if (status === STATUS.completed && exercise) {
             setIsSubmitted(
                 exercise.exerciseSubmissions.some(submit => submit.studentId === userInfo.id)
             )
@@ -96,7 +97,7 @@ const ExercisePage = ({ location, match }) => {
     // If user is student show his submitted exercise if he submitted
     // If not submitted exercise, show submission form
     const studentScreen =
-        status === 'completed' ? (
+        status === STATUS.completed ? (
             exercise.exerciseSubmissions.length === 1 && isSubmitted ? (
                 <ExerciseItem exercise={exercise.exerciseSubmissions[0]} />
             ) : (
@@ -113,7 +114,7 @@ const ExercisePage = ({ location, match }) => {
     return (
         <Grid>
             <Main>
-                {status === 'loading' ? (
+                {status === STATUS.loading ? (
                     <Loader />
                 ) : error ? (
                     <Alert>{error}</Alert>

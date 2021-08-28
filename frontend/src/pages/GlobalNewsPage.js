@@ -17,6 +17,7 @@ import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
 import Loader from '../components/Loader'
 import Pagination from '../components/Pagination'
 import GlobalNewsItem from '../components/GlobalNewsItem'
+import { STATUS } from '../constants/requestStatusConstants'
 
 const GlobalNewsPage = ({ match: { path } }) => {
     const location = useLocation()
@@ -56,7 +57,7 @@ const GlobalNewsPage = ({ match: { path } }) => {
                 <Main.Title>
                     <Link to="/news">Općenite obavijesti</Link>
                 </Main.Title>
-                {status === 'loading' ? (
+                {status === STATUS.loading ? (
                     <Loader />
                 ) : error ? (
                     <Alert>{error}</Alert>
