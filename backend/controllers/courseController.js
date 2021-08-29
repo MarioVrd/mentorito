@@ -76,6 +76,11 @@ export const getCourseById = asyncHandler(async (req, res) => {
 export const createCourse = asyncHandler(async (req, res) => {
     let { title, description, locked, teachers } = req.body
 
+    if (!title) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Naziv je obavezan.')
+    }
+
     if (typeof locked === 'string') validator.toBoolean(locked)
 
     const course = await prisma.course.create({ data: { title, description, locked } })
@@ -100,6 +105,11 @@ export const updateCourse = asyncHandler(async (req, res) => {
 
     const { courseId } = req.params
     let { title, description, locked, teachers } = req.body
+
+    if (!title) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Naziv je obavezan')
+    }
 
     if (typeof locked === 'string') locked = validator.toBoolean(locked)
 
@@ -184,6 +194,11 @@ export const getEnrolledCourses = asyncHandler(async (req, res) => {
 export const enrollToCourse = asyncHandler(async (req, res) => {
     const { userId, courseId } = req.body
 
+    if (!courseId) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! ID kolegija je obavezan')
+    }
+
     const course = await prisma.course.findUnique({ where: { id: courseId } })
     if (!course) throw new Error('Ne postoji kolegij sa odabranim ID-om')
 
@@ -212,8 +227,6 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
 // @access  Student/Teacher/Admin
 export const unenrollCourse = asyncHandler(async (req, res) => {
     const { userId, courseId } = req.params
-
-    if (!courseId) throw new Error('Nepravilan zahtjev! Potreban ID kolegija.')
 
     if (userId && req.user.role === ROLE_STUDENT) {
         res.status(401)
@@ -322,6 +335,11 @@ export const deleteCourseNews = asyncHandler(async (req, res) => {
 export const createCourseMaterial = asyncHandler(async (req, res) => {
     const { courseId } = req.params
     const { uploadId, description } = req.body
+
+    if (!uploadId) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! ID uploada je obavezan')
+    }
 
     const material = await prisma.courseMaterial.create({
         data: { courseId, uploadId, description }

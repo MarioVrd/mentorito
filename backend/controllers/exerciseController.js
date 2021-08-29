@@ -35,6 +35,11 @@ export const updateExercise = asyncHandler(async (req, res) => {
     const { id } = req.params
     let { title, description, deadline } = req.body
 
+    if (!title) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Naziv je obavezan')
+    }
+
     if (deadline != null) {
         if (!isValidDeadline(deadline))
             throw new Error(

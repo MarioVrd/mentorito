@@ -23,11 +23,16 @@ const RegisterPage = () => {
     const handleSubmit = e => {
         e.preventDefault()
         dispatch(register(firstName, lastName, email, password, role))
-        setFirstName('')
-        setLastName('')
-        setEmail('')
-        setPassword('')
     }
+
+    useEffect(() => {
+        if (status === STATUS.completed) {
+            setFirstName('')
+            setLastName('')
+            setEmail('')
+            setPassword('')
+        }
+    }, [status])
 
     useEffect(() => {
         return () => {

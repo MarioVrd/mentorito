@@ -56,6 +56,11 @@ export const getNewsById = asyncHandler(async (req, res) => {
 export const createNews = asyncHandler(async (req, res) => {
     const { title, content } = req.body
 
+    if (!title || !content) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Naslov i sadržaj su obavezni.')
+    }
+
     const news = await prisma.globalNews.create({
         data: { title, content, adminId: req.user.id }
     })
@@ -69,6 +74,11 @@ export const createNews = asyncHandler(async (req, res) => {
 export const updateNews = asyncHandler(async (req, res) => {
     const { id } = req.params
     const { title, content } = req.body
+
+    if (!title || !content) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Naslov i sadržaj su obavezni.')
+    }
 
     const updatedNews = await prisma.globalNews.update({
         data: { title, content },

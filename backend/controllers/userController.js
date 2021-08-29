@@ -2,14 +2,21 @@ import prisma from '../prisma/client.js'
 import asyncHandler from 'express-async-handler'
 import isEmail from 'validator/lib/isEmail.js'
 import isIn from 'validator/lib/isIn.js'
+import isStrongPassword from 'validator/lib/isStrongPassword.js'
 import { encrypt, comparePassword, generateToken } from '../utils/authUtils.js'
 import { availableRoles, ROLE_STUDENT } from '../constants/roles.js'
+import { pwdConfig } from '../constants/passwordConfig.js'
 
 // @desc    Create a new user
 // @route   POST /api/users/register
 // @access  Admin
 export const register = asyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body
+
+    if (!firstName || !lastName || !email || !password || !role) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Ime, prezime, email, lozinka i uloga su obavezni!')
+    }
 
     const user = await prisma.user.findUnique({ where: { email } })
 
@@ -24,6 +31,11 @@ export const register = asyncHandler(async (req, res) => {
         )
 
     if (!isEmail(email)) throw new Error('Nepravilan email')
+
+    if (!isStrongPassword(password, pwdConfig))
+        throw new Error(
+            `Nepravilan zahtjev! Lozinka mora imati barem ${pwdConfig.minLength} znakova od kojih barem ${pwdConfig.minLowercase} malo, ${pwdConfig.minUppercase} veliko slovo i ${pwdConfig.minNumbers} broj`
+        )
 
     const encryptedPassword = await encrypt(password)
 
@@ -47,8 +59,13 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body
 
+    if (!email || !password) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Email i lozinka su obavezni.')
+    }
+
     const user = await prisma.user.findUnique({
-        where: { email: email },
+        where: { email },
         include: { notifications: true }
     })
 
@@ -77,6 +94,11 @@ export const login = asyncHandler(async (req, res) => {
 export const updateMyAccount = asyncHandler(async (req, res) => {
     const { firstName, lastName, oldPassword, newPassword } = req.body
 
+    if (!firstName || !lastName || !oldPassword) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Ime, prezime i trenutna lozinka su obavezni.')
+    }
+
     const user = await prisma.user.findUnique({ where: { id: req.user.id } })
 
     let validOldPassword = false
@@ -87,6 +109,11 @@ export const updateMyAccount = asyncHandler(async (req, res) => {
     const newData = { firstName, lastName }
 
     if (newPassword) {
+        if (!isStrongPassword(password, pwdConfig))
+            throw new Error(
+                `Nepravilan zahtjev! Lozinka mora imati barem ${pwdConfig.minLength} znakova od kojih barem ${pwdConfig.minLowercase} malo, ${pwdConfig.minUppercase} veliko slovo i ${pwdConfig.minNumbers} broj`
+            )
+
         const encryptedPassword = await encrypt(newPassword)
         newData.password = encryptedPassword
     }

@@ -21,7 +21,7 @@ export const errorHandler = (err, req, res, next) => {
     }
 
     let message = err.message
-    if (err.name === 'TypeError') message = 'Došlo je do pogreške'
+    if (err.name === 'TypeError' || err.name === 'SyntaxError') message = 'Došlo je do pogreške'
     if (err.code === PRISMA_NOT_FOUND) message = 'Nije moguće dohvatiti tražene povezane podatke'
     if (err.code === PRISMA_UNIQUE_PRIMARY_KEY_FAILED)
         message = 'Već postoji zapis sa istim podacima'
