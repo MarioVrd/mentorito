@@ -13,7 +13,7 @@ import {
     GLOBAL_NEWS_DELETE_RESET,
     GLOBAL_NEWS_UPDATE_RESET
 } from '../constants/newsConstants'
-import { ROLE_ADMIN, ROLE_TEACHER } from '../constants/roles'
+import { ROLE_ADMIN } from '../constants/roles'
 import Loader from '../components/Loader'
 import Pagination from '../components/Pagination'
 import GlobalNewsItem from '../components/GlobalNewsItem'
@@ -121,7 +121,7 @@ const GlobalNewsPage = ({ match: { path } }) => {
                 )}
             </Main>
             <Sidebar>
-                {(userInfo?.role === ROLE_ADMIN || userInfo?.role === ROLE_TEACHER) && (
+                {userInfo?.role === ROLE_ADMIN && (
                     <div>
                         <h3>Poveznice</h3>
                         <Link to={`${path}/add`}>Dodaj obavijest</Link>

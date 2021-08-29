@@ -3,10 +3,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getCourseDetails, getCourseNews } from '../actions/courseActions'
 import { STATUS } from '../constants/requestStatusConstants'
 import useApi from '../hooks/useApi'
+import useInput from '../hooks/useInput'
+import { isRequired } from '../utils/validateUtils'
 import NewsForm from './NewsForm'
 
 const CourseNewsForm = ({ match, history }) => {
-    const [title, setTitle] = useState('')
+    const [title, setTitle, titleTouched, titleError] = useInput(
+        '',
+        isRequired,
+        'Naslov je obavezan'
+    )
     const [content, setContent] = useState('')
 
     const dispatch = useDispatch()
@@ -27,6 +33,8 @@ const CourseNewsForm = ({ match, history }) => {
 
     const submitHandler = e => {
         e.preventDefault()
+
+        if (titleError) return
 
         const data = { title, content }
 
@@ -49,7 +57,7 @@ const CourseNewsForm = ({ match, history }) => {
                 setContent(selectedNews.content)
             }
         }
-    }, [match.params.newsId, status, news])
+    }, [match.params.newsId, setTitle, status, news])
 
     useEffect(() => {
         if (createStatus === STATUS.completed) {
@@ -68,6 +76,8 @@ const CourseNewsForm = ({ match, history }) => {
             submitHandler={submitHandler}
             title={title}
             setTitle={setTitle}
+            titleTouched={titleTouched}
+            titleError={titleError}
             content={content}
             setContent={setContent}
             createStatus={createStatus}

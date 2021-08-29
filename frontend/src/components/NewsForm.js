@@ -10,8 +10,12 @@ const NewsForm = props => {
         submitHandler,
         title,
         setTitle,
+        titleTouched,
+        titleError,
         content,
         setContent,
+        contentTouched,
+        contentError,
         createStatus,
         createError,
         updateStatus,
@@ -28,10 +32,10 @@ const NewsForm = props => {
                 <Form.Input
                     type="text"
                     id="title"
-                    required
                     value={title}
                     onChange={e => setTitle(e.target.value)}
                 />
+                {titleTouched && titleError && <Form.Error>{titleError}</Form.Error>}
             </Form.Group>
             <Form.Group>
                 <Form.Label htmlFor="content">Sadržaj</Form.Label>
@@ -41,6 +45,7 @@ const NewsForm = props => {
                     value={content}
                     onChange={e => setContent(e.target.value)}
                 />
+                {contentTouched && contentError && <Form.Error>{contentError}</Form.Error>}
             </Form.Group>
 
             <Button

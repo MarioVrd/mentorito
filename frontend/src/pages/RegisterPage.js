@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import isEmail from 'validator/lib/isEmail'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { register } from '../actions/userActions'
@@ -8,12 +9,33 @@ import Loader from '../components/Loader'
 import { STATUS } from '../constants/requestStatusConstants'
 import { availableRoles, ROLE_STUDENT } from '../constants/roles'
 import { USER_REGISTER_RESET } from '../constants/userConstants'
+import useInput from '../hooks/useInput'
+import {
+    emailMsg,
+    firstNameMsg,
+    isRequired,
+    isValidPassword,
+    lastNameMsg,
+    passwordMsg
+} from '../utils/validateUtils'
 
 const RegisterPage = () => {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [firstName, setFirstName, firstNameTouched, firstNameError, resetFirstName] = useInput(
+        '',
+        isRequired,
+        firstNameMsg
+    )
+    const [lastName, setLastName, lastNameTouched, lastNameError, resetLastName] = useInput(
+        '',
+        isRequired,
+        lastNameMsg
+    )
+    const [email, setEmail, emailTouched, emailError, resetEmail] = useInput('', isEmail, emailMsg)
+    const [password, setPassword, passwordTouched, passwordError, resetPassword] = useInput(
+        '',
+        isValidPassword,
+        passwordMsg
+    )
     const [role, setRole] = useState(ROLE_STUDENT)
 
     const dispatch = useDispatch()
@@ -22,17 +44,20 @@ const RegisterPage = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        dispatch(register(firstName, lastName, email, password, role))
+        if (!firstNameError && !lastNameError && !emailError && !passwordError) {
+            dispatch(register(firstName, lastName, email, password, role))
+        }
     }
 
     useEffect(() => {
         if (status === STATUS.completed) {
-            setFirstName('')
-            setLastName('')
-            setEmail('')
-            setPassword('')
+            resetFirstName('')
+            resetLastName('')
+            resetEmail('')
+            resetPassword('')
+            dispatch({ type: USER_REGISTER_RESET })
         }
-    }, [status])
+    }, [dispatch, status, resetFirstName, resetLastName, resetEmail, resetPassword])
 
     useEffect(() => {
         return () => {
@@ -59,6 +84,9 @@ const RegisterPage = () => {
                         onChange={e => setFirstName(e.target.value)}
                         required
                     />
+                    {firstNameTouched && firstNameError && (
+                        <UserForm.Error>{firstNameError}</UserForm.Error>
+                    )}
                 </UserForm.Group>
                 <UserForm.Group>
                     <UserForm.Label htmlFor="surname">Prezime</UserForm.Label>
@@ -70,6 +98,9 @@ const RegisterPage = () => {
                         onChange={e => setLastName(e.target.value)}
                         required
                     />
+                    {lastNameTouched && lastNameError && (
+                        <UserForm.Error>{lastNameError}</UserForm.Error>
+                    )}
                 </UserForm.Group>
                 <UserForm.Group>
                     <UserForm.Label htmlFor="email">Email</UserForm.Label>
@@ -81,6 +112,7 @@ const RegisterPage = () => {
                         onChange={e => setEmail(e.target.value)}
                         required
                     />
+                    {emailTouched && emailError && <UserForm.Error>{emailError}</UserForm.Error>}
                 </UserForm.Group>
                 <UserForm.Group>
                     <UserForm.Label htmlFor="password">Lozinka</UserForm.Label>
@@ -92,6 +124,9 @@ const RegisterPage = () => {
                         onChange={e => setPassword(e.target.value)}
                         required
                     />
+                    {passwordTouched && passwordError && (
+                        <UserForm.Error>{passwordError}</UserForm.Error>
+                    )}
                 </UserForm.Group>
                 <UserForm.Group>
                     <UserForm.Label htmlFor="role">Uloga</UserForm.Label>

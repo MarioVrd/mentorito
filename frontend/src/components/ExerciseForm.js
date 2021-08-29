@@ -8,10 +8,16 @@ import PropTypes from 'prop-types'
 import { EXERCISE_CREATE_RESET } from '../constants/exerciseConstants'
 import useApi from '../hooks/useApi'
 import { STATUS } from '../constants/requestStatusConstants'
+import { isRequired } from '../utils/validateUtils'
+import useInput from '../hooks/useInput'
 
 const ExerciseForm = ({ type, exerciseId, currTitle, currDescription }) => {
     const { id: courseId } = useParams()
-    const [title, setTitle] = useState(currTitle || '')
+    const [title, setTitle, titleTouched, titleError] = useInput(
+        currTitle || '',
+        isRequired,
+        'Naziv je obavezan'
+    )
     const [description, setDescription] = useState(currDescription || '')
     const [deadline, setDeadline] = useState('')
 
@@ -27,11 +33,15 @@ const ExerciseForm = ({ type, exerciseId, currTitle, currDescription }) => {
     const addExerciseHandler = e => {
         e.preventDefault()
 
+        if (titleError) return
+
         dispatch(createExercise({ title, description, deadline, courseId }))
     }
 
     const updateExerciseHandler = e => {
         e.preventDefault()
+
+        if (titleError) return
 
         const data = { title, description }
         if (deadline) data.deadline = deadline
@@ -64,6 +74,7 @@ const ExerciseForm = ({ type, exerciseId, currTitle, currDescription }) => {
             <Form.Group>
                 <Form.Label htmlFor="title">Naziv</Form.Label>
                 <Form.Input id="title" value={title} onChange={e => setTitle(e.target.value)} />
+                {titleTouched && titleError && <Form.Error>{titleError}</Form.Error>}
             </Form.Group>
             <Form.Group>
                 <Form.Label htmlFor="description">Opis</Form.Label>

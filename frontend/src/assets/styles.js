@@ -157,6 +157,12 @@ Form.Input = styled.input`
     }
 `
 
+Form.Error = styled.p`
+    margin-top: 0.5rem;
+    color: var(--clr-danger);
+    font-size: 0.8rem;
+`
+
 Form.Textarea = styled.textarea`
     display: block;
     width: 100%;
@@ -196,6 +202,12 @@ UserForm.Input = styled.input`
     padding: 0.75rem;
     border-radius: 5px;
     border: 1px solid var(--clr-grey-200);
+`
+
+UserForm.Error = styled.p`
+    margin-top: 0.5rem;
+    color: var(--clr-danger);
+    font-size: 0.8rem;
 `
 
 export const Table = styled.table`

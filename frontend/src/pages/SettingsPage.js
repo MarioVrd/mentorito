@@ -4,6 +4,7 @@ import { updateMyAccount } from '../actions/userActions'
 import { Button, Form, Main } from '../assets/styles'
 import { STATUS } from '../constants/requestStatusConstants'
 import Alert from '../components/Alert'
+import { USER_UPDATE_RESET } from '../constants/userConstants'
 
 const SettingsPage = () => {
     const [firstName, setFirstName] = useState('')
@@ -32,6 +33,10 @@ const SettingsPage = () => {
         setOldPassword('')
         setNewPassword('')
     }
+
+    useEffect(() => {
+        return () => dispatch({ type: USER_UPDATE_RESET })
+    }, [dispatch])
 
     return (
         <Main>

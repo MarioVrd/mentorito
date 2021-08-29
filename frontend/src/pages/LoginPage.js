@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
+import isEmail from 'validator/lib/isEmail'
 import { login } from '../actions/userActions'
 import { Button, UserForm } from '../assets/styles'
 import Alert from '../components/Alert'
 import Loader from '../components/Loader'
 import { STATUS } from '../constants/requestStatusConstants'
 import { USER_LOGOUT } from '../constants/userConstants'
+import useInput from '../hooks/useInput'
+import { emailMsg, isRequired } from '../utils/validateUtils'
 
 const LoginPage = ({ history }) => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail, emailTouched, emailError] = useInput('', isEmail, emailMsg)
+    const [password, setPassword, passwordTouched, passwordError] = useInput(
+        '',
+        isRequired,
+        'Lozinka je obavezna'
+    )
 
     const dispatch = useDispatch()
 
@@ -28,7 +35,7 @@ const LoginPage = ({ history }) => {
         e.preventDefault()
         // reset userLogin data if error occured on previous login for better UX
         dispatch({ type: USER_LOGOUT })
-        dispatch(login(email, password))
+        if (!emailError && !passwordError) dispatch(login(email, password))
     }
 
     return (
@@ -45,8 +52,8 @@ const LoginPage = ({ history }) => {
                         placeholder="Unesite email"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        required
                     />
+                    {emailTouched && emailError && <UserForm.Error>{emailError}</UserForm.Error>}
                 </UserForm.Group>
                 <UserForm.Group>
                     <UserForm.Label htmlFor="password">Lozinka</UserForm.Label>
@@ -56,8 +63,10 @@ const LoginPage = ({ history }) => {
                         placeholder="Unesite lozinku"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
-                        required
                     />
+                    {passwordTouched && passwordError && (
+                        <UserForm.Error>{passwordError}</UserForm.Error>
+                    )}
                 </UserForm.Group>
                 <Button type="submit" primary block>
                     Prijava

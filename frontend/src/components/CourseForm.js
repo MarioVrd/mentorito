@@ -12,10 +12,16 @@ import {
 } from '../constants/courseConstants'
 import { STATUS } from '../constants/requestStatusConstants'
 import { ROLE_TEACHER } from '../constants/roles'
+import useInput from '../hooks/useInput'
+import { isRequired } from '../utils/validateUtils'
 import Alert from './Alert'
 
 const CourseForm = () => {
-    const [title, setTitle] = useState('')
+    const [title, setTitle, titleTouched, titleError] = useInput(
+        '',
+        isRequired,
+        'Naziv je obavezan'
+    )
     const [description, setDescription] = useState('')
     const [teachers, setTeachers] = useState([])
     const [locked, setLocked] = useState(false)
@@ -60,7 +66,7 @@ const CourseForm = () => {
                     .map(e => e.userId)
             )
         }
-    }, [dispatch, match.params.id, courseStatus, course])
+    }, [dispatch, setTitle, match.params.id, courseStatus, course])
 
     useEffect(() => {
         if (match.params.id) dispatch(getCourseDetails(match.params.id))
@@ -83,6 +89,8 @@ const CourseForm = () => {
     const addOrUpdateCourseHandler = e => {
         e.preventDefault()
 
+        if (titleError) return
+
         if (match.params.id) {
             dispatch(updateCourse(match.params.id, { title, description, locked, teachers }))
         } else {
@@ -102,10 +110,10 @@ const CourseForm = () => {
                     <Form.Input
                         type="text"
                         id="title"
-                        required
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                     />
+                    {titleTouched && titleError && <Form.Error>{titleError}</Form.Error>}
                 </Form.Group>
                 <Form.Group>
                     <Form.Label htmlFor="description">Opis</Form.Label>

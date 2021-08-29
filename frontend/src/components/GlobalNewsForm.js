@@ -1,15 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createGlobalNews, updateGlobalNews } from '../actions/newsActions'
 import { GLOBAL_NEWS_CREATE_RESET, GLOBAL_NEWS_UPDATE_RESET } from '../constants/newsConstants'
 import { STATUS } from '../constants/requestStatusConstants'
 import useApi from '../hooks/useApi'
+import useInput from '../hooks/useInput'
+import { isRequired } from '../utils/validateUtils'
 import Alert from './Alert'
 import NewsForm from './NewsForm'
 
 const GlobalNewsForm = ({ match, history }) => {
-    const [title, setTitle] = useState('')
-    const [content, setContent] = useState('')
+    const [title, setTitle, titleTouched, titleError] = useInput(
+        '',
+        isRequired,
+        'Naslov je obavezan'
+    )
+    const [content, setContent, contentTouched, contentError] = useInput(
+        '',
+        isRequired,
+        'Sadržaj je obavezan'
+    )
 
     const dispatch = useDispatch()
 
@@ -24,6 +34,8 @@ const GlobalNewsForm = ({ match, history }) => {
 
     const addOrUpdateGlobalNewsHandler = e => {
         e.preventDefault()
+
+        if (titleError || contentError) return
 
         if (match.params.id) {
             dispatch(updateGlobalNews({ id: match.params.id, title, content }))
@@ -43,7 +55,7 @@ const GlobalNewsForm = ({ match, history }) => {
             setTitle(news.title)
             setContent(news.content)
         }
-    }, [match.params.id, status, news])
+    }, [match.params.id, setTitle, setContent, status, news])
 
     useEffect(() => {
         if (updateStatus === STATUS.completed || createStatus === STATUS.completed) {
@@ -61,8 +73,12 @@ const GlobalNewsForm = ({ match, history }) => {
                 submitHandler={addOrUpdateGlobalNewsHandler}
                 title={title}
                 setTitle={setTitle}
+                titleTouched={titleTouched}
+                titleError={titleError}
                 content={content}
                 setContent={setContent}
+                contentTouched={contentTouched}
+                contentError={contentError}
                 createStatus={createStatus}
                 createError={createError}
                 updateStatus={updateStatus}
