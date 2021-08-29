@@ -16,12 +16,7 @@ export const getFileById = asyncHandler(async (req, res) => {
         throw new Error('Nije pronađena odabrana datoteka')
     }
 
-    const { title: fileName, userId } = upload
-
-    if (req.user.role === ROLE_STUDENT && userId !== req.user.id) {
-        res.status(401)
-        throw new Error('Nemate dopuštenje za preuzimanje ove datoteke')
-    }
+    const { title: fileName } = upload
 
     const __dirname = path.resolve()
     res.sendFile(path.join(__dirname, './uploads', fileName))
