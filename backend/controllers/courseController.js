@@ -106,17 +106,17 @@ export const updateCourse = asyncHandler(async (req, res) => {
     const { courseId } = req.params
     let { title, description, locked, teachers } = req.body
 
-    if (!title) {
-        res.status(400)
-        throw new Error('Nepravilan zahtjev! Naziv je obavezan')
-    }
-
     if (typeof locked === 'string') locked = validator.toBoolean(locked)
 
     // Teacher can only lock/unlock enrollment
     if (req.user.role === ROLE_TEACHER) {
         const updated = await prisma.course.update({ where: { id: courseId }, data: { locked } })
         return res.json(updated)
+    }
+
+    if (!title) {
+        res.status(400)
+        throw new Error('Nepravilan zahtjev! Naziv je obavezan')
     }
 
     // Get all enrolled teachers
@@ -228,7 +228,7 @@ export const enrollToCourse = asyncHandler(async (req, res) => {
 export const unenrollCourse = asyncHandler(async (req, res) => {
     const { userId, courseId } = req.params
 
-    if (userId && req.user.role === ROLE_STUDENT) {
+    if (req.user.role === ROLE_STUDENT && userId !== req.user.id) {
         res.status(401)
         throw new Error('Nemate dopuštenje za ispisivanje drugih studenata')
     }

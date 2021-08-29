@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Route, Switch } from 'react-router-dom'
-import { getCourseDetails, updateCourse } from '../actions/courseActions'
+import { getCourseDetails, getEnrolledCourses, updateCourse } from '../actions/courseActions'
 import { Button, Grid, LinkButton, Main } from '../assets/styles'
 import Sidebar from '../components/Sidebar'
 import Alert from '../components/Alert'
@@ -66,8 +66,11 @@ const CoursePage = ({ match, history }) => {
     }, [updateStatus, dispatch, match.params.id])
 
     useEffect(() => {
-        if (unenrollStatus === STATUS.completed && isMounted) history.push('/courses')
-    }, [history, unenrollStatus, isMounted])
+        if (unenrollStatus === STATUS.completed && isMounted) {
+            dispatch(getEnrolledCourses())
+            history.push('/courses')
+        }
+    }, [history, dispatch, unenrollStatus, isMounted])
 
     useEffect(() => {
         return () => {

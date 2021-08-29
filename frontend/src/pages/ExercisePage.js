@@ -162,14 +162,16 @@ const ExercisePage = ({ location, match }) => {
                         ? new Date(exercise.deadline).toLocaleString()
                         : 'Nije ograničen'}
                 </p>
-                <div>
-                    <h3>Poveznice</h3>
-                    <ul>
-                        <li>
-                            <Link to={`/exercises/${exercise.id}/edit`}>Uredi vježbu</Link>
-                        </li>
-                    </ul>
-                </div>
+                {userInfo?.role === ROLE_TEACHER && (
+                    <div>
+                        <h3>Poveznice</h3>
+                        <ul>
+                            <li>
+                                <Link to={`/exercises/${exercise.id}/edit`}>Uredi vježbu</Link>
+                            </li>
+                        </ul>
+                    </div>
+                )}
             </Sidebar>
         </Grid>
     )

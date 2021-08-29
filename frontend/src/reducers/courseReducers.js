@@ -32,12 +32,12 @@ import {
     COURSE_NEWS_LIST_REQUEST,
     COURSE_NEWS_LIST_SUCCESS,
     COURSE_NEWS_LIST_FAIL,
-    COURSE_NEWS_LIST_RESET
+    COURSE_NEWS_LIST_RESET,
+    ENROLLED_COURSES_LIST_RESET
 } from '../constants/courseConstants'
 import { STATUS } from '../constants/requestStatusConstants'
 
-
-export const enrolledCoursesReducer = (state = {status: STATUS.idle}, action) => {
+export const enrolledCoursesReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case ENROLLED_COURSES_LIST_REQUEST:
             return { status: STATUS.loading }
@@ -45,12 +45,14 @@ export const enrolledCoursesReducer = (state = {status: STATUS.idle}, action) =>
             return { status: STATUS.completed, enrollment: action.payload }
         case ENROLLED_COURSES_LIST_FAIL:
             return { status: STATUS.failed, error: action.payload }
+        case ENROLLED_COURSES_LIST_RESET:
+            return { status: STATUS.idle }
         default:
             return state
     }
 }
 
-export const courseListReducer = (state = {status: STATUS.idle}, action) => {
+export const courseListReducer = (state = { status: STATUS.idle }, action) => {
     switch (action.type) {
         case COURSE_LIST_REQUEST:
             return { status: STATUS.loading }
