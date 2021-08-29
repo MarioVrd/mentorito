@@ -16,7 +16,7 @@ const useInput = (initialValue, validateFunction, errorMessage = 'Pogrešan unos
     }, [fieldValue, isTouched])
 
     useEffect(() => {
-        if (!validateFunction(fieldValue)) {
+        if (!validateFunction(fieldValue) && isTouched) {
             setError(errorMessage)
         } else {
             setError(null)

@@ -109,7 +109,7 @@ export const updateMyAccount = asyncHandler(async (req, res) => {
     const newData = { firstName, lastName }
 
     if (newPassword) {
-        if (!isStrongPassword(password, pwdConfig))
+        if (!isStrongPassword(newPassword, pwdConfig))
             throw new Error(
                 `Nepravilan zahtjev! Lozinka mora imati barem ${pwdConfig.minLength} znakova od kojih barem ${pwdConfig.minLowercase} malo, ${pwdConfig.minUppercase} veliko slovo i ${pwdConfig.minNumbers} broj`
             )

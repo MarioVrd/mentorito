@@ -1,16 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateMyAccount } from '../actions/userActions'
 import { Button, Form, Main } from '../assets/styles'
 import { STATUS } from '../constants/requestStatusConstants'
 import Alert from '../components/Alert'
 import { USER_UPDATE_RESET } from '../constants/userConstants'
+import {
+    firstNameMsg,
+    isRequired,
+    isValidPassword,
+    lastNameMsg,
+    passwordMsg
+} from '../utils/validateUtils'
+import useInput from '../hooks/useInput'
 
 const SettingsPage = () => {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [oldPassword, setOldPassword] = useState('')
-    const [newPassword, setNewPassword] = useState('')
+    const [firstName, setFirstName, firstNameTouched, firstNameError] = useInput(
+        '',
+        isRequired,
+        firstNameMsg
+    )
+    const [lastName, setLastName, lastNameTouched, lastNameError] = useInput(
+        '',
+        isRequired,
+        lastNameMsg
+    )
+    const [oldPassword, setOldPassword, oldPasswordTouched, oldPasswordError, resetOldPassword] =
+        useInput('', isRequired, 'Lozinka je obavezna')
+    const [newPassword, setNewPassword, newPasswordTouched, newPasswordError, resetNewPassword] =
+        useInput('', isValidPassword, passwordMsg)
 
     const dispatch = useDispatch()
 
@@ -23,15 +41,17 @@ const SettingsPage = () => {
     useEffect(() => {
         setFirstName(userInfo.firstName)
         setLastName(userInfo.lastName)
-    }, [userInfo.firstName, userInfo.lastName])
+    }, [setFirstName, setLastName, userInfo.firstName, userInfo.lastName])
 
     const updateAccountHandler = e => {
         e.preventDefault()
 
+        if (firstNameError || lastNameError || oldPasswordError || newPasswordError) return
+
         dispatch(updateMyAccount(firstName, lastName, oldPassword, newPassword))
 
-        setOldPassword('')
-        setNewPassword('')
+        resetOldPassword()
+        resetNewPassword()
     }
 
     useEffect(() => {
@@ -55,6 +75,9 @@ const SettingsPage = () => {
                         value={firstName}
                         onChange={e => setFirstName(e.target.value)}
                     />
+                    {firstNameTouched && firstNameError && (
+                        <Form.Error>{firstNameError}</Form.Error>
+                    )}
                 </Form.Group>
                 <Form.Group>
                     <Form.Label htmlFor="surname">Prezime</Form.Label>
@@ -65,6 +88,7 @@ const SettingsPage = () => {
                         value={lastName}
                         onChange={e => setLastName(e.target.value)}
                     />
+                    {lastNameTouched && lastNameError && <Form.Error>{lastNameError}</Form.Error>}
                 </Form.Group>
 
                 <Form.Group>
@@ -74,9 +98,12 @@ const SettingsPage = () => {
                         id="oldPassword"
                         placeholder="Unesite lozinku"
                         value={oldPassword}
-                        onChange={e => setOldPassword(e.target.value)}
                         required
+                        onChange={e => setOldPassword(e.target.value)}
                     />
+                    {oldPasswordTouched && oldPasswordError && (
+                        <Form.Error>{oldPasswordError}</Form.Error>
+                    )}
                 </Form.Group>
                 <Form.Group>
                     <Form.Label htmlFor="newPassword">Nova lozinka</Form.Label>
@@ -87,6 +114,9 @@ const SettingsPage = () => {
                         value={newPassword}
                         onChange={e => setNewPassword(e.target.value)}
                     />
+                    {newPasswordTouched && newPasswordError && (
+                        <Form.Error>{newPasswordError}</Form.Error>
+                    )}
                 </Form.Group>
 
                 <Button type="submit" primary block disabled={status === STATUS.loading}>

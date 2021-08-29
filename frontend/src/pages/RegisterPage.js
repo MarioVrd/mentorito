@@ -51,10 +51,10 @@ const RegisterPage = () => {
 
     useEffect(() => {
         if (status === STATUS.completed) {
-            resetFirstName('')
-            resetLastName('')
-            resetEmail('')
-            resetPassword('')
+            resetFirstName()
+            resetLastName()
+            resetEmail()
+            resetPassword()
             dispatch({ type: USER_REGISTER_RESET })
         }
     }, [dispatch, status, resetFirstName, resetLastName, resetEmail, resetPassword])
