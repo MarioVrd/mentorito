@@ -17,11 +17,10 @@ import {
 } from '../constants/newsConstants'
 import { STATUS } from '../constants/requestStatusConstants'
 
-
 export const globalNewsReducer = (state = { status: STATUS.idle, news: [] }, action) => {
     switch (action.type) {
         case GLOBAL_NEWS_REQUEST:
-            return { status: STATUS.loading }
+            return { ...state, status: STATUS.loading }
         case GLOBAL_NEWS_SUCCESS:
             return { status: STATUS.completed, ...action.payload }
         case GLOBAL_NEWS_FAIL:

@@ -25,9 +25,9 @@ export const userLoginReducer = (state = { status: STATUS.idle }, action) => {
         case USER_LOGIN_REQUEST:
             return { ...state, status: STATUS.loading }
         case USER_LOGIN_SUCCESS:
-            return { ...state, status: STATUS.completed, userInfo: action.payload }
+            return { status: STATUS.completed, userInfo: action.payload }
         case USER_LOGIN_FAIL:
-            return { ...state, status: STATUS.failed, error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case USER_LOGOUT:
             return { status: STATUS.idle }
         default:
@@ -38,7 +38,7 @@ export const userLoginReducer = (state = { status: STATUS.idle }, action) => {
 export const userListReducer = (state = { status: STATUS.idle, users: [] }, action) => {
     switch (action.type) {
         case USER_LIST_REQUEST:
-            return { status: STATUS.loading }
+            return { ...state, status: STATUS.loading }
         case USER_LIST_SUCCESS:
             return { status: STATUS.completed, users: action.payload }
         case USER_LIST_FAIL:

@@ -87,7 +87,7 @@ const initialCourseDetails = {
 export const courseDetailsReducer = (state = initialCourseDetails, action) => {
     switch (action.type) {
         case COURSE_DETAILS_REQUEST:
-            return { status: STATUS.loading }
+            return { ...state, status: STATUS.loading }
         case COURSE_DETAILS_SUCCESS:
             return { status: STATUS.completed, course: action.payload }
         case COURSE_DETAILS_FAIL:

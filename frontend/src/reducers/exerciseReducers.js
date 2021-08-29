@@ -14,17 +14,19 @@ import {
 } from '../constants/exerciseConstants'
 import { STATUS } from '../constants/requestStatusConstants'
 
-
-const initialExerciseDetailsState = { status: STATUS.idle, exercise: { exerciseSubmissions: [], course: {} } }
+const initialExerciseDetailsState = {
+    status: STATUS.idle,
+    exercise: { exerciseSubmissions: [], course: {} }
+}
 
 export const exerciseDetailsReducer = (state = initialExerciseDetailsState, action) => {
     switch (action.type) {
         case EXERCISE_DETAILS_REQUEST:
             return { ...state, status: STATUS.loading }
         case EXERCISE_DETAILS_SUCCESS:
-            return { ...state, status: STATUS.completed, exercise: action.payload }
+            return { status: STATUS.completed, exercise: action.payload }
         case EXERCISE_DETAILS_FAIL:
-            return { ...state, status: STATUS.failed, error: action.payload }
+            return { status: STATUS.failed, error: action.payload }
         case EXERCISE_DETAILS_RESET:
             return initialExerciseDetailsState
         default:
